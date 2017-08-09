@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Family Hub</string>
+
+    <string name="up_button">⬆</string>
+    <string name="down_button">⬇</string>
+    <string name="photos_button">Photos</string>
+    <string name="messages_button">Messages</string>
+
+    <string name="title_activity_message_selection">MessageSelectionActivity</string>
+</resources>

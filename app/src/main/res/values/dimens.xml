@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="button_font_size">92sp</dimen>
+    <dimen name="arrow_button_font_size">150sp</dimen>
+    <dimen name="preview_metadata_font_size">48sp</dimen>
+    <dimen name="preview_text_font_size">64sp</dimen>
+    <dimen name="message_preview_padding">10sp</dimen>
+</resources>
