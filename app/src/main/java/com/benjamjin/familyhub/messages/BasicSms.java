@@ -1,4 +1,4 @@
-package com.benjamjin.familyhub;
+package com.benjamjin.familyhub.messages;
 
 /**
  * Created by benjamin on 08/08/2017.

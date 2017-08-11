@@ -1,14 +1,11 @@
 package com.benjamjin.familyhub;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.os.Message;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.os.Handler;
-import android.view.MotionEvent;
 import android.view.View;
+
+import com.benjamjin.familyhub.messages.MessageSelectActivity;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -91,11 +88,6 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.hide();
-        }
-
 //        mVisible = true;
 //        mControlsView = findViewById(R.id.fullscreen_content_controls);
 //        mContentView = findViewById(R.id.fullscreen_content);
@@ -169,10 +161,18 @@ public class MainActivity extends AppCompatActivity {
 //    }
 
     public void showMessagesActivity(View v) {
-        startActivity(new Intent(this, MessageSelectionActivity.class));
+        startActivity(new Intent(this, MessageSelectActivity.class));
     }
 
     public void showPhotosActivity(View v) {
-//        startActivity(new Intent());
+//        startActivity(new Intent(this, PhotosActivity.class));
+    }
+
+    public void showSettingsActivity(View v) {
+        startActivity(new Intent(this, SettingsActivity.class));
+    }
+
+    public void resetLauncher(View v) {
+        //TODO
     }
 }

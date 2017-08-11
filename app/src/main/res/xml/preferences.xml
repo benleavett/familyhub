@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--<PreferenceCategory-->
+        <!--android:title="Modes available">-->
+    <!--</PreferenceCategory>-->
+
+    <PreferenceCategory
+        android:title="Speech"
+        android:persistent="false">
+        <CheckBoxPreference
+            android:key="@string/sp_name_vocalisation_enabled"
+            android:title="@string/sp_title_vocalisation_enabled"
+            android:defaultValue="true" />
+        <ListPreference
+            android:dependency="@string/sp_name_vocalisation_enabled"
+            android:key="pref_choose_speech_rate"
+            android:title="@string/choose_speech_rate_title"
+            android:dialogTitle="@string/choose_speech_rate_dialog_title"
+            android:summary="Change the speed at which words are spoken"
+            android:entries="@array/speech_rate_options"
+            android:entryValues="@array/speech_rate_options_values"
+            android:defaultValue="@dimen/speech_rate_options_default" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="Message replies"
+        android:persistent="false">
+        <CheckBoxPreference
+            android:key="@string/sp_name_enable_replies"
+            android:title="Allow SMS replies"
+            android:defaultValue="false"/>
+        <PreferenceScreen
+            android:title="@string/sp_category_title_preset_reply"
+            android:key="button_preset_replies_category"
+            android:dependency="@string/sp_name_enable_replies"
+            android:persistent="false">
+            <EditTextPreference
+                android:key="pref_preset_reply_1"
+                android:title="@string/preset_reply_title_1"
+                android:defaultValue="@string/preset_reply_default_1" />
+            <EditTextPreference
+                android:key="pref_preset_reply_2"
+                android:title="@string/preset_reply_title_2"
+                android:defaultValue="@string/preset_reply_default_2" />
+            <EditTextPreference
+                android:key="pref_preset_reply_3"
+                android:title="@string/preset_reply_title_3"
+                android:defaultValue="@string/preset_reply_default_3" />
+        </PreferenceScreen>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="Photo sources"
+        android:persistent="false">
+        <PreferenceScreen
+            android:title="Manage photo sources">
+            <!-- TODO -->
+        </PreferenceScreen>
+    </PreferenceCategory>
+</PreferenceScreen>

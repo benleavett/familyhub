@@ -1,4 +1,4 @@
-package com.benjamjin.familyhub;
+package com.benjamjin.familyhub.messages;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

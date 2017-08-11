@@ -2,42 +2,70 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.benjamjin.familyhub">
 
+    <uses-permission
+        android:name="android.permission.RECEIVE_SMS"
+        android:protectionLevel="signature" />
+    <uses-permission android:name="android.permission.READ_SMS" />
+
     <application
+        android:name=".MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme.NoActionBar">
+
+        <!-- Activities -->
+
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
-            android:theme="@style/FullscreenTheme">
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
+                <!--<category android:name="android.intent.category.HOME" />-->
+                <!--<category android:name="android.intent.category.DEFAULT" />-->
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
-            android:name=".MessageSelectionActivity"
+            android:name=".messages.MessageSelectActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.benjamjin.familyhub.MainActivity" />
+        </activity>
+
+        <activity
+            android:name=".messages.MessageViewActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:parentActivityName=".messages.MessageSelectActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".messages.MessageSelectActivity" />
+        </activity>
+
+        <activity android:name=".SettingsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:parentActivityName=".MainActivity"
-            android:label="@string/title_activity_message_selection"
-            android:theme="@style/FullscreenTheme" />
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
 
-        <receiver android:name=".SmsReceiver">
+        <!-- Receivers -->
+
+        <receiver android:name=".messages.SmsReceiver">
             <intent-filter>
-                <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
     </application>
-
-    <uses-permission
-        android:name="android.permission.RECEIVE_SMS"
-        android:protectionLevel="signature" />
-
-    <uses-permission android:name="android.permission.READ_SMS" />
 
 </manifest>

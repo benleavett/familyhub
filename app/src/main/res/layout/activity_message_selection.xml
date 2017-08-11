@@ -2,71 +2,63 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff"
-    tools:context="com.benjamjin.familyhub.MainActivity">
+    android:background="#fff"
+    android:keepScreenOn="true"
+    tools:context=".messages.MessageSelectActivity">
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/fullscreen_content">
-
-        <!-- The primary full-screen view. This can be replaced with whatever view
-             is needed to present your content, e.g. VideoView, SurfaceView,
-             TextureView, etc. -->
-        <LinearLayout
-            android:id="@+id/fullscreen_content_controls"
+        android:orientation="vertical">
+        <Button
+            android:id="@+id/back_button"
+            style="?metaButtonBarButtonStyle"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:keepScreenOn="true"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/button_default_font_size"
+            android:text="@string/back_button"
+            android:background="@drawable/basic_button"
+            android:onClick="showPreviousActivity"/>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:id="@+id/message_body_view"
+            android:layout_weight="1"
+            android:layout_below="@id/back_button">
+            <include layout="@layout/message_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@id/message_body_view">
+
             <Button
-                android:id="@+id/up_button"
+                android:id="@+id/select_earlier_message_button"
                 style="?metaButtonBarButtonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:textSize="@dimen/arrow_button_font_size"
-                android:text="@string/up_button"
-                android:onClick="previewNewerMessage"/>
-            <include layout="@layout/view_message_preview"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:layout_below="@id/up_button"/>
+                android:textSize="@dimen/button_default_font_size"
+                android:text="@string/show_earlier_message_button"
+                android:background="@drawable/basic_button"
+                android:onClick="previewEarlierMessage"/>
+
             <Button
-                android:id="@+id/down_button"
+                android:id="@+id/select_later_message_button"
                 style="?metaButtonBarButtonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:textSize="@dimen/arrow_button_font_size"
-                android:text="@string/down_button"
-                android:layout_below="@id/up_button"
-                android:onClick="previewOlderMessage"/>
+                android:textSize="@dimen/button_default_font_size"
+                android:text="@string/show_later_message_button"
+                android:background="@drawable/basic_button"
+                android:onClick="previewLaterMessage"/>
+
         </LinearLayout>
-    </FrameLayout>
-
-    <!-- This FrameLayout insets its children based on system windows using
-         android:fitsSystemWindows. -->
-    <!--<FrameLayout-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:fitsSystemWindows="true">-->
-
-    <!--<LinearLayout-->
-    <!--android:id="@+id/fullscreen_content_controls"-->
-    <!--style="?metaButtonBarStyle"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_gravity="bottom|center_horizontal"-->
-    <!--android:background="@color/black_overlay"-->
-    <!--android:orientation="horizontal"-->
-    <!--tools:ignore="UselessParent">-->
-
-    <!---->
-
-    <!--</LinearLayout>-->
-    <!--</FrameLayout>-->
-
+    </LinearLayout>
 </FrameLayout>

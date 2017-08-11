@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="speech_rate_options_default" format="float" type="dimen" >1.0</item>
+</resources>

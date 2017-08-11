@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff"
+    tools:context=".messages.MessageViewActivity"
+    android:orientation="vertical"
+    android:id="@+id/message_view_layout">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:id="@+id/message_body_scroll_view">
+
+        <include layout="@layout/message_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </ScrollView>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="?metaButtonBarButtonStyle"
+        android:id="@+id/response_button_1"
+        android:layout_weight="0"
+        android:text="Reply"
+        android:background="@drawable/basic_button"
+        android:textSize="@dimen/button_default_font_size"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="?metaButtonBarButtonStyle"
+        android:id="@+id/response_button_2"
+        android:layout_weight="0"
+        android:text="Reply"
+        android:background="@drawable/basic_button"
+        android:textSize="@dimen/button_default_font_size"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="?metaButtonBarButtonStyle"
+        android:id="@+id/response_button_3"
+        android:layout_weight="0"
+        android:text="Reply"
+        android:background="@drawable/basic_button"
+        android:textSize="@dimen/button_default_font_size"/>
+
+</LinearLayout>

@@ -3,65 +3,53 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#fff"
-    tools:context="com.benjamjin.familyhub.MainActivity">
+    android:keepScreenOn="true"
+    tools:context=".MainActivity">
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/fullscreen_content">
-
-        <!-- The primary full-screen view. This can be replaced with whatever view
-             is needed to present your content, e.g. VideoView, SurfaceView,
-             TextureView, etc. -->
-        <LinearLayout
-            android:id="@+id/fullscreen_content_controls"
+        android:gravity="center"
+        android:orientation="vertical">
+        <Button
+            android:id="@+id/show_photos_button"
+            style="?metaButtonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"
-            android:keepScreenOn="true"
-            android:orientation="vertical">
+            android:layout_weight="1"
+            android:textSize="@dimen/button_default_font_size"
+            android:text="@string/photos_button"
+            android:onClick="showPhotosActivity"/>
+
+        <Button
+            android:id="@+id/show_messages_button"
+            style="?metaButtonBarButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textSize="@dimen/button_default_font_size"
+            android:text="@string/messages_button"
+            android:layout_below="@id/show_photos_button"
+            android:onClick="showMessagesActivity"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
             <Button
-                android:id="@+id/show_photos_button"
-                style="?metaButtonBarButtonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:textSize="@dimen/button_font_size"
-                android:text="@string/photos_button"
-                android:onClick="showPhotosActivity"/>
-            <Button
-                android:id="@+id/show_messages_button"
                 style="?metaButtonBarButtonStyle"
+                android:layout_weight="1"
+                android:text="Settings"
+                android:onClick="showSettingsActivity"/>
+            <Button
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                style="?metaButtonBarButtonStyle"
                 android:layout_weight="1"
-                android:textSize="@dimen/button_font_size"
-                android:text="@string/messages_button"
-                android:layout_below="@id/show_photos_button"
-                android:onClick="showMessagesActivity"/>
+                android:text="Reset launcher"
+                android:onClick="resetLauncher"/>
         </LinearLayout>
-    </FrameLayout>
-
-    <!-- This FrameLayout insets its children based on system windows using
-         android:fitsSystemWindows. -->
-    <!--<FrameLayout-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:fitsSystemWindows="true">-->
-
-        <!--<LinearLayout-->
-            <!--android:id="@+id/fullscreen_content_controls"-->
-            <!--style="?metaButtonBarStyle"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_gravity="bottom|center_horizontal"-->
-            <!--android:background="@color/black_overlay"-->
-            <!--android:orientation="horizontal"-->
-            <!--tools:ignore="UselessParent">-->
-
-            <!---->
-
-        <!--</LinearLayout>-->
-    <!--</FrameLayout>-->
-
+    </LinearLayout>
 </FrameLayout>

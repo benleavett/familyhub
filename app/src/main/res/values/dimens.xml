@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="button_font_size">92sp</dimen>
-    <dimen name="arrow_button_font_size">150sp</dimen>
-    <dimen name="preview_metadata_font_size">48sp</dimen>
-    <dimen name="preview_text_font_size">64sp</dimen>
-    <dimen name="message_preview_padding">10sp</dimen>
+    <!-- Message activities -->
+    <dimen name="button_default_font_size">50dp</dimen>
+    <dimen name="message_view_metadata_font_size">24dp</dimen>
+    <dimen name="message_view_text_font_size">44dp</dimen>
+    <dimen name="message_view_padding">10dp</dimen>
+    <dimen name="message_view_metadata_padding">5dp</dimen>
+
+    <!-- Setting activities -->
+    <dimen name="setting_label_font_size">20dp</dimen>
+    <dimen name="setting_padding_item">15dp</dimen>
 </resources>

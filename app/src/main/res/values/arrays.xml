@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="speech_rate_options">
+        <item>Slowest</item>
+        <item>Slow</item>
+        <item>Normal</item>
+    </string-array>
+    
+    <string-array name="speech_rate_options_values">
+        <item>1.0</item>
+        <item>0.75</item>
+        <item>0.5</item>
+    </string-array>
+</resources>
