@@ -1,55 +1,52 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#fff"
+    android:gravity="center"
+    android:orientation="vertical"
     android:keepScreenOn="true"
     tools:context=".MainActivity">
+    <Button
+        android:id="@+id/show_photos_button"
+        style="?metaButtonBarButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:textSize="@dimen/button_large_font_size"
+        android:text="@string/photos_button"
+        android:enabled="false"
+        android:onClick="showPhotosActivity"/>
+
+    <Button
+        android:id="@+id/show_messages_button"
+        style="?metaButtonBarButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:textSize="@dimen/button_large_font_size"
+        android:text="@string/messages_button"
+        android:onClick="showMessagesActivity"/>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
         <Button
-            android:id="@+id/show_photos_button"
-            style="?metaButtonBarButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:textSize="@dimen/button_default_font_size"
-            android:text="@string/photos_button"
-            android:onClick="showPhotosActivity"/>
-
-        <Button
-            android:id="@+id/show_messages_button"
             style="?metaButtonBarButtonStyle"
+            android:textSize="@dimen/button_normal_font_size"
+            android:layout_weight="1"
+            android:text="@string/settings_button"
+            android:onClick="showSettingsActivity"/>
+        <Button
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            style="?metaButtonBarButtonStyle"
+            android:textSize="@dimen/button_normal_font_size"
             android:layout_weight="1"
-            android:textSize="@dimen/button_default_font_size"
-            android:text="@string/messages_button"
-            android:layout_below="@id/show_photos_button"
-            android:onClick="showMessagesActivity"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                style="?metaButtonBarButtonStyle"
-                android:layout_weight="1"
-                android:text="Settings"
-                android:onClick="showSettingsActivity"/>
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                style="?metaButtonBarButtonStyle"
-                android:layout_weight="1"
-                android:text="Reset launcher"
-                android:onClick="resetLauncher"/>
-        </LinearLayout>
+            android:text="@string/reset_launcher_button"
+            android:onClick="resetLauncher"/>
     </LinearLayout>
-</FrameLayout>
+</LinearLayout>

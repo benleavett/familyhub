@@ -2,25 +2,26 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.benjamjin.familyhub">
 
-    <uses-permission
-        android:name="android.permission.RECEIVE_SMS"
-        android:protectionLevel="signature" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.WRITE_SMS" />
+    <uses-permission android:name="android.permission.RECEIVE_MMS" />
 
-    <application
-        android:name=".MyApplication"
+    <application android:name=".MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme.NoActionBar">
+        android:theme="@style/AppTheme.NoActionBar"
+        android:fullBackupContent="true">
 
         <!-- Activities -->
 
-        <activity
-            android:name=".MainActivity"
+        <activity android:name=".MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
             android:label="@string/app_name"
             android:launchMode="singleTask">
             <intent-filter>
@@ -32,24 +33,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".messages.MessageSelectActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:parentActivityName=".MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.benjamjin.familyhub.MainActivity" />
-        </activity>
-
-        <activity
-            android:name=".messages.MessageViewActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:parentActivityName=".messages.MessageSelectActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".messages.MessageSelectActivity" />
-        </activity>
-
         <activity android:name=".SettingsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:parentActivityName=".MainActivity"
@@ -59,13 +42,68 @@
                 android:value=".MainActivity" />
         </activity>
 
-        <!-- Receivers -->
+        <activity android:name=".messages.InboxActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
 
-        <receiver android:name=".messages.SmsReceiver">
+        <activity android:name=".messages.ReplyActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".messages.InboxActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".messages.InboxActivity" />
+        </activity>
+
+        <!-- UNUSED -->
+        <activity android:name=".messages.ComposeSmsActivity" >
             <intent-filter>
-                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+                <action android:name="android.intent.action.SEND" />
+                <action android:name="android.intent.action.SENDTO" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="sms" />
+                <data android:scheme="smsto" />
+                <data android:scheme="mms" />
+                <data android:scheme="mmsto" />
+            </intent-filter>
+        </activity>
+
+        <!-- UNUSED -->
+        <receiver android:name=".messages.MmsReceiver"
+            android:permission="android.permission.BROADCAST_WAP_PUSH">
+            <intent-filter>
+                <action android:name="android.provider.Telephony.WAP_PUSH_DELIVER" />
+                <data android:mimeType="application/vnd.wap.mms-message" />
             </intent-filter>
         </receiver>
+
+        <!-- Receivers -->
+        <receiver android:name=".messages.SmsReceiver"
+            android:permission="android.permission.BROADCAST_SMS">
+            <intent-filter>
+                <action android:name="android.provider.Telephony.SMS_DELIVER" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Services -->
+        <service android:name=".messages.HeadlessSmsSendService"
+            android:permission="android.permission.SEND_RESPOND_VIA_MESSAGE"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.RESPOND_VIA_MESSAGE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="sms" />
+                <data android:scheme="smsto" />
+                <data android:scheme="mms" />
+                <data android:scheme="mmsto" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

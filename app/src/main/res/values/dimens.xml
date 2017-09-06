@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="button_normal_font_size">16dp</dimen>
+    <dimen name="button_large_font_size">50dp</dimen>
+
     <!-- Message activities -->
-    <dimen name="button_default_font_size">50dp</dimen>
     <dimen name="message_view_metadata_font_size">24dp</dimen>
     <dimen name="message_view_text_font_size">44dp</dimen>
     <dimen name="message_view_padding">10dp</dimen>

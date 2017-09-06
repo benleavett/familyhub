@@ -14,7 +14,7 @@
             android:defaultValue="true" />
         <ListPreference
             android:dependency="@string/sp_name_vocalisation_enabled"
-            android:key="pref_choose_speech_rate"
+            android:key="@string/sp_name_pref_choose_speech_rate"
             android:title="@string/choose_speech_rate_title"
             android:dialogTitle="@string/choose_speech_rate_dialog_title"
             android:summary="Change the speed at which words are spoken"
@@ -24,8 +24,16 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="Message replies"
+        android:title="Messages"
         android:persistent="false">
+        <ListPreference
+            android:key="@string/sp_name_pref_max_messages_from_contact"
+            android:title="Max messages to show per contact"
+            android:dialogTitle="Maximum per contact"
+            android:summary="Show this many messages per contact"
+            android:entries="@array/max_messages_per_contact_options"
+            android:entryValues="@array/max_messages_per_contact_options_values"
+            android:defaultValue="@dimen/max_messages_per_contact_options_default"/>
         <CheckBoxPreference
             android:key="@string/sp_name_enable_replies"
             android:title="Allow SMS replies"
@@ -36,17 +44,17 @@
             android:dependency="@string/sp_name_enable_replies"
             android:persistent="false">
             <EditTextPreference
-                android:key="pref_preset_reply_1"
-                android:title="@string/preset_reply_title_1"
-                android:defaultValue="@string/preset_reply_default_1" />
+                android:key="@string/sp_name_reply_A"
+                android:title="@string/title_reply_A"
+                android:defaultValue="@string/default_text_reply_A" />
             <EditTextPreference
-                android:key="pref_preset_reply_2"
-                android:title="@string/preset_reply_title_2"
-                android:defaultValue="@string/preset_reply_default_2" />
+                android:key="@string/sp_name_reply_B"
+                android:title="@string/title_reply_B"
+                android:defaultValue="@string/default_text_reply_B" />
             <EditTextPreference
-                android:key="pref_preset_reply_3"
-                android:title="@string/preset_reply_title_3"
-                android:defaultValue="@string/preset_reply_default_3" />
+                android:key="@string/sp_name_reply_C"
+                android:title="@string/title_reply_C"
+                android:defaultValue="@string/default_text_reply_C" />
         </PreferenceScreen>
     </PreferenceCategory>
 

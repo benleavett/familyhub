@@ -1,30 +1,20 @@
 package com.benjamjin.familyhub.messages;
 
-import android.util.Log;
-
 import java.util.HashMap;
-
-/**
- * Created by benjamin on 19/08/2017.
- */
 
 class AcceptedContacts {
 
-    private static AcceptedContacts mInstance;
-    private static HashMap<String, String> mAcceptedContacts = new HashMap<>();
+    private static final AcceptedContacts mInstance = new AcceptedContacts();
+
+    private HashMap<String, String> mAcceptedContacts = new HashMap<>();
 
     private AcceptedContacts() {
         load();
     }
 
-    protected static AcceptedContacts getInstance() {
-        if (mInstance == null) {
-            mInstance = new AcceptedContacts();
-        }
-        return mInstance;
-    }
+    static AcceptedContacts getInstance() { return mInstance; }
 
-    private static void load() {
+    private void load() {
         mAcceptedContacts.put("+447870757202", "Andrew");
         mAcceptedContacts.put("+44", "Richard");
         mAcceptedContacts.put("+447733024940", "Jenny");
@@ -34,11 +24,22 @@ class AcceptedContacts {
 //        Log.d(TAG, mAcceptedContacts.toString());
     }
 
-    protected static String getContactName(String phoneNumber) {
+    String getContactName(String phoneNumber) {
         return mAcceptedContacts.get(phoneNumber);
     }
 
-    protected static boolean isAcceptedContact(String phoneNumber) {
+    protected boolean isAcceptedContact(String phoneNumber) {
         return mAcceptedContacts.containsKey(phoneNumber);
+    }
+
+    void addContact(String phoneNumber, String friendlyName) {
+        mAcceptedContacts.put(phoneNumber.replace(" ", "").trim(), friendlyName);
+    }
+
+    void removeContact(String phoneNumber) {
+        if (mAcceptedContacts.remove(phoneNumber.replace(" ", "").trim()) == null) {
+            //FIXME throw exception
+//            throw new Exception("Failed to find (or remove) specified contact");
+        }
     }
 }

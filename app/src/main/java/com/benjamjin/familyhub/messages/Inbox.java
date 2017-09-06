@@ -1,107 +1,178 @@
 package com.benjamjin.familyhub.messages;
 
-import android.database.Cursor;
+import android.app.Activity;
+import android.content.Context;
+import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
+
+import com.benjamjin.familyhub.R;
 
 import java.util.LinkedList;
-
-/**
- * Created by benjamin on 19/08/2017.
- */
+import java.util.List;
 
 class Inbox {
+    private static final String TAG = Inbox.class.getSimpleName();
 
-    private static Inbox mInstance;
+    private static final Inbox mInstance = new Inbox();
 
-    private static LinkedList<BasicSms> inbox = null;
-    private static int mInboxIterator = -1;
-
-    static Inbox getInstance() {
-        if (mInstance == null) {
-            mInstance = new Inbox();
-        }
-        return mInstance;
-    }
+    private LinkedList<BasicSms> mMessages = new LinkedList<>();
+    private int mInboxIndex = -1;
 
     private Inbox() {}
+
+    static Inbox getInstance() { return mInstance; }
 
     /*
         Order of messages is:
         0 ..................... n
         Earliest message        Latest message
      */
-    static void initInboxFromCursor(Cursor cursor) {
-        if (inbox == null) {
-            inbox = new LinkedList<>();
+    void initInbox(Context context) {//ContentResolver contentResolver) {
+        Log.d(TAG, "Init");
+        OnInboxLoadedListener listener = (OnInboxLoadedListener)context;
 
-            if (cursor.moveToFirst()) {
-                do {
-                    BasicSms sms = new BasicSms();
-                    for (int i = 0; i < cursor.getColumnCount(); i++) {
-                        if (cursor.getColumnName(i).equals("body")) {
-                            sms.body = cursor.getString(i);
-                        } else if (cursor.getColumnName(i).equals("address")) {
-                            sms.senderAddress = cursor.getString(i);
-                        } else if (cursor.getColumnName(i).equals("date_sent")) {
-                            sms.timestampSent = cursor.getString(i);
-                        }
-                    }
+        if (mInboxIndex == -1) {
+            Log.d(TAG, "Init - actual");
+            mMessages.clear();
 
-                    if (AcceptedContacts.getInstance().isAcceptedContact(sms.senderAddress)) {
-                        inbox.push(sms);
-                        Log.d("BEN", "Family SMS: " + sms);
-                    }
-
-                } while (cursor.moveToNext());
-
-                resetInboxIterator();
-
-            } else {
-                Log.i("BEN", "No SMS");
-            }
+            collectSmsAndAddToInbox(context, listener);
         } else {
-            resetInboxIterator();
+            resetInboxIteratorToLatest();
+
+            listener.onInboxLoaded();
         }
     }
 
-    private static void resetInboxIterator() {
-        if (inbox.size() > 0) {
-            mInboxIterator = inbox.size() - 1;
+    void resetInboxIteratorToLatest() {
+        Log.d(TAG, "RESETTING ITERATOR");
+        if (mMessages.size() > 0) {
+//            mInboxIndex = 0;
+            mInboxIndex = mMessages.size() - 1;
         }
     }
 
-    static BasicSms getCurrentMessage() {
-        Log.d("BEN", mInboxIterator + "");
-        if (mInboxIterator >= 0) {
-            return inbox.get(mInboxIterator);
+    BasicSms getCurrentMessage() {
+        if (mInboxIndex >= 0) {
+            return mMessages.get(mInboxIndex);
         } else {
             return null;
         }
     }
 
-    static BasicSms moveCursorToLaterMessage() {
+    /**
+     *
+     * @return The message if a later message exists, otherwise null.
+     */
+    BasicSms moveCursorToLaterMessage() {
         if (hasLaterMessage()) {
-            mInboxIterator++;
+            mInboxIndex++;
+            Log.d(TAG, "MOVING ITERATOR LATER " + mInboxIndex);
             return getCurrentMessage();
         } else {
             return null;
         }
     }
 
-    static BasicSms moveCursorToEarlierMessage() {
+    /**
+     *
+     * @return The message if an earlier message exists, otherwise null.
+     */
+    BasicSms moveCursorToEarlierMessage() {
         if (hasEarlierMessage()) {
-            mInboxIterator--;
+            mInboxIndex--;
+            Log.d(TAG, "MOVING ITERATOR EARLIER " + mInboxIndex);
             return getCurrentMessage();
         } else {
             return null;
         }
     }
 
-    static boolean hasLaterMessage() {
-        return mInboxIterator+1 < inbox.size();
+    boolean hasLaterMessage() {
+        return mInboxIndex+1 < mMessages.size();
     }
 
-    static boolean hasEarlierMessage() {
-        return mInboxIterator > 0;
+    boolean hasEarlierMessage() {
+        return mInboxIndex > 0;
+    }
+
+    boolean handleNewSmsReceived(BasicSms sms) {
+        final String friendlyName = AcceptedContacts.getInstance().getContactName(sms.senderAddress);
+
+        if (friendlyName != null) {
+            sms.friendlySenderName = friendlyName;
+
+            // Add to end of list (latest messages at end of list)
+            mMessages.add(sms);
+
+            Log.d(TAG, "ADDED new SMS to local store " + sms);
+            return true;
+        }
+        else {
+            Log.d(TAG, "Found new SMS from invalid contact " + sms);
+            return false;
+        }
+    }
+
+    void markMessageAsRead(final Activity activity, final BasicSms sms) {
+        if (sms.isRead) {
+            return;
+        }
+
+        final int inboxIndex = mInboxIndex;
+        new AsyncTask<Void, Void, Boolean>() {
+            @Override
+            protected Boolean doInBackground(Void... a) {
+//        final String msgId = getMsgIdFromSmsDatabase(contentResolver, currentSms);
+                if (!sms.isRead) {
+                    if (!SmsHelper.markMessageAsRead(activity.getApplicationContext(), sms)) {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+
+            @Override
+            protected void onPostExecute(Boolean isSuccess) {
+                if (isSuccess) {
+                    sms.isRead = true;
+                    mMessages.set(inboxIndex, sms);
+
+                    // If we're still looking at the message we just marked as 'read'...
+                    if (mInboxIndex == inboxIndex) {
+                        // Show unread state if appropriate
+                        TextView isUnreadState = activity.findViewById(R.id.message_status);
+                        isUnreadState.setVisibility(View.GONE);
+                    }
+
+                    Log.d(TAG, "Marked message as read. " + sms.id);
+                } else {
+                    Log.e(TAG, "Failed to set message as read. " + sms.id);
+                }
+            }
+        }.execute();
+    }
+
+    private void collectSmsAndAddToInbox(final Context context, OnInboxLoadedListener listener) {
+        new InboxLoadTask(listener) {
+            @Override
+            protected List<BasicSms> doInBackground(Void... voids) {
+                return SmsHelper.getAllMessages(context);
+            }
+
+            protected void onPostExecute(List<BasicSms> result) {
+                setInboxContents(result);
+
+                resetInboxIteratorToLatest();
+
+                super.onPostExecute(result);
+            }
+        }.execute();
+    }
+
+    private void setInboxContents(List<BasicSms> result) {
+        mMessages = new LinkedList<>(result);
     }
 }

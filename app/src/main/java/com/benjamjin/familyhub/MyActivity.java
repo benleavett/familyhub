@@ -1,19 +1,32 @@
 package com.benjamjin.familyhub;
 
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+import android.Manifest;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Toast;
 
-/**
- * Created by benjamin on 09/08/2017.
- */
+import java.util.HashMap;
 
 public class MyActivity extends AppCompatActivity {
 
-    protected void vocaliseText(String text) {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        if (sp.getBoolean(getString(R.string.sp_name_vocalisation_enabled), false)) {
-            MyApplication.getInstance().vocaliseText(text);
+    public void showPreviousActivity(View v) {
+        finish();
+    }
+
+    public boolean handleRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        int index = 0;
+        HashMap<String, Integer> PermissionsMap = new HashMap<>();
+        for (String permission : permissions) {
+            PermissionsMap.put(permission, grantResults[index]);
+            index++;
+        }
+
+        if (PermissionsMap.get(Manifest.permission.RECEIVE_SMS) != 0 ||
+                PermissionsMap.get(Manifest.permission.READ_SMS) != 0) {
+            Toast.makeText(this, "SMS permissions are required", Toast.LENGTH_SHORT).show();
+            return false;
+        } else {
+            return true;
         }
     }
 }

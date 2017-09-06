@@ -1,20 +1,16 @@
 package com.benjamjin.familyhub;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Locale;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
 import android.speech.tts.UtteranceProgressListener;
 import android.util.Log;
 
-/**
- * Created by benjamin on 09/08/2017.
- */
-
-public class VocaliserService implements OnInitListener {
+class VocaliserService implements OnInitListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String TAG = VocaliserService.class.getSimpleName();
 
@@ -22,20 +18,25 @@ public class VocaliserService implements OnInitListener {
     private boolean mIsTTSReady = false;
     private boolean mIsEnableVocalisation;
     private Locale mCachedLocalePref;
+    private final Context mContext;
 
-    public VocaliserService(Context context) {
+    VocaliserService(Context context) {
         this(context, Locale.getDefault());
     }
 
-    public VocaliserService(Context context, Locale userLocalePref) {
+    private VocaliserService(Context context, Locale userLocalePref) {
         mTTS = new TextToSpeech(context, this);
+        mContext = context;
         mIsEnableVocalisation = false;
 
         Log.d(TAG, "User locale: " + userLocalePref);
         mCachedLocalePref = userLocalePref;
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        sp.registerOnSharedPreferenceChangeListener(this);
     }
 
-    public void doVocalise(String text) {
+    void doVocalise(String text) {
         if (mIsTTSReady) {
             if (mIsEnableVocalisation) {
                 Log.d(TAG, "Vocalising: " + text);
@@ -47,18 +48,13 @@ public class VocaliserService implements OnInitListener {
         }
     }
 
-    public void doVocalise(String text, UtteranceProgressListener progressListener) {
+    void doVocalise(String text, UtteranceProgressListener progressListener) {
         mTTS.setOnUtteranceProgressListener(progressListener);
         doVocalise(text);
     }
 
-    public void stopVocalising() {
+    void cancelVocalising() {
         mTTS.stop();
-    }
-
-    public void setEnableVocalisation(boolean isEnable) {
-        mIsEnableVocalisation = isEnable;
-        Log.i(TAG, String.format("Vocalisation %s", isEnable ? "enabled" : "disabled"));
     }
 
     @Override
@@ -70,28 +66,43 @@ public class VocaliserService implements OnInitListener {
         }
 
         mTTS.setLanguage(mCachedLocalePref);
-        // Normal rate is 1.0f, this slows it down
-        mTTS.setSpeechRate(0.75f);
     }
 
-    public void setLocale(String localeString) {
-        Log.i(TAG, String.format("Setting vocalisation locale to %s", localeString));
-        mCachedLocalePref = getLocaleFromString(localeString);
-        mTTS.setLanguage(mCachedLocalePref);
-    }
-
-    private static Locale getLocaleFromString(String localeString) {
-        List<String> toks = Arrays.asList(localeString.split("_"));
-        if (toks.size() == 2) {
-            return new Locale(toks.get(0), toks.get(1));
-        }
-        else {
-            Log.d(TAG, "Couldn't find requested locale so setting to default");
-            return Locale.getDefault();
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sp, String spKey) {
+        if (spKey.equals(mContext.getString(R.string.sp_name_pref_choose_speech_rate))) {
+            setSpeechRate(sp.getString(spKey, ""));
+        } else if (spKey.equals(mContext.getString(R.string.sp_name_vocalisation_enabled))) {
+            setEnableVocalisation(sp.getBoolean(spKey, false));
         }
     }
 
-    private static List<Locale> getSupportedLocales() {
-        return Arrays.asList(Locale.getAvailableLocales());
+    private void setEnableVocalisation(boolean isEnable) {
+        mIsEnableVocalisation = isEnable;
+        Log.i(TAG, String.format("Vocalisation %s", isEnable ? "enabled" : "disabled"));
     }
+
+    private void setSpeechRate(String speechRateStr) {
+        float rate = Float.parseFloat(speechRateStr);
+        mTTS.setSpeechRate(rate);
+
+        Log.d(TAG, "Speech rate: " + rate);
+    }
+
+//    void refreshLocaleFromPrefs(String localeString) {
+//        Log.i(TAG, String.format("Setting vocalisation locale to %s", localeString));
+//        mCachedLocalePref = getLocaleFromString(localeString);
+//        mTTS.setLanguage(mCachedLocalePref);
+//    }
+//
+//    private static Locale getLocaleFromString(String localeString) {
+//        List<String> toks = Arrays.asList(localeString.split("_"));
+//        if (toks.size() == 2) {
+//            return new Locale(toks.get(0), toks.get(1));
+//        }
+//        else {
+//            Log.d(TAG, "Couldn't find requested locale so setting to default");
+//            return Locale.getDefault();
+//        }
+//    }
 }

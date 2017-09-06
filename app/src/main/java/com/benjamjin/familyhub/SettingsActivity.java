@@ -3,9 +3,8 @@ package com.benjamjin.familyhub;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import android.support.v7.app.AppCompatActivity;
 
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends MyActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -20,6 +19,16 @@ public class SettingsActivity extends AppCompatActivity {
 
         setTitle(getString(R.string.app_name) + " settings");
     }
+
+    //FIXME doesn't work (so commented out)
+//    @Override
+//    public boolean onPreferenceClick(Preference preference) {
+//        Log.d("BEN", "HERE " + preference.getKey());
+//        if (preference.getKey().equals(getString(R.string.sp_name_pref_choose_speech_rate))) {
+//            doVocalise(getString(R.string.choose_speech_rate_title) + " selected");
+//        }
+//        return false;
+//    }
 
     public static class SettingsFragment extends PreferenceFragment {
         @Override

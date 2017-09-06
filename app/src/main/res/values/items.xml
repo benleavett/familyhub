@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item name="speech_rate_options_default" format="float" type="dimen" >1.0</item>
+    <item name="speech_rate_options_default" format="float" type="dimen">1.0</item>
+    <item name="max_messages_per_contact_options_default" format="integer" type="dimen">-1</item>
 </resources>
