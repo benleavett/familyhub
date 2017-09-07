@@ -5,7 +5,7 @@ import android.os.AsyncTask;
 import java.util.List;
 
 class InboxLoadTask extends AsyncTask<Void, Void, List<BasicSms>> {
-    private OnInboxLoadedListener mListener;
+    private final OnInboxLoadedListener mListener;
 
     InboxLoadTask(OnInboxLoadedListener listener) {
         mListener = listener;

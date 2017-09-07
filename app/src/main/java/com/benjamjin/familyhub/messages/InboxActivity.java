@@ -188,7 +188,7 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
         }
     }
 
-    protected void populateMessageViewLayout(final BasicSms sms) {
+    private void populateMessageViewLayout(final BasicSms sms) {
         setMessageStatusIndicator(sms);
 
         // Set sender name
@@ -218,9 +218,9 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
         btn.setEnabled(isEnabled);
     }
 
-    private boolean isMessageSelectorButtonEnabled(int id) {
+    private boolean isMessageSelectorButtonDisabled(int id) {
         Button btn = (Button) findViewById(id);
-        return btn.isEnabled();
+        return !btn.isEnabled();
     }
 
     private static String getPrettyStringFromTimestamp(Long timestamp) {
@@ -228,7 +228,7 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
     }
 
     public void previewLaterMessage(View v) {
-        if (!isMessageSelectorButtonEnabled(R.id.select_earlier_message_button)) {
+        if (isMessageSelectorButtonDisabled(R.id.select_earlier_message_button)) {
             setMessageSelectorButtonEnabled(true, R.id.select_earlier_message_button);
         }
 
@@ -239,7 +239,7 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
     }
 
     public void previewEarlierMessage(View v) {
-        if (!isMessageSelectorButtonEnabled(R.id.select_later_message_button)) {
+        if (isMessageSelectorButtonDisabled(R.id.select_later_message_button)) {
             setMessageSelectorButtonEnabled(true, R.id.select_later_message_button);
         }
 

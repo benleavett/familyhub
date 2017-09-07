@@ -14,10 +14,10 @@ class VocaliserService implements OnInitListener, SharedPreferences.OnSharedPref
 
     private static final String TAG = VocaliserService.class.getSimpleName();
 
-    private TextToSpeech mTTS;
+    private final TextToSpeech mTTS;
     private boolean mIsTTSReady = false;
     private boolean mIsEnableVocalisation;
-    private Locale mCachedLocalePref;
+    private final Locale mCachedLocalePref;
     private final Context mContext;
 
     VocaliserService(Context context) {
@@ -57,8 +57,11 @@ class VocaliserService implements OnInitListener, SharedPreferences.OnSharedPref
         if (mIsTTSReady) {
             if (mIsEnableVocalisation) {
                 Log.d(TAG, "Vocalising: " + text);
-                //FIXME unsupported in API 19
-                mTTS.speak(text, TextToSpeech.QUEUE_ADD, null, null);
+                if (Util.isLollipopOrAbove()) {
+                    mTTS.speak(text, TextToSpeech.QUEUE_ADD, null, null);
+                } else {
+                    mTTS.speak(text, TextToSpeech.QUEUE_ADD, null);
+                }
             }
         }
         else {

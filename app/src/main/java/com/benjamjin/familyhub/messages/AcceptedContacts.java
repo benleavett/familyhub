@@ -6,7 +6,7 @@ class AcceptedContacts {
 
     private static final AcceptedContacts mInstance = new AcceptedContacts();
 
-    private HashMap<String, String> mAcceptedContacts = new HashMap<>();
+    private final HashMap<String, String> mAcceptedContacts = new HashMap<>();
 
     private AcceptedContacts() {
         load();
@@ -20,26 +20,24 @@ class AcceptedContacts {
         mAcceptedContacts.put("+447733024940", "Jenny");
         mAcceptedContacts.put("+447754741953", "Ben");
         mAcceptedContacts.put("+4915737625757", "Ruth");
-
-//        Log.d(TAG, mAcceptedContacts.toString());
     }
 
     String getContactName(String phoneNumber) {
         return mAcceptedContacts.get(phoneNumber);
     }
 
-    protected boolean isAcceptedContact(String phoneNumber) {
+    boolean isAcceptedContact(String phoneNumber) {
         return mAcceptedContacts.containsKey(phoneNumber);
     }
 
-    void addContact(String phoneNumber, String friendlyName) {
-        mAcceptedContacts.put(phoneNumber.replace(" ", "").trim(), friendlyName);
-    }
-
-    void removeContact(String phoneNumber) {
-        if (mAcceptedContacts.remove(phoneNumber.replace(" ", "").trim()) == null) {
-            //FIXME throw exception
-//            throw new Exception("Failed to find (or remove) specified contact");
-        }
-    }
+//    void addContact(String phoneNumber, String friendlyName) {
+//        mAcceptedContacts.put(phoneNumber.replace(" ", "").trim(), friendlyName);
+//    }
+//
+//    void removeContact(String phoneNumber) {
+//        if (mAcceptedContacts.remove(phoneNumber.replace(" ", "").trim()) == null) {
+//            //FIXME throw exception
+////            throw new Exception("Failed to find (or remove) specified contact");
+//        }
+//    }
 }

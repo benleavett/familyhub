@@ -32,8 +32,6 @@ public class MainActivity extends MyActivity {
 
         //TODO check if SMS function is enabled
         getMyApplication().verifySmsPermissions(this);
-
-        promptToMakeHome();
     }
 
     @Override
@@ -47,7 +45,7 @@ public class MainActivity extends MyActivity {
         if (!hasDeviceActiveSim()) {
             new AlertDialog.Builder(this)
                     .setTitle(getTitle())
-                    .setMessage(String.format(getString(R.string.dialog_text_no_sim_card), getString(R.string.app_name)))
+                    .setMessage(getString(R.string.dialog_text_no_sim_card))
                     .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -57,6 +55,8 @@ public class MainActivity extends MyActivity {
                     })
                     .show();
         }
+
+        promptToMakeHome();
     }
 
     @Override
@@ -113,8 +113,6 @@ public class MainActivity extends MyActivity {
 //    }
 
     public void resetLauncher(View v) {
-        Util.log("Resetting");
-
         if (Util.isDefault(this)) {
             getPackageManager().clearPackagePreferredActivities(getPackageName());
             startActivity(Util.homeScreenIntent());
@@ -122,17 +120,13 @@ public class MainActivity extends MyActivity {
         }
     }
 
-    public void promptToMakeHome() {
-        Util.log("Resetting");
-        if (Util.noDefaultSet(this) || Util.isDefault(this)) {
-//            startActivity(Util.homeScreenIntent());
-//            finish();
-        } else if (Util.isLollipopOrAbove()) {
-            Util.log("Resetting", "lollipop");
-            chooseHomeScreenLollipop();
-        } else {
-            Util.log("Resetting", "default");
-            chooseHomeScreenDefault();
+    private void promptToMakeHome() {
+        if (!Util.noDefaultSet(this) && !Util.isDefault(this)) {
+            if (Util.isLollipopOrAbove()) {
+                chooseHomeScreenLollipop();
+            } else {
+                chooseHomeScreenDefault();
+            }
         }
     }
 

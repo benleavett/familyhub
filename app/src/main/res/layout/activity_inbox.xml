@@ -30,16 +30,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="@dimen/message_view_metadata_font_size"
-        android:padding="@dimen/message_view_metadata_padding"
-        android:text="sender"/>
+        android:padding="@dimen/message_view_metadata_padding"/>
     <TextView
         android:id="@+id/message_datetime_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="@dimen/message_view_metadata_font_size"
         android:paddingLeft="@dimen/message_view_metadata_padding"
-        android:paddingRight="@dimen/message_view_metadata_padding"
-        android:text="time"/>
+        android:paddingRight="@dimen/message_view_metadata_padding"/>
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -49,8 +47,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:textSize="@dimen/message_view_text_font_size"
-            android:padding="@dimen/message_view_padding"
-            android:text="message" />
+            android:padding="@dimen/message_view_padding" />
     </ScrollView>
     <Button
         android:id="@+id/reply_button"

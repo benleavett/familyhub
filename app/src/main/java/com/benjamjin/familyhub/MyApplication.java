@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MyApplication extends Application {
-    private static String[] SMS_PERMISSIONS = { Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_SMS };
+    private static final String[] SMS_PERMISSIONS = { Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_SMS };
 
     private VocaliserService mVocaliser;
     private Boolean mIsFullscreen = null;

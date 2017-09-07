@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
 import android.util.Log;
@@ -23,23 +24,28 @@ public class SmsReceiver extends BroadcastReceiver {
 
             if (extras != null) {
                 Object[] pdus = (Object[]) extras.get(SMS_BUNDLE);
-                final SmsMessage[] message = new SmsMessage[pdus.length];
+                if (pdus != null) {
+                    final SmsMessage[] message = new SmsMessage[pdus.length];
 
-                for (int i = 0; i < pdus.length; i++) {
-                    String format = extras.getString("format");
-                    message[i] = SmsMessage.createFromPdu((byte[])pdus[i]);
-//                    message[i] = SmsMessage.createFromPdu((byte[])pdus[i], format);
-                }
+                    for (int i = 0; i < pdus.length; i++) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            String format = extras.getString("format");
+                            message[i] = SmsMessage.createFromPdu((byte[])pdus[i], format);
+                        } else {
+                            message[i] = SmsMessage.createFromPdu((byte[]) pdus[i]);
+                        }
+                    }
 
-                if (message.length > -1) {
-                    Log.d(TAG, String.format("SMS received (length: %d): %s", message.length, message[0].getMessageBody()));
+                    if (message.length > -1) {
+                        Log.d(TAG, String.format("SMS received (length: %d): %s", message.length, message[0].getMessageBody()));
 
 //                    InboxActivity.getInstance().updateInbox(buildBasicSms(message));
-                    BasicSms sms = buildBasicSms(message);
-                    Uri uriResult = SmsHelper.insertMessageToInbox(context, sms.senderAddress, sms.body, sms.timestampSent);
-                    Log.d(TAG, "Store SMS: " + uriResult);
+                        BasicSms sms = buildBasicSms(message);
+                        Uri uriResult = SmsHelper.insertMessageToInbox(context, sms.senderAddress, sms.body, sms.timestampSent);
+                        Log.d(TAG, "Store SMS: " + uriResult);
 
-                    notifyActivityOfNewSms(context, uriResult, sms);
+                        notifyActivityOfNewSms(context, uriResult, sms);
+                    }
                 }
             }
         }

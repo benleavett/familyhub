@@ -61,31 +61,15 @@ class Inbox {
         }
     }
 
-    /**
-     *
-     * @return The message if a later message exists, otherwise null.
-     */
-    BasicSms moveCursorToLaterMessage() {
+    void moveCursorToLaterMessage() {
         if (hasLaterMessage()) {
             mInboxIndex++;
-            Log.d(TAG, "MOVING ITERATOR LATER " + mInboxIndex);
-            return getCurrentMessage();
-        } else {
-            return null;
         }
     }
 
-    /**
-     *
-     * @return The message if an earlier message exists, otherwise null.
-     */
-    BasicSms moveCursorToEarlierMessage() {
+    void moveCursorToEarlierMessage() {
         if (hasEarlierMessage()) {
             mInboxIndex--;
-            Log.d(TAG, "MOVING ITERATOR EARLIER " + mInboxIndex);
-            return getCurrentMessage();
-        } else {
-            return null;
         }
     }
 

@@ -23,11 +23,11 @@ public class MyActivity extends AppCompatActivity {
         return (MyApplication)getApplication();
     }
 
-    public void showPreviousActivity(View v) {
+    protected void showPreviousActivity(View v) {
         finish();
     }
 
-    public boolean handleRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    protected boolean handleRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         int index = 0;
         HashMap<String, Integer> PermissionsMap = new HashMap<>();
         for (String permission : permissions) {
@@ -49,7 +49,7 @@ public class MyActivity extends AppCompatActivity {
         return sp.getBoolean(getString(R.string.sp_name_enable_fullscreen), true);
     }
 
-    public void setWindowFullscreenState() {
+    private void setWindowFullscreenState() {
         if (isFullscreenEnabled()) {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         } else {
