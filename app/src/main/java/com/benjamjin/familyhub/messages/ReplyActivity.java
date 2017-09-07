@@ -1,18 +1,23 @@
 package com.benjamjin.familyhub.messages;
 
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.benjamjin.familyhub.MyActivity;
 import com.benjamjin.familyhub.R;
+import com.benjamjin.familyhub.Util;
 
 import java.util.ArrayList;
 
 public class ReplyActivity extends MyActivity {
+
+    private static final String TAG = ReplyActivity.class.getSimpleName();
 
     final static String MESSAGE_REPLY_INTENT_ACTION_NAME = "com.benjamjin.familyhub.MESSAGE_REPLY_INTENT_ACTION_NAME";
     private String mSenderAddress;
@@ -42,6 +47,8 @@ public class ReplyActivity extends MyActivity {
         replies.add(sp.getString(getString(R.string.sp_name_reply_B), null));
         replies.add(sp.getString(getString(R.string.sp_name_reply_C), null));
 
+        Log.d(TAG, replies + "");
+
         int replyBtnsUsed = 0;
         for (String reply : replies) {
             if (reply != null) {
@@ -70,8 +77,12 @@ public class ReplyActivity extends MyActivity {
             return;
         }
 
-        //TODO send SMS
-        Log.d("BEN", String.format("Sending message \"%s\" to %s", message, mSenderAddress));
+        Uri uri = SmsHelper.insertMessageToOutbox(this, mSenderAddress, message);
+
+        Util.log(TAG, "Placed message in outbox", uri);
+
+        SmsManager smsManager = SmsManager.getDefault();
+        smsManager.sendTextMessage(mSenderAddress, null, message, null, null);
     }
 
     private boolean verifyRequiredSmsFields() {

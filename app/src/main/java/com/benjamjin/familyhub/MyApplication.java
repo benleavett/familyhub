@@ -3,7 +3,9 @@ package com.benjamjin.familyhub;
 import android.Manifest;
 import android.app.Activity;
 import android.app.Application;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 
@@ -14,12 +16,19 @@ public class MyApplication extends Application {
     private static String[] SMS_PERMISSIONS = { Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_SMS };
 
     private VocaliserService mVocaliser;
+    private Boolean mIsFullscreen = null;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
         mVocaliser = new VocaliserService(this);
+
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, true);
+
+        //FIXME need to unregister at some point (needs moving to an Activity)
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        sp.registerOnSharedPreferenceChangeListener(mVocaliser);
     }
 
     public void doVocalise(String text) {

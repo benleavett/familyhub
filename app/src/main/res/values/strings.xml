@@ -6,6 +6,9 @@
     <string name="messages_button">Messages</string>
     <string name="settings_button">Settings</string>
     <string name="reset_launcher_button">Reset launcher</string>
+    <string name="dialog_text_change_home_default">Your default Home screen is \"%s\".\n\nTap OK, then \"Clear Defaults\" to choose a new default.</string>
+    <string name="dialog_text_change_home_lollipop_above" formatted="false">Your default Home screen is \"%s\".\n\nTap OK, then \"Home app\" to choose a new default. Then re-open %s.</string>
+    <string name="dialog_text_no_sim_card">A SIM card is required to run %s</string>
 
     <!-- Messages activities -->
     <string name="show_earlier_message_button">Older</string>
@@ -18,25 +21,30 @@
     <string name="reply_button_text">Reply</string>
 
     <!-- SettingsActivity -->
-    <string name="sp_name_vocalisation_enabled">pref_vocalisation_enabled</string>
+    <string name="sp_category_title_application">Application</string>
+    <string name="sp_title_enable_fullscreen">Fullscreen mode</string>
+
+    <string name="sp_category_title_vocalisation">Speech</string>
     <string name="sp_title_vocalisation_enabled">Speak messages selected</string>
     <string name="choose_speech_rate_title">Speech rate</string>
     <string name="choose_speech_rate_dialog_title">Choose speech rate</string>
 
-    <string name="sp_name_pref_max_messages_from_contact">pref_max_messages_from_contact</string>
-
-    <string name="sp_name_pref_choose_speech_rate">pref_choose_speech_rate</string>
-    <string name="sp_name_enable_replies">pref_enable_replies</string>
+    <string name="sp_category_title_messages">Messages</string>
     <string name="sp_category_title_preset_reply">Customise preset replies</string>
-    <string name="sp_name_reply_A">pref_reply_A</string>
-    <string name="sp_name_reply_B">pref_reply_B</string>
-    <string name="sp_name_reply_C">pref_reply_C</string>
     <string name="title_reply_A">Reply #1</string>
     <string name="title_reply_B">Reply #2</string>
     <string name="title_reply_C">Reply #3</string>
-    <string name="default_text_reply_A">foo 1</string>
-    <string name="default_text_reply_B">foo 2</string>
-    <string name="default_text_reply_C">foo 3</string>
+    <string name="default_text_reply_A">Preset 1</string>
+    <string name="default_text_reply_B">Preset 2</string>
+    <string name="default_text_reply_C">Preset 3</string>
 
-
+    <!-- Shared prefs keys -->
+    <string name="sp_name_enable_fullscreen">pref_fullscreen_mode_enabled</string>
+    <string name="sp_name_vocalisation_enabled">pref_vocalisation_enabled</string>
+    <string name="sp_name_pref_choose_speech_rate">pref_choose_speech_rate</string>
+    <string name="sp_name_pref_max_messages_from_contact">pref_max_messages_from_contact</string>
+    <string name="sp_name_enable_replies">pref_enable_replies</string>
+    <string name="sp_name_reply_A">pref_reply_A</string>
+    <string name="sp_name_reply_B">pref_reply_B</string>
+    <string name="sp_name_reply_C">pref_reply_C</string>
 </resources>

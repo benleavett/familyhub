@@ -3,10 +3,12 @@ package com.benjamjin.familyhub.messages;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.res.ResourcesCompat;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
 import android.util.Log;
@@ -18,6 +20,7 @@ import android.widget.TextView;
 import com.benjamjin.familyhub.MyActivity;
 import com.benjamjin.familyhub.MyApplication;
 import com.benjamjin.familyhub.R;
+import com.benjamjin.familyhub.Util;
 
 import org.ocpsoft.prettytime.PrettyTime;
 
@@ -36,7 +39,7 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
         setContentView(R.layout.activity_inbox);
 
         // Check we have right permissions
-        if (((MyApplication) getApplication()).verifySmsPermissions(this)) {
+        if (getMyApplication().verifySmsPermissions(this)) {
             Inbox.getInstance().initInbox(this);
         }
 
@@ -56,6 +59,40 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
 
         // Add new SMS but don't update current selected message (as user may be viewing another SMS)
         handleNewSmsReceived(intent, false);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (super.handleRequestPermissionsResult(requestCode, permissions, grantResults)) {
+            Inbox.getInstance().initInbox(this);
+        } else {
+            finish();
+        }
+    }
+
+    @Override
+    public boolean onLongClick(View view) {
+        if (view.getId() == R.id.message_body_view) {
+            TextView messageBody = (TextView) view;
+            getMyApplication().doVocalise(messageBody.getText().toString());
+            //FIXME add sender's name (eg "From Ben. <message>")
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public void showPreviousActivity(View v) {
+        markCurrentMessageAsRead();
+
+        super.showPreviousActivity(v);
+    }
+
+    @Override
+    public void onInboxLoaded() {
+        Log.d(TAG, "Inbox loaded");
+        viewCurrentMessage();
     }
 
     private void handleNewSmsReceived(Intent intent, boolean isResetCurrentMessageToLatest) {
@@ -80,8 +117,6 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
 
                 notifyUserNewSms();
             }
-        } else {
-            Log.d(TAG, "NOPE");
         }
     }
 
@@ -94,15 +129,6 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
     private void setLongPressListeners() {
         TextView body = (TextView) findViewById(R.id.message_body_view);
         body.setOnLongClickListener(this);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (super.handleRequestPermissionsResult(requestCode, permissions, grantResults)) {
-            Inbox.getInstance().initInbox(this);
-        } else {
-            finish();
-        }
     }
 
     private void viewCurrentMessage() {
@@ -147,7 +173,11 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
         if (!sms.isRead) {
             messageStatusView.setText(getString(R.string.message_unread_text));
             messageStatusView.setVisibility(View.VISIBLE);
-            messageStatusView.setBackground(getDrawable(R.drawable.unread_state_background));
+            if (Util.isLollipopOrAbove()) {
+                messageStatusView.setBackground(getDrawable(R.drawable.unread_state_background));
+            } else {
+                ResourcesCompat.getDrawable(getResources(), R.drawable.unread_state_background, null);
+            }
         }/* else if (sms.hasReplied) {
         //TODO handle 'has replied' message state
             messageStatusView.setText(getString(R.string.message_replied_text));
@@ -236,36 +266,11 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
         replyBtn.setVisibility(isResponseEnabled ? View.VISIBLE : View.GONE);
     }
 
-    @Override
-    public boolean onLongClick(View view) {
-        if (view.getId() == R.id.message_body_view) {
-            TextView messageBody = (TextView) view;
-            ((MyApplication)getApplication()).doVocalise(messageBody.getText().toString());
-            //FIXME add sender's name (eg "From Ben. <message>")
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    @Override
-    public void showPreviousActivity(View v) {
-        markCurrentMessageAsRead();
-
-        super.showPreviousActivity(v);
-    }
-
     public void showReplyActivity(View v) {
         Intent intent = new Intent(this, ReplyActivity.class);
         intent.setAction(ReplyActivity.MESSAGE_REPLY_INTENT_ACTION_NAME);
         intent.putExtra("senderAddress", Inbox.getInstance().getCurrentMessage().senderAddress);
         startActivity(intent);
-    }
-
-    @Override
-    public void onInboxLoaded() {
-        Log.d(TAG, "Inbox loaded");
-        viewCurrentMessage();
     }
 }
 

@@ -2,11 +2,15 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--<PreferenceCategory-->
-        <!--android:title="Modes available">-->
+        <!--android:title="@string/sp_category_title_application">-->
+        <!--<CheckBoxPreference-->
+            <!--android:key="@string/sp_name_enable_fullscreen"-->
+            <!--android:title="@string/sp_title_enable_fullscreen"-->
+            <!--android:defaultValue="true" />-->
     <!--</PreferenceCategory>-->
 
     <PreferenceCategory
-        android:title="Speech"
+        android:title="@string/sp_category_title_vocalisation"
         android:persistent="false">
         <CheckBoxPreference
             android:key="@string/sp_name_vocalisation_enabled"
@@ -24,7 +28,7 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="Messages"
+        android:title="@string/sp_category_title_messages"
         android:persistent="false">
         <ListPreference
             android:key="@string/sp_name_pref_max_messages_from_contact"

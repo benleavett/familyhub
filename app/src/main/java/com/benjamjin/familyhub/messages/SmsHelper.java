@@ -9,6 +9,7 @@ import android.provider.Telephony;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 class SmsHelper {
@@ -31,7 +32,7 @@ class SmsHelper {
         cv.put(Telephony.Sms.Inbox.BODY, body);
         cv.put(Telephony.Sms.Inbox.DATE_SENT, timestamp);
 
-        return contentResolver.insert(Telephony.Sms.Inbox.CONTENT_URI, cv);
+        return contentResolver.insert(Telephony.Sms.CONTENT_URI, cv);
     }
 
     static boolean markMessageAsRead(Context context, final BasicSms sms) {
@@ -47,14 +48,14 @@ class SmsHelper {
                 Telephony.Sms.BODY);
         String[] selectionArgs = {sms.senderAddress, sms.timestampSent.toString(), sms.body};
 
-        int numRowsUpdates = contentResolver.update(Telephony.Sms.Inbox.CONTENT_URI, values, selection, selectionArgs);
+        int numRowsUpdates = contentResolver.update(Telephony.Sms.CONTENT_URI, values, selection, selectionArgs);
         Log.d(TAG, "Rows updated: " + numRowsUpdates);
         return numRowsUpdates == 1;
     }
 
     private static Cursor getContentCursorForAllMessages(Context context) {
         String sortOrder = Telephony.Sms.DATE_SENT + " ASC";
-        return context.getContentResolver().query(Telephony.Sms.Inbox.CONTENT_URI, ALL_SMS_MESSAGES_PROJECTION, null, null, sortOrder);
+        return context.getContentResolver().query(Telephony.Sms.CONTENT_URI, ALL_SMS_MESSAGES_PROJECTION, null, null, sortOrder);
     }
 
 //    private static Cursor getContentCursorForMessage(Context context, BasicSms sms) {
@@ -64,7 +65,7 @@ class SmsHelper {
 //                Telephony.Sms.BODY);
 //        String[] selectionArgs = {sms.senderAddress, sms.timestampSent.toString(), sms.body};
 //
-//        return context.getContentResolver().query(Telephony.Sms.Inbox.CONTENT_URI, ALL_SMS_MESSAGES_PROJECTION, selection, selectionArgs, null);
+//        return context.getContentResolver().query(Telephony.Sms.CONTENT_URI, ALL_SMS_MESSAGES_PROJECTION, selection, selectionArgs, null);
 //    }
 
 //    private String getMsgIdFromSmsDatabase(Context context, final BasicSms sms) {
@@ -153,7 +154,21 @@ class SmsHelper {
     }
 
     static String getIdFromUri(String uri) {
-        return "";
+        //TODO
+        return "-1";
+    }
+
+    public static Uri insertMessageToOutbox(Context context, String mSenderAddress, String message) {
+        Calendar cal = Calendar.getInstance();
+
+        ContentValues values = new ContentValues();
+        values.put("address", mSenderAddress);
+        values.put("body", message);
+        values.put("date", cal.getTimeInMillis());
+        values.put("read", 1);
+        values.put("type", Telephony.TextBasedSmsColumns.MESSAGE_TYPE_OUTBOX);
+
+        return context.getContentResolver().insert(Telephony.Sms.CONTENT_URI, values);
     }
 
 //    public static BasicSms getSmsFromUri(Context context, Uri uri) {

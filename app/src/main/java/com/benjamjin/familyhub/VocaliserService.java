@@ -31,30 +31,6 @@ class VocaliserService implements OnInitListener, SharedPreferences.OnSharedPref
 
         Log.d(TAG, "User locale: " + userLocalePref);
         mCachedLocalePref = userLocalePref;
-
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        sp.registerOnSharedPreferenceChangeListener(this);
-    }
-
-    void doVocalise(String text) {
-        if (mIsTTSReady) {
-            if (mIsEnableVocalisation) {
-                Log.d(TAG, "Vocalising: " + text);
-                mTTS.speak(text, TextToSpeech.QUEUE_ADD, null, null);
-            }
-        }
-        else {
-            Log.w(TAG, "TextToSpeech service not yet initialised");
-        }
-    }
-
-    void doVocalise(String text, UtteranceProgressListener progressListener) {
-        mTTS.setOnUtteranceProgressListener(progressListener);
-        doVocalise(text);
-    }
-
-    void cancelVocalising() {
-        mTTS.stop();
     }
 
     @Override
@@ -75,6 +51,28 @@ class VocaliserService implements OnInitListener, SharedPreferences.OnSharedPref
         } else if (spKey.equals(mContext.getString(R.string.sp_name_vocalisation_enabled))) {
             setEnableVocalisation(sp.getBoolean(spKey, false));
         }
+    }
+
+    void doVocalise(String text) {
+        if (mIsTTSReady) {
+            if (mIsEnableVocalisation) {
+                Log.d(TAG, "Vocalising: " + text);
+                //FIXME unsupported in API 19
+                mTTS.speak(text, TextToSpeech.QUEUE_ADD, null, null);
+            }
+        }
+        else {
+            Log.w(TAG, "TextToSpeech service not yet initialised");
+        }
+    }
+
+    void doVocalise(String text, UtteranceProgressListener progressListener) {
+        mTTS.setOnUtteranceProgressListener(progressListener);
+        doVocalise(text);
+    }
+
+    void cancelVocalising() {
+        mTTS.stop();
     }
 
     private void setEnableVocalisation(boolean isEnable) {
