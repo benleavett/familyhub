@@ -1,4 +1,4 @@
-package com.benjamjin.familyhub.messages;
+package com.bivaca.familyhub.messages;
 
 import java.util.HashMap;
 

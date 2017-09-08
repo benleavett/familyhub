@@ -1,9 +1,8 @@
-package com.benjamjin.familyhub.messages;
+package com.bivaca.familyhub.messages;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
-import android.os.Build;
 import android.preference.PreferenceManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -17,10 +16,9 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.benjamjin.familyhub.MyActivity;
-import com.benjamjin.familyhub.MyApplication;
-import com.benjamjin.familyhub.R;
-import com.benjamjin.familyhub.Util;
+import com.bivaca.familyhub.MyActivity;
+import com.bivaca.familyhub.R;
+import com.bivaca.familyhub.Util;
 
 import org.ocpsoft.prettytime.PrettyTime;
 

@@ -1,16 +1,10 @@
-package com.benjamjin.familyhub.messages;
+package com.bivaca.familyhub.messages;
 
-import android.graphics.Typeface;
-import android.text.SpannableString;
-import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.view.View;
-import android.widget.TextView;
 
-import com.benjamjin.familyhub.MyActivity;
-import com.benjamjin.familyhub.R;
+import com.bivaca.familyhub.MyActivity;
 
 public class MyMessagingActivity extends MyActivity {
 

@@ -1,4 +1,4 @@
-package com.benjamjin.familyhub;
+package com.bivaca.familyhub;
 
 import android.annotation.TargetApi;
 import android.content.DialogInterface;
@@ -14,9 +14,8 @@ import android.support.v7.app.AlertDialog;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
-import com.benjamjin.familyhub.messages.InboxActivity;
+import com.bivaca.familyhub.messages.InboxActivity;
 
 public class MainActivity extends MyActivity {
 

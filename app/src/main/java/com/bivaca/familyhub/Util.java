@@ -1,4 +1,4 @@
-package com.benjamjin.familyhub;
+package com.bivaca.familyhub;
 
 import android.content.Context;
 import android.content.Intent;

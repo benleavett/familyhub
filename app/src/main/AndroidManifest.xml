@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.benjamjin.familyhub">
+    package="com.bivaca.familyhub">
 
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
@@ -9,7 +9,7 @@
     <uses-permission android:name="android.permission.RECEIVE_MMS" />
 
     <application
-        android:name=".MyApplication"
+        android:name="com.bivaca.familyhub.MyApplication"
         android:allowBackup="true"
         android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher"
@@ -21,7 +21,7 @@
         <!-- Activities -->
 
         <activity
-            android:name=".MainActivity"
+            android:name="com.bivaca.familyhub.MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
             android:launchMode="singleTask"
@@ -37,35 +37,35 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SettingsActivity"
+            android:name="com.bivaca.familyhub.SettingsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName="com.bivaca.familyhub.MainActivity"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value="com.bivaca.familyhub.MainActivity" />
         </activity>
         <activity
-            android:name=".messages.InboxActivity"
+            android:name="com.bivaca.familyhub.messages.InboxActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName="com.bivaca.familyhub.MainActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value="com.bivaca.familyhub.MainActivity" />
         </activity>
         <activity
-            android:name=".messages.ReplyActivity"
+            android:name="com.bivaca.familyhub.messages.ReplyActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:parentActivityName=".messages.InboxActivity"
+            android:parentActivityName="com.bivaca.familyhub.messages.InboxActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".messages.InboxActivity" />
+                android:value="com.bivaca.familyhub.messages.InboxActivity" />
         </activity>
 
         <!-- UNUSED -->
-        <activity android:name=".messages.ComposeSmsActivity">
+        <activity android:name="com.bivaca.familyhub.messages.ComposeSmsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <action android:name="android.intent.action.SENDTO" />
@@ -82,7 +82,7 @@
 
         <!-- UNUSED -->
         <receiver
-            android:name=".messages.MmsReceiver"
+            android:name="com.bivaca.familyhub.messages.MmsReceiver"
             android:permission="android.permission.BROADCAST_WAP_PUSH">
             <intent-filter>
                 <action android:name="android.provider.Telephony.WAP_PUSH_DELIVER" />
@@ -93,7 +93,7 @@
 
         <!-- Receivers -->
         <receiver
-            android:name=".messages.SmsReceiver"
+            android:name="com.bivaca.familyhub.messages.SmsReceiver"
             android:permission="android.permission.BROADCAST_SMS">
             <intent-filter>
                 <action android:name="android.provider.Telephony.SMS_DELIVER" />
@@ -102,7 +102,7 @@
 
         <!-- Services -->
         <service
-            android:name=".messages.HeadlessSmsSendService"
+            android:name="com.bivaca.familyhub.messages.HeadlessSmsSendService"
             android:exported="true"
             android:permission="android.permission.SEND_RESPOND_VIA_MESSAGE">
             <intent-filter>
@@ -117,7 +117,7 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".WelcomeActivity"></activity>
+        <activity android:name="com.bivaca.familyhub.WelcomeActivity"></activity>
     </application>
 
 </manifest>

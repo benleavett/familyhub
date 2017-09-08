@@ -1,4 +1,4 @@
-package com.benjamjin.familyhub.messages;
+package com.bivaca.familyhub.messages;
 
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -9,9 +9,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.benjamjin.familyhub.MyActivity;
-import com.benjamjin.familyhub.R;
-import com.benjamjin.familyhub.Util;
+import com.bivaca.familyhub.MyActivity;
+import com.bivaca.familyhub.R;
+import com.bivaca.familyhub.Util;
 
 import java.util.ArrayList;
 

@@ -1,10 +1,9 @@
-package com.benjamjin.familyhub;
+package com.bivaca.familyhub;
 
 import java.util.Locale;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
 import android.speech.tts.UtteranceProgressListener;
