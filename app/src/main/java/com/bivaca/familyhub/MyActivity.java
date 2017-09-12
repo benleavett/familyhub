@@ -23,7 +23,7 @@ public class MyActivity extends AppCompatActivity {
         return (MyApplication)getApplication();
     }
 
-    protected void showPreviousActivity(View v) {
+    public void showPreviousActivity(View v) {
         finish();
     }
 

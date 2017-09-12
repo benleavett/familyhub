@@ -64,10 +64,14 @@
 
     <PreferenceCategory
         android:title="Photo sources"
-        android:persistent="false">
+        android:persistent="false"
+        android:enabled="false">
         <PreferenceScreen
             android:title="Manage photo sources">
-            <!-- TODO -->
+            <CheckBoxPreference
+                android:key="@string/sp_name_pref_enable_photos"
+                android:defaultValue="false"
+                android:title="Enable photos view" />
         </PreferenceScreen>
     </PreferenceCategory>
 </PreferenceScreen>

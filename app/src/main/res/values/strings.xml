@@ -42,6 +42,7 @@
     <string name="sp_name_enable_fullscreen">pref_fullscreen_mode_enabled</string>
     <string name="sp_name_vocalisation_enabled">pref_vocalisation_enabled</string>
     <string name="sp_name_pref_choose_speech_rate">pref_choose_speech_rate</string>
+    <string name="sp_name_pref_enable_photos">pref_enable_photos</string>
     <string name="sp_name_pref_max_messages_from_contact">pref_max_messages_from_contact</string>
     <string name="sp_name_enable_replies">pref_enable_replies</string>
     <string name="sp_name_reply_A">pref_reply_A</string>

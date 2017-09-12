@@ -16,10 +16,13 @@ class AcceptedContacts {
 
     private void load() {
         mAcceptedContacts.put("+447870757202", "Andrew");
-        mAcceptedContacts.put("+44", "Richard");
         mAcceptedContacts.put("+447733024940", "Jenny");
         mAcceptedContacts.put("+447754741953", "Ben");
         mAcceptedContacts.put("+4915737625757", "Ruth");
+        mAcceptedContacts.put("+447977452939", "Richard");
+        mAcceptedContacts.put("+447837382394", "David");
+        mAcceptedContacts.put("+447837482162", "Rosie");
+        mAcceptedContacts.put("+447545151183", "Suzanne");
     }
 
     String getContactName(String phoneNumber) {

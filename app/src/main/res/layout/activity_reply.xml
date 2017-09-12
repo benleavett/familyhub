@@ -4,7 +4,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:id="@+id/reply_layout"
-    android:background="#fff"
     android:keepScreenOn="true"
     tools:context=".messages.ReplyActivity">
     <Button
