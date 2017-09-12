@@ -11,6 +11,9 @@ android {
         versionName "6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         setProperty("archivesBaseName", applicationId + "-v" + versionCode)
+        lintOptions {
+            abortOnError false
+        }
     }
     buildTypes {
         release {
