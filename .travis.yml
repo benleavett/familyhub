@@ -1,0 +1,60 @@
+language: android
+sudo: required
+jdk: oraclejdk8
+before_cache:
+- rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+- rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+cache:
+  directories:
+  - $HOME/.gradle/caches/
+  - $HOME/.gradle/wrapper/
+env:
+  global:
+  - ANDROID_API=26
+  - EMULATOR_API=21
+  - ANDROID_BUILD_TOOLS=26.0.1
+  - ADB_INSTALL_TIMEOUT=5
+  - KEYSTORE_NAME=.keystore
+  - KEY_ALIAS=key0
+  - DEPLOY_FILENAME=familyhub-$TRAVIS_BUILD_NUMBER.apk
+  - secure: ijtn6B8w1hccDD7rEBK2WAL9yuyjjb+zmgI48kSj3vi63d5tgucBJm12FjB5amN/53j3w73OovyT7TrUFteM8XxrAPdVY6AjEz0L/qdrAbUzMX6taotNgHTHNdl5dHOMQxt4nOBYPVHlPPWk7bHInBWoD0Ph4JXnmL/l6d7M740D29AomMeBOowloH5WmDsZnCtPrViUQlt4rprSeXyoY7KJlkDc4ngqtQlY04h6l5wHwjkr+JdNk2lVGTBgSU/nvKjImsWR2QQg2afZgB0aAev+ZuE5+Y3sc0MVeL+piukCg7PdEt5EvCe7o8SMBLN8PuuxT0+ZAG1t1lRP/hm5nX8x29s/afzpM4a2HsR33arxckGseqpTmPv+MGdmD+CTsxDjmlRQQ+TyjDGmp+vFBKNUmG1sz9jJuPQyAFNfjOaPzzDzee4D1JTYXzANnnwn2ygJg7zX8OR8widA2j9orufz9abNdhof8KXnRBLCVd7wreSQv8eeAoJVMesNjzZ6BTpPRHmh+guTb0pguUH7eyy/nBrmBoWgkrMjdb+o7XQ8ItA4Uj+QOZnm2LQG7SsWbS4i5DOs7xq0iWBgprLdRxkt8qOhWswidxy1HUf3GvwoNekkkJz0fVUMZODHGDEZu0KaTZepmv5L7agDsFXubOyAqQH4G3X8G2AGLVhugcs=
+  - secure: ZeJVMD5mmRuOjOT16epMcVq8ukLWz38Ijz6l7BhIsMUYOk5LPsRxASBfIJktAbwwh2R7cfi8YxgOP69gjyDgzaVSdAe0SKYZXC2BTA0t+V0t91DWN6zwM+cT9H49IqUrHGzAdo9tcb9doTzvJM9edkO/nM+5fhnti3TEHsY/5KUxn2CvclnQxxR5JvIVljKH+8WZ5sl6GAK6eMJYg7RS0GhRI0AI8bnkejqli6p2sPhjLzyRPKp//oZdaqzIFVzSet0cmByhHE2PQGBwECu933hbMz7mms02KFT5RdNxnz3SaGhvo9xym0QQfuZtZo2hCnuzPxbOJwRUgW4rpR4GYgAWuqeNRXy+FCBuirW5GQpkwxKxZjvlRejdfZNTdD+bluZP9zKzX6r15sSkGJ7cTaf2NATA+tGWxEGf4UgmPd13c79DgiNRGHE8oYoQ55MEGllB0cv3PkyPLbOXnK8heIyQYHlExkvki0vfV2up8Km4OiV0kFzYev4uqOy8278vIPaefSfTqKbasycdaIhwrr2IOSaS7IjATTjyqbljtESV+TWzYHRVQ356LaGkr78126vf2M0wRoqkoQO3CFlL7ZzGUELbS8IOcVICeNB41GQrDogSxlW7NS/0sIslgbPjhLX+KdYuzm/aZFq0tZcrTViK/a8VhGSruqkMHm2xpsA=
+android:
+  components:
+  - tools
+  - platform-tools
+  - build-tools-$ANDROID_BUILD_TOOLS
+  - android-$ANDROID_API
+  - android-$EMULATOR_API
+  - extra-google-m2repository
+  - sys-img-armeabi-v7a-addon-google_apis-google-$ANDROID_API
+  - sys-img-armeabi-v7a-addon-google_apis-google-$EMULATOR_API
+  licenses:
+  - android-sdk-preview-license-.+
+  - android-sdk-license-.+
+  - google-gdk-license-.+
+before_install:
+- openssl aes-256-cbc -K $encrypted_0b856137f4eb_key -iv $encrypted_0b856137f4eb_iv -in $KEYSTORE_NAME.enc -out $KEYSTORE_NAME -d
+- mkdir "$ANDROID_HOME/licenses" || true
+- echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
+- echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
+- chmod +x gradlew
+- ./gradlew dependencies || true
+script:
+- ./gradlew clean build -PdisablePreDex --stacktrace
+before_deploy:
+- cp $TRAVIS_BUILD_DIR/$KEYSTORE_NAME $HOME
+- cd app/build/outputs/apk/
+- jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore $HOME/$KEYSTORE_NAME -storepass $storepass -keypass $keypass app-release-unsigned.apk $KEY_ALIAS
+- jarsigner -verify app-release-unsigned.apk
+- ${ANDROID_HOME}/build-tools/$ANDROID_BUILD_TOOLS/zipalign -v 4 app-release-unsigned.apk $DEPLOY_FILENAME
+deploy:
+  provider: releases
+  file: $DEPLOY_FILENAME
+  skip_cleanup: true
+  on:
+    repo: benleavett/familyhub
+    tags: true
+    jdk: oraclejdk8
+  api_key:
+    secure: eDiuySKajQ9ZP5Gjika6oxMv7oVjp5h9Y20y21k2GpJZAZ7HmbAORmTHQbUPcIrLWZLG53V5DFFbskmW2SrV2Xw8WMEyvyPogrikHoj7yfhx4Nrs5nJVAVKDiMle3qM4Yd0bj4VlpmeoEX+i73b5nd27fBsVJ+pvtE3qGYzksoSHe0C4x/PLtYHDC+1VjYhnMJlNe7XObS1IwbpXAylmZFxCSIm/HEkhmJOPLCsh8G9m7X8DxmoPj5BEejuOyRRIdLgMBcwg1OG81rDyut3KIOvJAl0u40seDY1yz1e/PI2n9CneGImhsjcsrWB9BZpdWqipm866uV8F3GXHweS0xnfsUWJC/oNPaqyfixLl0ziH9rC4FSlVg16ze3jNVR6gtqA2L8LRCdQt1aIhQY8s3ieBFmHXeecwzedQeGwQYUdpq/9mOMVj9kW6vM9DNfuIot6TMSZXCUY5vGzSbLn5Nig19+L16FWN8qej2V25+WKRM1TU3JG89AHDoLsfUv+hBIlNL4zfkrPtw9ALcbu5+rOz53V8cnAHSyMx9DDubd7A9p40xmj+qgAm2bffT6hMkxKTMvzcyBmvaQVWTO6Q0GcbPaUEpgiBKmirI3QK5EROvetZRQinzhr79KM+1DG6DifhK9WIcq+s9LWpeqduUHdfgUYTcCaNhWYMVLVjEPQ=
