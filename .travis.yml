@@ -16,7 +16,6 @@ env:
   - ADB_INSTALL_TIMEOUT=5
   - KEYSTORE_NAME=.keystore
   - KEY_ALIAS=key0
-  - DEPLOY_FILENAME=familyhub-$TRAVIS_BUILD_NUMBER.apk
   - secure: ijtn6B8w1hccDD7rEBK2WAL9yuyjjb+zmgI48kSj3vi63d5tgucBJm12FjB5amN/53j3w73OovyT7TrUFteM8XxrAPdVY6AjEz0L/qdrAbUzMX6taotNgHTHNdl5dHOMQxt4nOBYPVHlPPWk7bHInBWoD0Ph4JXnmL/l6d7M740D29AomMeBOowloH5WmDsZnCtPrViUQlt4rprSeXyoY7KJlkDc4ngqtQlY04h6l5wHwjkr+JdNk2lVGTBgSU/nvKjImsWR2QQg2afZgB0aAev+ZuE5+Y3sc0MVeL+piukCg7PdEt5EvCe7o8SMBLN8PuuxT0+ZAG1t1lRP/hm5nX8x29s/afzpM4a2HsR33arxckGseqpTmPv+MGdmD+CTsxDjmlRQQ+TyjDGmp+vFBKNUmG1sz9jJuPQyAFNfjOaPzzDzee4D1JTYXzANnnwn2ygJg7zX8OR8widA2j9orufz9abNdhof8KXnRBLCVd7wreSQv8eeAoJVMesNjzZ6BTpPRHmh+guTb0pguUH7eyy/nBrmBoWgkrMjdb+o7XQ8ItA4Uj+QOZnm2LQG7SsWbS4i5DOs7xq0iWBgprLdRxkt8qOhWswidxy1HUf3GvwoNekkkJz0fVUMZODHGDEZu0KaTZepmv5L7agDsFXubOyAqQH4G3X8G2AGLVhugcs=
   - secure: ZeJVMD5mmRuOjOT16epMcVq8ukLWz38Ijz6l7BhIsMUYOk5LPsRxASBfIJktAbwwh2R7cfi8YxgOP69gjyDgzaVSdAe0SKYZXC2BTA0t+V0t91DWN6zwM+cT9H49IqUrHGzAdo9tcb9doTzvJM9edkO/nM+5fhnti3TEHsY/5KUxn2CvclnQxxR5JvIVljKH+8WZ5sl6GAK6eMJYg7RS0GhRI0AI8bnkejqli6p2sPhjLzyRPKp//oZdaqzIFVzSet0cmByhHE2PQGBwECu933hbMz7mms02KFT5RdNxnz3SaGhvo9xym0QQfuZtZo2hCnuzPxbOJwRUgW4rpR4GYgAWuqeNRXy+FCBuirW5GQpkwxKxZjvlRejdfZNTdD+bluZP9zKzX6r15sSkGJ7cTaf2NATA+tGWxEGf4UgmPd13c79DgiNRGHE8oYoQ55MEGllB0cv3PkyPLbOXnK8heIyQYHlExkvki0vfV2up8Km4OiV0kFzYev4uqOy8278vIPaefSfTqKbasycdaIhwrr2IOSaS7IjATTjyqbljtESV+TWzYHRVQ356LaGkr78126vf2M0wRoqkoQO3CFlL7ZzGUELbS8IOcVICeNB41GQrDogSxlW7NS/0sIslgbPjhLX+KdYuzm/aZFq0tZcrTViK/a8VhGSruqkMHm2xpsA=
 android:
@@ -45,13 +44,15 @@ script:
 before_deploy:
 - cp $TRAVIS_BUILD_DIR/$KEYSTORE_NAME $HOME
 - cd app/build/outputs/apk/
-- intermediatefilename="$(ls *-release-unsigned.apk)"
-- jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore $HOME/$KEYSTORE_NAME -storepass $storepass -keypass $keypass $intermediatefilename $KEY_ALIAS
-- jarsigner -verify $intermediatefilename
-- ${ANDROID_HOME}/build-tools/$ANDROID_BUILD_TOOLS/zipalign -v 4 $intermediatefilename $DEPLOY_FILENAME
+- INTERMEDIATE_FILENAME="$(ls *-release-unsigned.apk)"
+- VERSION="$(echo $INTERMEDIATE_FILENAME | cut -d'-' -f 2)"
+- APK_FILENAME=familyhub-$VERSION-build$TRAVIS_BUILD_NUMBER.apk
+- jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore $HOME/$KEYSTORE_NAME -storepass $storepass -keypass $keypass $INTERMEDIATE_FILENAME $KEY_ALIAS
+- jarsigner -verify $INTERMEDIATE_FILENAME
+- ${ANDROID_HOME}/build-tools/$ANDROID_BUILD_TOOLS/zipalign -v 4 $INTERMEDIATE_FILENAME $APK_FILENAME
 deploy:
   provider: releases
-  file: $DEPLOY_FILENAME
+  file: $APK_FILENAME
   skip_cleanup: true
   on:
     repo: benleavett/familyhub
