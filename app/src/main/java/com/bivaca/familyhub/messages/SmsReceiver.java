@@ -59,6 +59,8 @@ public class SmsReceiver extends BroadcastReceiver {
 //            return;
 //        }
 
+        Log.d(TAG, "Sending intent to InboxActivity");
+
         Intent i = new Intent(context, InboxActivity.class);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         i.putExtra("uri", uri.toString());

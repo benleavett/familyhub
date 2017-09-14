@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.bivaca.familyhub.messages.Inbox;
 import com.crashlytics.android.Crashlytics;
 import io.fabric.sdk.android.Fabric;
 
@@ -77,6 +78,7 @@ public class MainActivity extends MyActivity {
         if (requestCode == MAKE_DEFAULT_SMS_PROMPT) {
             if (resultCode != RESULT_OK) {
                 Log.w(TAG, "User declined to set as default SMS app");
+                finish();
             }
         }
     }
@@ -127,6 +129,14 @@ public class MainActivity extends MyActivity {
             getPackageManager().clearPackagePreferredActivities(getPackageName());
             startActivity(Util.homeScreenIntent());
             finish();
+        }
+//        clearInbox();
+    }
+
+    private void clearInbox() {
+        Log.d(TAG, "DELETING");
+        if (!Inbox.getInstance().clearInbox(this)) {
+            Log.e(TAG, "Failed to clear inbox");
         }
     }
 

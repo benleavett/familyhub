@@ -46,8 +46,7 @@ before_deploy:
 - cp $TRAVIS_BUILD_DIR/$KEYSTORE_NAME $HOME
 - cd app/build/outputs/apk/
 - INTERMEDIATE_FILENAME="$(ls *-release-unsigned.apk)"
-- VERSION="$(echo $INTERMEDIATE_FILENAME | cut -d'-' -f 2)"
-- APK_FILENAME=familyhub-$VERSION-build$TRAVIS_BUILD_NUMBER.apk
+- APK_FILENAME=familyhub-$TRAVIS_TAG-build$TRAVIS_BUILD_NUMBER.apk
 - jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore $HOME/$KEYSTORE_NAME -storepass $storepass -keypass $keypass $INTERMEDIATE_FILENAME $KEY_ALIAS
 - jarsigner -verify $INTERMEDIATE_FILENAME
 - ${ANDROID_HOME}/build-tools/$ANDROID_BUILD_TOOLS/zipalign -v 4 $INTERMEDIATE_FILENAME $APK_FILENAME

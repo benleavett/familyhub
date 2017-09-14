@@ -1,9 +1,11 @@
 package com.bivaca.familyhub.messages;
 
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AlertDialog;
 import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
@@ -11,7 +13,6 @@ import android.widget.TextView;
 
 import com.bivaca.familyhub.MyActivity;
 import com.bivaca.familyhub.R;
-import com.bivaca.familyhub.Util;
 
 import java.util.ArrayList;
 
@@ -77,12 +78,27 @@ public class ReplyActivity extends MyActivity {
             return;
         }
 
+        //FIXME check that we *actually* inserted the message
         Uri uri = SmsHelper.insertMessageToOutbox(this, mSenderAddress, message);
-
-        Util.log(TAG, "Placed message in outbox", uri);
 
         SmsManager smsManager = SmsManager.getDefault();
         smsManager.sendTextMessage(mSenderAddress, null, message, null, null);
+
+        confirmSmsSent();
+    }
+
+    private void confirmSmsSent() {
+        new AlertDialog.Builder(this)
+                .setTitle(getTitle())
+                .setMessage(getString(R.string.confirm_sms_sent))
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        finish();
+                    }
+                })
+                .show();
     }
 
     private boolean verifyRequiredSmsFields() {

@@ -5,7 +5,7 @@
     <string name="photos_button">Photos</string>
     <string name="messages_button">Messages</string>
     <string name="settings_button">Settings</string>
-    <string name="reset_launcher_button">Reset launcher</string>
+    <string name="reset_launcher_button">Revert launcher</string>
     <string name="dialog_text_change_home_default">Your default Home screen is \"%s\".\n\nTap OK, then \"Clear Defaults\" to choose a new default.</string>
     <string name="dialog_text_change_home_lollipop_above">Your default Home screen is \"%1$s\".\n\nTap OK, then \"Home app\" to choose a new default. Then re-open %2$s.</string>
     <string name="dialog_text_no_sim_card">Device not supported - SIM card required.</string>
@@ -19,6 +19,9 @@
     <string name="empty_inbox_message">You have no messages from your contacts</string>
     <string name="choose_reply_text">Choose reply</string>
     <string name="reply_button_text">Reply</string>
+
+    <!-- ReplyActivity -->
+    <string name="confirm_sms_sent">Your reply has been sent</string>
 
     <!-- SettingsActivity -->
     <string name="sp_category_title_application">Application</string>

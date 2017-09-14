@@ -12,7 +12,7 @@ import com.bivaca.familyhub.R;
 import java.util.LinkedList;
 import java.util.List;
 
-class Inbox {
+public class Inbox {
     private static final String TAG = Inbox.class.getSimpleName();
 
     private static final Inbox mInstance = new Inbox();
@@ -22,7 +22,7 @@ class Inbox {
 
     private Inbox() {}
 
-    static Inbox getInstance() { return mInstance; }
+    public static Inbox getInstance() { return mInstance; }
 
     /*
         Order of messages is:
@@ -48,8 +48,9 @@ class Inbox {
     void resetInboxIteratorToLatest() {
         Log.d(TAG, "RESETTING ITERATOR");
         if (mMessages.size() > 0) {
-//            mInboxIndex = 0;
             mInboxIndex = mMessages.size() - 1;
+        } else {
+            mInboxIndex = -1;
         }
     }
 
@@ -158,5 +159,17 @@ class Inbox {
 
     private void setInboxContents(List<BasicSms> result) {
         mMessages = new LinkedList<>(result);
+    }
+
+    public boolean clearInbox(final Context context) {
+        if (mMessages.size() > 0) {
+            if (SmsHelper.clearInbox(context) == 0) {
+                return false;
+            }
+
+            mMessages.clear();
+            resetInboxIteratorToLatest();
+        }
+        return true;
     }
 }

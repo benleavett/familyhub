@@ -171,6 +171,10 @@ class SmsHelper {
         return context.getContentResolver().insert(Telephony.Sms.CONTENT_URI, values);
     }
 
+    public static int clearInbox(Context context) {
+        return context.getContentResolver().delete(Telephony.Sms.CONTENT_URI, null, null);
+    }
+
 //    public static BasicSms getSmsFromUri(Context context, Uri uri) {
 //        long messageId = -1;
 //        Cursor cursor = null;
