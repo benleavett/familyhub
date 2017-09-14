@@ -32,6 +32,7 @@
         android:persistent="false">
         <ListPreference
             android:key="@string/sp_name_pref_max_messages_from_contact"
+            android:enabled="false"
             android:title="Max messages to show per contact"
             android:dialogTitle="Maximum per contact"
             android:summary="Show this many messages per contact"

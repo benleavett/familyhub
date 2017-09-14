@@ -16,7 +16,6 @@ public class MyApplication extends Application {
     private static final String[] SMS_PERMISSIONS = { Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_SMS };
 
     private VocaliserService mVocaliser;
-    private Boolean mIsFullscreen = null;
 
     @Override
     public void onCreate() {
@@ -26,8 +25,8 @@ public class MyApplication extends Application {
 
         PreferenceManager.setDefaultValues(this, R.xml.preferences, true);
 
-        //FIXME need to unregister at some point (needs moving to an Activity)
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        //FIXME need to unregister at some point (needs moving to an Activity)
         sp.registerOnSharedPreferenceChangeListener(mVocaliser);
     }
 

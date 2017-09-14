@@ -18,6 +18,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
 
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="118f1cc57721a300c28c0695bb187d1392ea3267" />
+
         <!-- Activities -->
 
         <activity
@@ -40,7 +44,7 @@
             android:name="com.bivaca.familyhub.SettingsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:parentActivityName="com.bivaca.familyhub.MainActivity"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme.ActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.bivaca.familyhub.MainActivity" />
@@ -119,5 +123,7 @@
 
         <activity android:name="com.bivaca.familyhub.WelcomeActivity"></activity>
     </application>
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>

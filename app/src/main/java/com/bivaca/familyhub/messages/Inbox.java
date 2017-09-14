@@ -100,7 +100,7 @@ class Inbox {
     }
 
     void markMessageAsRead(final Activity activity, final BasicSms sms) {
-        if (sms.isRead) {
+        if (sms == null || sms.isRead) {
             return;
         }
 

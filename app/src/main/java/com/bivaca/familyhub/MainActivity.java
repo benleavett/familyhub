@@ -10,10 +10,15 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Telephony;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
+
+import com.crashlytics.android.Crashlytics;
+import io.fabric.sdk.android.Fabric;
 
 import com.bivaca.familyhub.messages.InboxActivity;
 
@@ -26,6 +31,8 @@ public class MainActivity extends MyActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Fabric.with(this, new Crashlytics());
 
         setContentView(R.layout.activity_main);
 
@@ -95,6 +102,10 @@ public class MainActivity extends MyActivity {
 
     public void showSettingsActivity(View v) {
         startActivity(new Intent(this, SettingsActivity.class));
+        //TODO wtf - testing snackbar
+//        LinearLayout layout = (LinearLayout) findViewById(R.id.main_layout);
+//        Snackbar snackBar = Snackbar.make(layout, "You've received a new message", Snackbar.LENGTH_LONG);
+//        snackBar.show();
     }
 
     private boolean hasDeviceActiveSim() {

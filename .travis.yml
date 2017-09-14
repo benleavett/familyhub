@@ -25,6 +25,7 @@ android:
   - build-tools-$ANDROID_BUILD_TOOLS
   - android-$ANDROID_API
   - android-$EMULATOR_API
+  - extra-google-google_play_services
   - extra-google-m2repository
   - sys-img-armeabi-v7a-addon-google_apis-google-$ANDROID_API
   - sys-img-armeabi-v7a-addon-google_apis-google-$EMULATOR_API
