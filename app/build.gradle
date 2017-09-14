@@ -25,7 +25,7 @@ android {
         applicationId "com.benjamjin.familyhub"
         minSdkVersion 19
         targetSdkVersion 26
-        versionCode 7
+        versionCode 8
         versionName "ALPHA"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         setProperty("archivesBaseName", applicationId + "-v" + versionCode)
