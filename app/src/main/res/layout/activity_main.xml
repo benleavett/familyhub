@@ -12,7 +12,7 @@
         style="?metaButtonBarButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
+        android:layout_weight="2"
         android:textSize="@dimen/button_large_font_size"
         android:text="@string/photos_button"
         android:enabled="false"
@@ -23,10 +23,16 @@
         style="?metaButtonBarButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
+        android:layout_weight="2"
         android:textSize="@dimen/button_large_font_size"
         android:text="@string/messages_button"
         android:onClick="showMessagesActivity"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:id="@+id/version_text"/>
 
     <LinearLayout
         android:layout_width="match_parent"

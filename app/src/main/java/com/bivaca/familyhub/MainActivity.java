@@ -16,6 +16,7 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.bivaca.familyhub.messages.Inbox;
 import com.crashlytics.android.Crashlytics;
@@ -39,6 +40,9 @@ public class MainActivity extends MyActivity {
 
         //TODO check if SMS function is enabled
         getMyApplication().verifySmsPermissions(this);
+
+        TextView versionView = (TextView)findViewById(R.id.version_text);
+        versionView.setText("v" + BuildConfig.VERSION_CODE);
     }
 
     @Override
