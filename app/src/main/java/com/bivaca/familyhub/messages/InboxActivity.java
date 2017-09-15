@@ -265,6 +265,8 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
     }
 
     public void showReplyActivity(View v) {
+        markCurrentMessageAsRead();
+        
         Intent intent = new Intent(this, ReplyActivity.class);
         intent.setAction(ReplyActivity.MESSAGE_REPLY_INTENT_ACTION_NAME);
         intent.putExtra("senderAddress", Inbox.getInstance().getCurrentMessage().senderAddress);
