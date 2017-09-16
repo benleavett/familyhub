@@ -11,7 +11,7 @@
         style="@style/LargeButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/back_button"
+        android:text="@string/back_to_messages_button"
         android:onClick="showPreviousActivity"/>
     <TextView
         android:id="@+id/choose_reply_text_view"
