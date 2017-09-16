@@ -70,10 +70,13 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
 
     @Override
     public boolean onLongClick(View view) {
-        if (view.getId() == R.id.message_body_view) {
-            TextView messageBody = (TextView) view;
-            getMyApplication().doVocalise(messageBody.getText().toString());
-            //FIXME add sender's name (eg "From Ben. <message>")
+        final int id = view.getId();
+
+        if (id == R.id.message_body_view || id == R.id.message_sender_text) {
+            BasicSms sms = Inbox.getInstance().getCurrentMessage();
+            final String textToVocalise = String.format("From %s. %s", sms.friendlySenderName, sms.body);
+            Log.d(TAG, "Sending text to vocalise: " + textToVocalise);
+            getMyApplication().doVocalise(textToVocalise);
             return true;
         } else {
             return false;
@@ -127,6 +130,9 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
     private void setLongPressListeners() {
         TextView body = (TextView) findViewById(R.id.message_body_view);
         body.setOnLongClickListener(this);
+
+        TextView sender = (TextView) findViewById(R.id.message_sender_text);
+        sender.setOnLongClickListener(this);
     }
 
     private void viewCurrentMessage() {
@@ -266,7 +272,7 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
 
     public void showReplyActivity(View v) {
         markCurrentMessageAsRead();
-        
+
         Intent intent = new Intent(this, ReplyActivity.class);
         intent.setAction(ReplyActivity.MESSAGE_REPLY_INTENT_ACTION_NAME);
         intent.putExtra("senderAddress", Inbox.getInstance().getCurrentMessage().senderAddress);

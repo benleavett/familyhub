@@ -15,7 +15,7 @@
         <CheckBoxPreference
             android:key="@string/sp_name_vocalisation_enabled"
             android:title="@string/sp_title_vocalisation_enabled"
-            android:defaultValue="true" />
+            android:defaultValue="@bool/vocalisation_enabled_default" />
         <ListPreference
             android:dependency="@string/sp_name_vocalisation_enabled"
             android:key="@string/sp_name_pref_choose_speech_rate"
