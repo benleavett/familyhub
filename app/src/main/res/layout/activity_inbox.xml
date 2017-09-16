@@ -10,7 +10,7 @@
         style="@style/LargeButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/back_button"
+        android:text="@string/back_to_main_button"
         android:onClick="showPreviousActivity"/>
     <TextView
         android:layout_width="match_parent"

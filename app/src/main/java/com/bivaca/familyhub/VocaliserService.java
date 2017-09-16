@@ -4,6 +4,7 @@ import java.util.Locale;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
 import android.speech.tts.UtteranceProgressListener;
@@ -15,7 +16,6 @@ class VocaliserService implements OnInitListener, SharedPreferences.OnSharedPref
 
     private final TextToSpeech mTTS;
     private boolean mIsTTSReady = false;
-    private boolean mIsEnableVocalisation;
     private final Locale mCachedLocalePref;
     private final Context mContext;
 
@@ -26,7 +26,6 @@ class VocaliserService implements OnInitListener, SharedPreferences.OnSharedPref
     private VocaliserService(Context context, Locale userLocalePref) {
         mTTS = new TextToSpeech(context, this);
         mContext = context;
-        mIsEnableVocalisation = false;
 
         Log.d(TAG, "User locale: " + userLocalePref);
         mCachedLocalePref = userLocalePref;
@@ -46,16 +45,16 @@ class VocaliserService implements OnInitListener, SharedPreferences.OnSharedPref
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sp, String spKey) {
         if (spKey.equals(mContext.getString(R.string.sp_name_pref_choose_speech_rate))) {
-            setSpeechRate(sp.getString(spKey, ""));
-        } else if (spKey.equals(mContext.getString(R.string.sp_name_vocalisation_enabled))) {
-            setEnableVocalisation(sp.getBoolean(spKey, false));
+            float defaultRate = mContext.getResources().getDimension(R.dimen.speech_rate_options_default);
+            setSpeechRate(sp.getString(spKey, Float.toString(defaultRate)));
         }
     }
 
     void doVocalise(String text) {
         if (mIsTTSReady) {
-            if (mIsEnableVocalisation) {
+            if (isVocalisationEnabled()) {
                 Log.d(TAG, "Vocalising: " + text);
+
                 if (Util.isLollipopOrAbove()) {
                     mTTS.speak(text, TextToSpeech.QUEUE_ADD, null, null);
                 } else {
@@ -77,9 +76,11 @@ class VocaliserService implements OnInitListener, SharedPreferences.OnSharedPref
         mTTS.stop();
     }
 
-    private void setEnableVocalisation(boolean isEnable) {
-        mIsEnableVocalisation = isEnable;
-        Log.i(TAG, String.format("Vocalisation %s", isEnable ? "enabled" : "disabled"));
+    private boolean isVocalisationEnabled() {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
+        return sp.getBoolean(
+                mContext.getString(R.string.sp_name_vocalisation_enabled),
+                mContext.getResources().getBoolean(R.bool.vocalisation_enabled_default));
     }
 
     private void setSpeechRate(String speechRateStr) {
