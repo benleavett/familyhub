@@ -52,17 +52,11 @@ public class SmsReceiver extends BroadcastReceiver {
     }
 
     private void notifyActivityOfNewSms(Context context, Uri uri, BasicSms sms) {
-//        final String originatingAddress = message[0].getOriginatingAddress();
-
-//        if (originatingAddress == null || !AcceptedContacts.getInstance().isAcceptedContact(originatingAddress)) {
-//            Log.d(TAG, "Received message but not from an accepted contact: " + originatingAddress);
-//            return;
-//        }
-
         Log.d(TAG, "Sending intent to InboxActivity");
 
         Intent i = new Intent(context, InboxActivity.class);
-        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         i.putExtra("uri", uri.toString());
         i.putExtra("body", sms.body);
         i.putExtra("senderAddress", sms.senderAddress);
