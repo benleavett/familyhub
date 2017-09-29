@@ -2,18 +2,20 @@ package com.bivaca.familyhub;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 public class Util {
 
-    private static final String COMMON_TAG = "FamilyHub";
+//    private static final String COMMON_TAG = "FamilyHub";
 
-    public static void log(Object... args) {
-        Log.d(COMMON_TAG, buildString(args));
-    }
+//    public static void log(Object... args) {
+//        Log.d(COMMON_TAG, buildString(args));
+//    }
 
     private static String buildString(Object... args) {
         StringBuilder builder = new StringBuilder();
@@ -49,5 +51,10 @@ public class Util {
 
     public static boolean isLollipopOrAbove() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
+    }
+
+    public static boolean isFullscreenModeEnabled(Context context) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        return sp.getBoolean(context.getString(R.string.sp_name_enable_fullscreen), context.getResources().getBoolean(R.bool.fullscreen_mode_enabled_default));
     }
 }

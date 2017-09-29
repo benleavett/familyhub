@@ -3,11 +3,13 @@ package com.bivaca.familyhub;
 import android.annotation.TargetApi;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.Telephony;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -67,7 +69,10 @@ public class MainActivity extends MyActivity {
                     .show();
         }
 
-        promptToMakeHome();
+
+        if (Util.isFullscreenModeEnabled(this)) {
+            promptToMakeHome();
+        }
     }
 
     @Override
@@ -145,6 +150,7 @@ public class MainActivity extends MyActivity {
     }
 
     private void promptToMakeHome() {
+        Log.d(TAG, "Here " + Util.noDefaultSet(this));
         if (!Util.noDefaultSet(this) && !Util.isDefault(this)) {
             if (Util.isLollipopOrAbove()) {
                 chooseHomeScreenLollipop();
@@ -194,7 +200,7 @@ public class MainActivity extends MyActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        // A home screen is set - take us to that
+                        // A home screen has already been set - take user to the settings page so they can set us as home screen
                         Intent settings = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
                         settings.setData(Uri.parse("package:" + info.activityInfo.packageName));
                         startActivity(settings);

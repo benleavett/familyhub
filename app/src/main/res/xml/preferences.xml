@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!--<PreferenceCategory-->
-        <!--android:title="@string/sp_category_title_application">-->
-        <!--<CheckBoxPreference-->
-            <!--android:key="@string/sp_name_enable_fullscreen"-->
-            <!--android:title="@string/sp_title_enable_fullscreen"-->
-            <!--android:defaultValue="true" />-->
-    <!--</PreferenceCategory>-->
+    <PreferenceCategory
+        android:title="@string/sp_category_title_application">
+        <CheckBoxPreference
+            android:key="@string/sp_name_enable_fullscreen"
+            android:title="@string/sp_title_enable_fullscreen"
+            android:defaultValue="@bool/fullscreen_mode_enabled_default" />
+    </PreferenceCategory>
 
     <PreferenceCategory
         android:title="@string/sp_category_title_vocalisation"

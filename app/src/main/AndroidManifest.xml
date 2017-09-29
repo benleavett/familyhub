@@ -24,22 +24,27 @@
 
         <!-- Activities -->
 
-        <activity
-            android:name="com.bivaca.familyhub.MainActivity"
+        <activity android:name="com.bivaca.familyhub.WelcomeActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:screenOrientation="portrait">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
-
                 <!-- Required to act as home activity -->
                 <category android:name="android.intent.category.HOME" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name="com.bivaca.familyhub.MainActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait">
+        </activity>
+
         <activity
             android:name="com.bivaca.familyhub.SettingsActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -120,8 +125,6 @@
                 <data android:scheme="mmsto" />
             </intent-filter>
         </service>
-
-        <activity android:name="com.bivaca.familyhub.WelcomeActivity"></activity>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />

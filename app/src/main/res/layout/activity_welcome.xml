@@ -1,9 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.bivaca.familyhub.WelcomeActivity">
+    android:orientation="vertical"
+    tools:context=".WelcomeActivity">
 
-</android.support.constraint.ConstraintLayout>
+    <TextView
+        android:id="@+id/is_fullscreen_enabled_cb_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Run in fullscreen mode (as a launcher)?"
+        android:layout_gravity="center"/>
+
+    <CheckBox
+        android:id="@+id/cb_is_fullscreen_enabled"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Fullscreen mode"
+        android:layout_gravity="center"/>
+
+    <Button
+        android:id="@+id/done_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Done"
+        android:layout_gravity="center"
+        android:onClick="startNextActivity"/>
+</LinearLayout>

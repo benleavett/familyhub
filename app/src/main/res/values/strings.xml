@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Family Hub</string>
 
+    <!-- WelcomeActivity -->
+    <string name="sp_name_is_welcome_shown">is_welcome_shown</string>
+
     <!-- MainActivity -->
     <string name="photos_button">Photos</string>
     <string name="messages_button">Messages</string>
