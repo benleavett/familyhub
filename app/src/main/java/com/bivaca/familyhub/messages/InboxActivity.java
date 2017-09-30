@@ -6,13 +6,13 @@ import android.graphics.Typeface;
 import android.preference.PreferenceManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v4.content.res.ResourcesCompat;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -29,6 +29,8 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
     private static final String TAG = InboxActivity.class.getSimpleName();
 
     final static String NEW_SMS_INTENT_ACTION_NAME = "com.benjamjin.familyhub.NEW_SMS";
+    final static int REPLY_REQUEST_CODE = 1;
+    final static int RESULT_REPLY_SENT_OK = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,15 +87,29 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
 
     @Override
     public void showPreviousActivity(View v) {
-        markCurrentMessageAsRead();
-
         super.showPreviousActivity(v);
+
+        markCurrentMessageAsRead();
     }
 
     @Override
     public void onInboxLoaded() {
         Log.d(TAG, "Inbox loaded");
         viewCurrentMessage();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REPLY_REQUEST_CODE) {
+            if (resultCode == RESULT_REPLY_SENT_OK) {
+                String messageId = data.getData().toString();
+                if (Inbox.getInstance().getCurrentMessage().id.equals(messageId)) {
+                    Inbox.getInstance().markCurrentMessageAsReplied(this);
+
+                    populateMessageViewLayout(Inbox.getInstance().getCurrentMessage());
+                }
+            }
+        }
     }
 
     private void handleNewSmsReceived(Intent intent, boolean isResetCurrentMessageToLatest) {
@@ -140,8 +156,6 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
         if (currentSms == null) {
             populateMessageViewLayoutForEmptyInbox();
         } else {
-            Log.d(TAG, "Current SMS: " + currentSms);
-
             populateMessageViewLayout(currentSms);
 
             refreshMessageSelectorButtonsVisibility();
@@ -149,11 +163,14 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
     }
 
     private void populateMessageViewLayoutForEmptyInbox() {
-        TextView isUnreadState = (TextView) findViewById(R.id.message_status);
+        TextView isUnreadState = (TextView) findViewById(R.id.unread_state);
         isUnreadState.setVisibility(View.INVISIBLE);
 
         TextView senderView = (TextView) findViewById(R.id.message_sender_text);
         senderView.setVisibility(View.INVISIBLE);
+
+        ImageView repliedState = (ImageView) findViewById(R.id.replied_state);
+        repliedState.setVisibility(View.INVISIBLE);
 
         TextView timestampView = (TextView) findViewById(R.id.message_datetime_text);
         timestampView.setVisibility(View.INVISIBLE);
@@ -171,7 +188,7 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
     }
 
     private void setMessageStatusIndicator(final BasicSms sms) {
-        TextView messageStatusView = (TextView) findViewById(R.id.message_status);
+        TextView messageStatusView = (TextView) findViewById(R.id.unread_state);
 
         if (!sms.isRead) {
             messageStatusView.setText(getString(R.string.message_unread_text));
@@ -201,6 +218,10 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
         senderNameSpan.setSpan(new StyleSpan(Typeface.ITALIC), 0, senderNameSpan.length(), 0);
         senderView.setText(senderNameSpan);
         senderView.setVisibility(View.VISIBLE);
+
+        // Set visibility of replied-to indicator
+        ImageView repliedState = (ImageView) findViewById(R.id.replied_state);
+        repliedState.setVisibility(sms.isRepliedTo ? View.VISIBLE : View.INVISIBLE);
 
         // Set message sent time
         TextView timestampView = (TextView) findViewById(R.id.message_datetime_text);
@@ -272,10 +293,16 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
     public void showReplyActivity(View v) {
         markCurrentMessageAsRead();
 
+        final BasicSms sms = Inbox.getInstance().getCurrentMessage();
+
+        Log.d(TAG, "Replying to: " + sms);
+
         Intent intent = new Intent(this, ReplyActivity.class);
         intent.setAction(ReplyActivity.MESSAGE_REPLY_INTENT_ACTION_NAME);
-        intent.putExtra("senderAddress", Inbox.getInstance().getCurrentMessage().senderAddress);
-        startActivity(intent);
+        intent.putExtra(ReplyActivity.SENDER_ADDRESS_INTENT_KEY, sms.senderAddress);
+        intent.putExtra(ReplyActivity.MESSAGE_ID_INTENT_KEY, sms.id);
+
+        startActivityForResult(intent, REPLY_REQUEST_CODE);
     }
 }
 

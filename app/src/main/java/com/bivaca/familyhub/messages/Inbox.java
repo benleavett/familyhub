@@ -2,7 +2,9 @@ package com.bivaca.familyhub.messages;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -16,6 +18,8 @@ public class Inbox {
     private static final String TAG = Inbox.class.getSimpleName();
 
     private static final Inbox mInstance = new Inbox();
+
+    private static final String SHARED_PREFS_MESSAGE_REPLIED_STATE_PREFIX = "sp_message_replied_state_for_id";
 
     private LinkedList<BasicSms> mMessages = new LinkedList<>();
     private int mInboxIndex = -1;
@@ -128,7 +132,7 @@ public class Inbox {
                     // If we're still looking at the message we just marked as 'read'...
                     if (mInboxIndex == inboxIndex) {
                         // Show unread state if appropriate
-                        TextView isUnreadState = activity.findViewById(R.id.message_status);
+                        TextView isUnreadState = activity.findViewById(R.id.unread_state);
                         isUnreadState.setVisibility(View.GONE);
                     }
 
@@ -148,7 +152,7 @@ public class Inbox {
             }
 
             protected void onPostExecute(List<BasicSms> result) {
-                setInboxContents(result);
+                setInboxContents(context, result);
 
                 resetInboxIteratorToLatest();
 
@@ -157,7 +161,11 @@ public class Inbox {
         }.execute();
     }
 
-    private void setInboxContents(List<BasicSms> result) {
+    private void setInboxContents(Context context, List<BasicSms> result) {
+        for (BasicSms sms : result) {
+            sms.isRepliedTo = getMessageRepliedStateFromDisk(context, sms.id);
+        }
+
         mMessages = new LinkedList<>(result);
     }
 
@@ -171,5 +179,31 @@ public class Inbox {
             resetInboxIteratorToLatest();
         }
         return true;
+    }
+
+    public void markCurrentMessageAsReplied(Context context) {
+        BasicSms sms = mMessages.get(mInboxIndex);
+        if (sms != null) {
+            sms.isRepliedTo = true;
+            mMessages.set(mInboxIndex, sms);
+
+            writeMessageRepliedStateToDisk(context, sms.id);
+        }
+    }
+
+    private void writeMessageRepliedStateToDisk(Context context, String messageId) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putBoolean(getSharedPrefsMessageRepliedStateKey(messageId), true);
+        editor.commit();
+    }
+
+    private boolean getMessageRepliedStateFromDisk(Context context, String messageId) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        return sp.getBoolean(getSharedPrefsMessageRepliedStateKey(messageId), false);
+    }
+
+    private String getSharedPrefsMessageRepliedStateKey(final String messageId) {
+        return SHARED_PREFS_MESSAGE_REPLIED_STATE_PREFIX + "_" + messageId;
     }
 }
