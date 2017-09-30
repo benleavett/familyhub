@@ -55,4 +55,14 @@
             android:text="@string/reset_launcher_button"
             android:onClick="resetLauncher"/>
     </LinearLayout>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/clear_inbox_btn"
+        style="?metaButtonBarButtonStyle"
+        android:textSize="@dimen/button_normal_font_size"
+        android:text="D: Clear Inbox"
+        android:onClick="clearInbox"
+        android:visibility="gone"/>
 </LinearLayout>

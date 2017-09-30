@@ -123,8 +123,7 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
 
     private void notifyUserNewSms() {
         LinearLayout layout = (LinearLayout) findViewById(R.id.inbox_layout);
-        Snackbar snackBar = Snackbar.make(layout, "You've received a new message", Snackbar.LENGTH_LONG);
-        snackBar.show();
+        Snackbar.make(layout, "You've received a new message", Snackbar.LENGTH_LONG).show();
     }
 
     private void setLongPressListeners() {
