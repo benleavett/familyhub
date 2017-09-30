@@ -136,7 +136,7 @@ public class MainActivity extends MyActivity {
         }
 
         LinearLayout layout = (LinearLayout) findViewById(R.id.main_layout);
-        Snackbar.make(layout, message, Snackbar.LENGTH_SHORT).show();
+//        Snackbar.make(layout, message, Snackbar.LENGTH_SHORT).show();
     }
 
     private boolean hasDeviceActiveSim() {
