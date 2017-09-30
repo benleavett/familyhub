@@ -15,6 +15,7 @@ import android.support.v7.app.AlertDialog;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -37,6 +38,8 @@ public class MainActivity extends MyActivity {
         Fabric.with(this, new Crashlytics());
 
         setContentView(R.layout.activity_main);
+
+        setClearInboxVisibleState();
 
         //TODO check if SMS function is enabled
         getMyApplication().verifySmsPermissions(this);
@@ -87,6 +90,13 @@ public class MainActivity extends MyActivity {
         }
     }
 
+    private void setClearInboxVisibleState() {
+        if (BuildConfig.DEBUG) {
+            Button clearInboxBtn = (Button) findViewById(R.id.clear_inbox_btn);
+            clearInboxBtn.setVisibility(View.VISIBLE);
+        }
+    }
+
     private void promptUserToMakeDefaultMessagingApp() {
         Intent intent = new Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT);
         intent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME, getPackageName());
@@ -114,6 +124,21 @@ public class MainActivity extends MyActivity {
 //        snackBar.show();
     }
 
+    public void clearInbox(View v) {
+        String message;
+        if (!Inbox.getInstance().clearInbox(this)) {
+            message = "Failed to clear inbox";
+            Log.e(TAG, message);
+
+        } else {
+            message = "All messages deleted from device";
+            Log.w(TAG, message);
+        }
+
+        LinearLayout layout = (LinearLayout) findViewById(R.id.main_layout);
+//        Snackbar.make(layout, message, Snackbar.LENGTH_SHORT).show();
+    }
+
     private boolean hasDeviceActiveSim() {
         TelephonyManager tm = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
         return tm.getSimState() != TelephonyManager.SIM_STATE_ABSENT;
@@ -133,14 +158,6 @@ public class MainActivity extends MyActivity {
             getPackageManager().clearPackagePreferredActivities(getPackageName());
             startActivity(Util.homeScreenIntent());
             finish();
-        }
-//        clearInbox();
-    }
-
-    private void clearInbox() {
-        Log.d(TAG, "DELETING");
-        if (!Inbox.getInstance().clearInbox(this)) {
-            Log.e(TAG, "Failed to clear inbox");
         }
     }
 

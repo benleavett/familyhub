@@ -38,7 +38,7 @@
             android:summary="Show this many messages per contact"
             android:entries="@array/max_messages_per_contact_options"
             android:entryValues="@array/max_messages_per_contact_options_values"
-            android:defaultValue="@dimen/max_messages_per_contact_options_default"/>
+            android:defaultValue="@integer/max_messages_per_contact_options_default"/>
         <CheckBoxPreference
             android:key="@string/sp_name_enable_replies"
             android:title="Allow SMS replies"

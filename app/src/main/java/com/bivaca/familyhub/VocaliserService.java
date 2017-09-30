@@ -9,6 +9,7 @@ import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
 import android.speech.tts.UtteranceProgressListener;
 import android.util.Log;
+import android.util.TypedValue;
 
 class VocaliserService implements OnInitListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -45,7 +46,9 @@ class VocaliserService implements OnInitListener, SharedPreferences.OnSharedPref
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sp, String spKey) {
         if (spKey.equals(mContext.getString(R.string.sp_name_pref_choose_speech_rate))) {
-            float defaultRate = mContext.getResources().getDimension(R.dimen.speech_rate_options_default);
+            TypedValue value = new TypedValue();
+            mContext.getResources().getValue(R.dimen.speech_rate_options_default, value, true);
+            float defaultRate = value.getFloat();
             setSpeechRate(sp.getString(spKey, Float.toString(defaultRate)));
         }
     }
