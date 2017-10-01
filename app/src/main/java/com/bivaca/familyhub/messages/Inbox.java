@@ -2,14 +2,13 @@ package com.bivaca.familyhub.messages;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.bivaca.familyhub.R;
+import com.bivaca.familyhub.SharedPrefsHelper;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -18,8 +17,6 @@ public class Inbox {
     private static final String TAG = Inbox.class.getSimpleName();
 
     private static final Inbox mInstance = new Inbox();
-
-    private static final String SHARED_PREFS_MESSAGE_REPLIED_STATE_PREFIX = "sp_message_replied_state_for_id";
 
     private LinkedList<BasicSms> mMessages = new LinkedList<>();
     private int mInboxIndex = -1;
@@ -51,10 +48,10 @@ public class Inbox {
 
     void resetInboxIteratorToLatest() {
         Log.d(TAG, "RESETTING ITERATOR");
-        if (mMessages.size() > 0) {
-            mInboxIndex = mMessages.size() - 1;
-        } else {
+        if (isEmpty()) {
             mInboxIndex = -1;
+        } else {
+            mInboxIndex = mMessages.size() - 1;
         }
     }
 
@@ -163,20 +160,22 @@ public class Inbox {
 
     private void setInboxContents(Context context, List<BasicSms> result) {
         for (BasicSms sms : result) {
-            sms.isRepliedTo = getMessageRepliedStateFromDisk(context, sms.id);
+            sms.isRepliedTo = SharedPrefsHelper.getMessageRepliedStateFromDisk(context, sms.id);
         }
 
         mMessages = new LinkedList<>(result);
     }
 
     public boolean clearInbox(final Context context) {
-        if (mMessages.size() > 0) {
+        if (!isEmpty()) {
             if (SmsHelper.clearInbox(context) == 0) {
                 return false;
             }
 
             mMessages.clear();
             resetInboxIteratorToLatest();
+
+            SharedPrefsHelper.deleteAllMessageRepliedStatesOnDisk(context);
         }
         return true;
     }
@@ -187,23 +186,11 @@ public class Inbox {
             sms.isRepliedTo = true;
             mMessages.set(mInboxIndex, sms);
 
-            writeMessageRepliedStateToDisk(context, sms.id);
+            SharedPrefsHelper.writeMessageRepliedStateToDisk(context, sms.id);
         }
     }
 
-    private void writeMessageRepliedStateToDisk(Context context, String messageId) {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putBoolean(getSharedPrefsMessageRepliedStateKey(messageId), true);
-        editor.commit();
-    }
-
-    private boolean getMessageRepliedStateFromDisk(Context context, String messageId) {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        return sp.getBoolean(getSharedPrefsMessageRepliedStateKey(messageId), false);
-    }
-
-    private String getSharedPrefsMessageRepliedStateKey(final String messageId) {
-        return SHARED_PREFS_MESSAGE_REPLIED_STATE_PREFIX + "_" + messageId;
+    public boolean isEmpty() {
+        return mMessages.size() == 0;
     }
 }

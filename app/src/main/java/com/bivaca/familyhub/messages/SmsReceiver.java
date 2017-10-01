@@ -39,10 +39,9 @@ public class SmsReceiver extends BroadcastReceiver {
                     if (message.length > -1) {
                         Log.d(TAG, String.format("SMS received (length: %d): %s", message.length, message[0].getMessageBody()));
 
-//                    InboxActivity.getInstance().updateInbox(buildBasicSms(message));
                         BasicSms sms = buildBasicSms(message);
                         Uri uriResult = SmsHelper.insertMessageToInbox(context, sms.senderAddress, sms.body, sms.timestampSent);
-                        Log.d(TAG, "Store SMS: " + uriResult);
+                        Log.d(TAG, "Store SMS " + uriResult + ": " + sms);
 
                         notifyActivityOfNewSms(context, uriResult, sms);
                     }
@@ -52,16 +51,15 @@ public class SmsReceiver extends BroadcastReceiver {
     }
 
     private void notifyActivityOfNewSms(Context context, Uri uri, BasicSms sms) {
-        Log.d(TAG, "Sending intent to InboxActivity");
+        Log.d(TAG, "Sending intent to InboxActivity for sms: " + sms);
 
         Intent i = new Intent(context, InboxActivity.class);
-//        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        i.putExtra("uri", uri.toString());
-        i.putExtra("body", sms.body);
-        i.putExtra("senderAddress", sms.senderAddress);
-        i.putExtra("timestamp", sms.timestampSent);
-        i.setAction(InboxActivity.NEW_SMS_INTENT_ACTION_NAME);
+        i.putExtra(InboxActivity.INTENT_KEY_URI, uri.toString());
+        i.putExtra(InboxActivity.INTENT_KEY_BODY, sms.body);
+        i.putExtra(InboxActivity.INTENT_KEY_SENDER_ADDRESS, sms.senderAddress);
+        i.putExtra(InboxActivity.INTENT_KEY_TIMESTAMP, sms.timestampSent);
+        i.setAction(InboxActivity.INTENT_ACTION_NAME_NEW_SMS);
 
         context.startActivity(i);
     }

@@ -22,8 +22,6 @@ public class ReplyActivity extends MyActivity {
     private static final String TAG = ReplyActivity.class.getSimpleName();
 
     final static String MESSAGE_REPLY_INTENT_ACTION_NAME = "com.benjamjin.familyhub.MESSAGE_REPLY_INTENT_ACTION_NAME";
-    final static String SENDER_ADDRESS_INTENT_KEY = "sender_address";
-    final static String MESSAGE_ID_INTENT_KEY = "msg_id";
 
     private String mSenderAddress;
     private String mMessageId;
@@ -40,8 +38,8 @@ public class ReplyActivity extends MyActivity {
             String action = getIntent().getAction();
 
             if (action != null && action.equals(MESSAGE_REPLY_INTENT_ACTION_NAME)) {
-                mSenderAddress = getIntent().getStringExtra(SENDER_ADDRESS_INTENT_KEY);
-                mMessageId = getIntent().getStringExtra(MESSAGE_ID_INTENT_KEY);
+                mSenderAddress = getIntent().getStringExtra(InboxActivity.INTENT_KEY_SENDER_ADDRESS);
+                mMessageId = getIntent().getStringExtra(InboxActivity.INTENT_KEY_MESSAGE_ID);
             }
         }
     }

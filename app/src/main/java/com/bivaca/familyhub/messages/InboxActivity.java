@@ -28,7 +28,13 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
 
     private static final String TAG = InboxActivity.class.getSimpleName();
 
-    final static String NEW_SMS_INTENT_ACTION_NAME = "com.benjamjin.familyhub.NEW_SMS";
+    final static String INTENT_ACTION_NAME_NEW_SMS = "com.benjamjin.familyhub.NEW_SMS";
+    final static String INTENT_KEY_SENDER_ADDRESS = "sender_address";
+    final static String INTENT_KEY_URI = "uri";
+    final static String INTENT_KEY_BODY = "body";
+    final static String INTENT_KEY_TIMESTAMP = "timestamp";
+    final static String INTENT_KEY_MESSAGE_ID = "msg_id";
+
     final static int REPLY_REQUEST_CODE = 1;
     final static int RESULT_REPLY_SENT_OK = 100;
 
@@ -49,7 +55,6 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
             handleNewSmsReceived(getIntent(), true);
         }
 
-        refreshResponseButtonsVisibilityFromPrefs();
         setLongPressListeners();
     }
 
@@ -58,7 +63,8 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
         Log.d(TAG, "onNewIntent");
 
         // Add new SMS but don't update current selected message (as user may be viewing another SMS)
-        handleNewSmsReceived(intent, false);
+        // ... unless the inbox is empty so we're staring at an empty screen
+        handleNewSmsReceived(intent, Inbox.getInstance().isEmpty());
     }
 
     @Override
@@ -112,21 +118,21 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
         }
     }
 
-    private void handleNewSmsReceived(Intent intent, boolean isResetCurrentMessageToLatest) {
+    private void handleNewSmsReceived(Intent intent, boolean isShowLatestMessage) {
         String action = intent.getAction();
-        if (action != null && action.equals(NEW_SMS_INTENT_ACTION_NAME)) {
+        if (action != null && action.equals(INTENT_ACTION_NAME_NEW_SMS)) {
 
             BasicSms sms = new BasicSms(
-                    intent.getLongExtra("timestamp", -1),
-                    intent.getStringExtra("senderAddress"),
-                    intent.getStringExtra("body"),
-                    SmsHelper.getIdFromUri(intent.getStringExtra("uri")));
+                    intent.getLongExtra(INTENT_KEY_TIMESTAMP, -1),
+                    intent.getStringExtra(INTENT_KEY_SENDER_ADDRESS),
+                    intent.getStringExtra(INTENT_KEY_BODY),
+                    SmsHelper.getIdFromUri(intent.getStringExtra(INTENT_KEY_URI)));
 
-            Log.d(TAG, String.format("Handling new sms (%s) - %s", sms, isResetCurrentMessageToLatest));
+            Log.d(TAG, String.format("Handling new sms (%s) - %s", sms, isShowLatestMessage));
 
             if (Inbox.getInstance().handleNewSmsReceived(sms)) {
                 // When we show the inbox, show the newly added sms
-                if (isResetCurrentMessageToLatest) {
+                if (isShowLatestMessage) {
                     Inbox.getInstance().resetInboxIteratorToLatest();
                 }
 
@@ -156,9 +162,9 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
         if (currentSms == null) {
             populateMessageViewLayoutForEmptyInbox();
         } else {
-            populateMessageViewLayout(currentSms);
+            Log.d(TAG, "Current SMS: " + currentSms);
 
-            refreshMessageSelectorButtonsVisibility();
+            populateMessageViewLayout(currentSms);
         }
     }
 
@@ -235,6 +241,15 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
         // Set message body
         TextView previewView = (TextView) findViewById(R.id.message_body_view);
         previewView.setText(sms.body);
+
+        Button earlierBtn = (Button) findViewById(R.id.select_earlier_message_button);
+        earlierBtn.setVisibility(View.VISIBLE);
+        Button laterBtn = (Button) findViewById(R.id.select_later_message_button);
+        laterBtn.setVisibility(View.VISIBLE);
+
+        refreshMessageSelectorButtonsEnabled();
+
+        refreshResponseButtonsVisibilityFromPrefs();
     }
 
     private void setMessageSelectorButtonEnabled(boolean isEnabled, int id) {
@@ -277,7 +292,7 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
         Inbox.getInstance().markMessageAsRead(this, Inbox.getInstance().getCurrentMessage());
     }
 
-    private void refreshMessageSelectorButtonsVisibility() {
+    private void refreshMessageSelectorButtonsEnabled() {
         setMessageSelectorButtonEnabled(Inbox.getInstance().hasEarlierMessage(), R.id.select_earlier_message_button);
         setMessageSelectorButtonEnabled(Inbox.getInstance().hasLaterMessage(), R.id.select_later_message_button);
     }
@@ -299,8 +314,8 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
 
         Intent intent = new Intent(this, ReplyActivity.class);
         intent.setAction(ReplyActivity.MESSAGE_REPLY_INTENT_ACTION_NAME);
-        intent.putExtra(ReplyActivity.SENDER_ADDRESS_INTENT_KEY, sms.senderAddress);
-        intent.putExtra(ReplyActivity.MESSAGE_ID_INTENT_KEY, sms.id);
+        intent.putExtra(INTENT_KEY_SENDER_ADDRESS, sms.senderAddress);
+        intent.putExtra(INTENT_KEY_MESSAGE_ID, sms.id);
 
         startActivityForResult(intent, REPLY_REQUEST_CODE);
     }
