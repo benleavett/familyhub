@@ -14,8 +14,6 @@
     <style name="AppTheme.NoActionBar" parent="BaseTheme">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="android:windowBackground">@null</item>
-        <item name="android:background">@color/colorBackground</item>
     </style>
 
     <!--<style name="AppTheme.NoActionBar.FullScreen" parent="AppTheme.NoActionBar">-->

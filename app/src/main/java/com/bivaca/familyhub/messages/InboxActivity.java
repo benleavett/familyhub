@@ -6,6 +6,7 @@ import android.graphics.Typeface;
 import android.preference.PreferenceManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.res.ResourcesCompat;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
@@ -145,7 +146,7 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
 
     private void notifyUserNewSms() {
         LinearLayout layout = (LinearLayout) findViewById(R.id.inbox_layout);
-//        Snackbar.make(layout, "You've received a new message", Snackbar.LENGTH_LONG).show();
+        Snackbar.make(layout, "You've received a new message", Snackbar.LENGTH_LONG).show();
     }
 
     private void setLongPressListeners() {
