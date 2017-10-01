@@ -35,7 +35,9 @@ public class MainActivity extends MyActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Fabric.with(this, new Crashlytics());
+        if (!BuildConfig.DEBUG) {
+            Fabric.with(this, new Crashlytics());
+        }
 
         setContentView(R.layout.activity_main);
 
@@ -120,8 +122,7 @@ public class MainActivity extends MyActivity {
         startActivity(new Intent(this, SettingsActivity.class));
         //TODO wtf - testing snackbar
 //        LinearLayout layout = (LinearLayout) findViewById(R.id.main_layout);
-//        Snackbar snackBar = Snackbar.make(layout, "You've received a new message", Snackbar.LENGTH_LONG);
-//        snackBar.show();
+//        Snackbar.make(layout, "You've received a new message", Snackbar.LENGTH_LONG).show();
     }
 
     public void clearInbox(View v) {
@@ -136,7 +137,7 @@ public class MainActivity extends MyActivity {
         }
 
         LinearLayout layout = (LinearLayout) findViewById(R.id.main_layout);
-//        Snackbar.make(layout, message, Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(layout, message, Snackbar.LENGTH_SHORT).show();
     }
 
     private boolean hasDeviceActiveSim() {

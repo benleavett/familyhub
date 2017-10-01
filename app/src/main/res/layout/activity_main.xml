@@ -4,7 +4,6 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    android:keepScreenOn="true"
     android:id="@+id/main_layout"
     tools:context=".MainActivity">
     <TextView
@@ -15,22 +14,20 @@
 
     <Button
         android:id="@+id/show_photos_button"
-        style="?metaButtonBarButtonStyle"
+        style="@style/LargeButton"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:textSize="@dimen/button_large_font_size"
         android:text="@string/photos_button"
         android:enabled="false"
         android:onClick="showPhotosActivity"/>
 
     <Button
         android:id="@+id/show_messages_button"
-        style="?metaButtonBarButtonStyle"
+        style="@style/LargeButton"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:textSize="@dimen/button_large_font_size"
         android:text="@string/messages_button"
         android:onClick="showMessagesActivity"/>
 
@@ -41,7 +38,7 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            style="?metaButtonBarButtonStyle"
+            style="@style/BasicButton"
             android:textSize="@dimen/button_normal_font_size"
             android:layout_weight="1"
             android:text="@string/settings_button"
@@ -49,7 +46,7 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            style="?metaButtonBarButtonStyle"
+            style="@style/BasicButton"
             android:textSize="@dimen/button_normal_font_size"
             android:layout_weight="1"
             android:text="@string/reset_launcher_button"
@@ -60,7 +57,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/clear_inbox_btn"
-        style="?metaButtonBarButtonStyle"
+        style="@style/BasicButton"
         android:textSize="@dimen/button_normal_font_size"
         android:text="D: Clear Inbox"
         android:onClick="clearInbox"

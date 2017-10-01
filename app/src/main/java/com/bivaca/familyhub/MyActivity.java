@@ -1,8 +1,6 @@
 package com.bivaca.familyhub;
 
 import android.Manifest;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
@@ -17,6 +15,17 @@ public class MyActivity extends AppCompatActivity {
         super.onResume();
 
         setWindowFullscreenState();
+        setKeepScreenOnState();
+    }
+
+    private void setKeepScreenOnState() {
+        //FIXME register receiver to get changes to charging state
+        // Only allow screen to stay on if we're charging
+        if (SharedPrefsHelper.isKeepScreenOnEnabled(this) && Util.isCharging(this)) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        } else {
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        }
     }
 
     protected MyApplication getMyApplication() {
@@ -44,13 +53,8 @@ public class MyActivity extends AppCompatActivity {
         }
     }
 
-    private boolean isFullscreenEnabled() {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        return sp.getBoolean(getString(R.string.sp_name_enable_fullscreen), true);
-    }
-
     private void setWindowFullscreenState() {
-        if (isFullscreenEnabled()) {
+        if (SharedPrefsHelper.isFullscreenEnabled(this)) {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         } else {
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);

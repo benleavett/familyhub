@@ -2,8 +2,10 @@ package com.bivaca.familyhub;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.os.BatteryManager;
 import android.os.Build;
 import android.util.Log;
 
@@ -49,5 +51,19 @@ public class Util {
 
     public static boolean isLollipopOrAbove() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
+    }
+
+    public static boolean isCharging(Context context) {
+        Intent intent = context.registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+        int chargingData = intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1);
+
+        switch (chargingData) {
+            case BatteryManager.BATTERY_PLUGGED_AC:
+            case BatteryManager.BATTERY_PLUGGED_USB:
+            case BatteryManager.BATTERY_PLUGGED_WIRELESS:
+                return true;
+            default:
+                return false;
+        }
     }
 }

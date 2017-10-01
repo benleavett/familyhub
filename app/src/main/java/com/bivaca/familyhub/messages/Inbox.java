@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.bivaca.familyhub.R;
+import com.bivaca.familyhub.SharedPrefsHelper;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -47,10 +48,10 @@ public class Inbox {
 
     void resetInboxIteratorToLatest() {
         Log.d(TAG, "RESETTING ITERATOR");
-        if (mMessages.size() > 0) {
-            mInboxIndex = mMessages.size() - 1;
-        } else {
+        if (isEmpty()) {
             mInboxIndex = -1;
+        } else {
+            mInboxIndex = mMessages.size() - 1;
         }
     }
 
@@ -128,7 +129,7 @@ public class Inbox {
                     // If we're still looking at the message we just marked as 'read'...
                     if (mInboxIndex == inboxIndex) {
                         // Show unread state if appropriate
-                        TextView isUnreadState = activity.findViewById(R.id.message_status);
+                        TextView isUnreadState = activity.findViewById(R.id.unread_state);
                         isUnreadState.setVisibility(View.GONE);
                     }
 
@@ -148,7 +149,7 @@ public class Inbox {
             }
 
             protected void onPostExecute(List<BasicSms> result) {
-                setInboxContents(result);
+                setInboxContents(context, result);
 
                 resetInboxIteratorToLatest();
 
@@ -157,19 +158,39 @@ public class Inbox {
         }.execute();
     }
 
-    private void setInboxContents(List<BasicSms> result) {
+    private void setInboxContents(Context context, List<BasicSms> result) {
+        for (BasicSms sms : result) {
+            sms.isRepliedTo = SharedPrefsHelper.getMessageRepliedStateFromDisk(context, sms.id);
+        }
+
         mMessages = new LinkedList<>(result);
     }
 
     public boolean clearInbox(final Context context) {
-        if (mMessages.size() > 0) {
+        if (!isEmpty()) {
             if (SmsHelper.clearInbox(context) == 0) {
                 return false;
             }
 
             mMessages.clear();
             resetInboxIteratorToLatest();
+
+            SharedPrefsHelper.deleteAllMessageRepliedStatesOnDisk(context);
         }
         return true;
+    }
+
+    public void markCurrentMessageAsReplied(Context context) {
+        BasicSms sms = mMessages.get(mInboxIndex);
+        if (sms != null) {
+            sms.isRepliedTo = true;
+            mMessages.set(mInboxIndex, sms);
+
+            SharedPrefsHelper.writeMessageRepliedStateToDisk(context, sms.id);
+        }
+    }
+
+    public boolean isEmpty() {
+        return mMessages.size() == 0;
     }
 }

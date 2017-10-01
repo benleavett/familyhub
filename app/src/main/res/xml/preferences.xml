@@ -1,30 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!--<PreferenceCategory-->
-        <!--android:title="@string/sp_category_title_application">-->
+    <PreferenceCategory
+        android:title="@string/sp_category_title_application">
+        <CheckBoxPreference
+            android:key="@string/sp_name_keep_screen_on"
+            android:title="@string/sp_title_keep_screen_on"
+            android:summary="@string/sp_summary_keep_screen_on"
+            android:defaultValue="@bool/keep_screen_on_default" />
         <!--<CheckBoxPreference-->
             <!--android:key="@string/sp_name_enable_fullscreen"-->
             <!--android:title="@string/sp_title_enable_fullscreen"-->
             <!--android:defaultValue="true" />-->
-    <!--</PreferenceCategory>-->
-
-    <PreferenceCategory
-        android:title="@string/sp_category_title_vocalisation"
-        android:persistent="false">
-        <CheckBoxPreference
-            android:key="@string/sp_name_vocalisation_enabled"
-            android:title="@string/sp_title_vocalisation_enabled"
-            android:defaultValue="@bool/vocalisation_enabled_default" />
-        <ListPreference
-            android:dependency="@string/sp_name_vocalisation_enabled"
-            android:key="@string/sp_name_pref_choose_speech_rate"
-            android:title="@string/choose_speech_rate_title"
-            android:dialogTitle="@string/choose_speech_rate_dialog_title"
-            android:summary="Change the speed at which words are spoken"
-            android:entries="@array/speech_rate_options"
-            android:entryValues="@array/speech_rate_options_values"
-            android:defaultValue="@dimen/speech_rate_options_default" />
     </PreferenceCategory>
 
     <PreferenceCategory
@@ -41,11 +28,10 @@
             android:defaultValue="@integer/max_messages_per_contact_options_default"/>
         <CheckBoxPreference
             android:key="@string/sp_name_enable_replies"
-            android:title="Allow SMS replies"
+            android:title="@string/sp_title_enable_replies"
             android:defaultValue="false"/>
         <PreferenceScreen
-            android:title="@string/sp_category_title_preset_reply"
-            android:key="button_preset_replies_category"
+            android:title="@string/sp_screen_title_preset_replies"
             android:dependency="@string/sp_name_enable_replies"
             android:persistent="false">
             <EditTextPreference
@@ -61,6 +47,25 @@
                 android:title="@string/title_reply_C"
                 android:defaultValue="@string/default_text_reply_C" />
         </PreferenceScreen>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/sp_category_title_vocalisation"
+        android:persistent="false">
+        <CheckBoxPreference
+            android:key="@string/sp_name_vocalisation_enabled"
+            android:title="@string/sp_title_vocalisation_enabled"
+            android:defaultValue="@bool/vocalisation_enabled_default"
+            android:summary="@string/sp_summary_vocalisation_enabled"/>
+        <ListPreference
+            android:dependency="@string/sp_name_vocalisation_enabled"
+            android:key="@string/sp_name_pref_choose_speech_rate"
+            android:title="@string/sp_title_choose_speech_rate"
+            android:dialogTitle="@string/choose_speech_rate_dialog_title"
+            android:summary="@string/sp_summary_choose_speech_rate"
+            android:entries="@array/speech_rate_options"
+            android:entryValues="@array/speech_rate_options_values"
+            android:defaultValue="@dimen/speech_rate_options_default" />
     </PreferenceCategory>
 
     <PreferenceCategory

@@ -6,6 +6,7 @@ class BasicSms {
     String body;
     String id;
     boolean isRead = false;
+    boolean isRepliedTo = false;
 
     // Initialise as may never be set elsewhere but we may want to use it in toString()
     String friendlySenderName = "";
@@ -20,6 +21,6 @@ class BasicSms {
     }
 
     public String toString() {
-        return String.format("[%s] %d, %s (%s), %s, %b", id, timestampSent, senderAddress, friendlySenderName, body, isRead);
+        return String.format("[%s] %d, %s (%s), %s, %b/%b", id, timestampSent, senderAddress, friendlySenderName, body, isRead, isRepliedTo);
     }
 }

@@ -1,11 +1,10 @@
 <resources>
 
     <style name="BaseTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="metaButtonBarStyle">?android:attr/buttonBarStyle</item>
-        <item name="metaButtonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>
+        <!--<item name="colorPrimary">@color/colorPrimary</item>-->
+        <!--<item name="colorPrimaryDark">@color/colorPrimaryDark</item>-->
+        <item name="colorAccent">@color/pink</item>
+        <!--<item name="colorButtonNormal">#000</item>-->
     </style>
 
     <!-- I don't understand why this works (to show an action bar without any items) but it does... -->
@@ -14,8 +13,6 @@
     <style name="AppTheme.NoActionBar" parent="BaseTheme">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="android:windowBackground">@null</item>
-        <item name="android:background">@color/colorBackground</item>
     </style>
 
     <!--<style name="AppTheme.NoActionBar.FullScreen" parent="AppTheme.NoActionBar">-->
@@ -27,10 +24,14 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="LargeButton" parent="@style/Widget.AppCompat.Button.Colored">
+    <style name="LargeButton" parent="BasicButton">
         <item name="android:textSize">@dimen/button_large_font_size</item>
-        <item name="android:paddingTop">30dp</item>
-        <item name="android:paddingBottom">30dp</item>
+        <item name="android:paddingTop">@dimen/large_button_padding</item>
+        <item name="android:paddingBottom">@dimen/large_button_padding</item>
+    </style>
+
+    <style name="BasicButton" parent="@style/Widget.AppCompat.Button.Colored">
+        <!--<item name="android:textColor">@android:color/black</item>-->
     </style>
 
 </resources>

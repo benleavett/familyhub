@@ -1,6 +1,7 @@
 package com.bivaca.familyhub.messages;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,7 +22,9 @@ public class ReplyActivity extends MyActivity {
     private static final String TAG = ReplyActivity.class.getSimpleName();
 
     final static String MESSAGE_REPLY_INTENT_ACTION_NAME = "com.benjamjin.familyhub.MESSAGE_REPLY_INTENT_ACTION_NAME";
+
     private String mSenderAddress;
+    private String mMessageId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +38,8 @@ public class ReplyActivity extends MyActivity {
             String action = getIntent().getAction();
 
             if (action != null && action.equals(MESSAGE_REPLY_INTENT_ACTION_NAME)) {
-                mSenderAddress = getIntent().getStringExtra("senderAddress");
+                mSenderAddress = getIntent().getStringExtra(InboxActivity.INTENT_KEY_SENDER_ADDRESS);
+                mMessageId = getIntent().getStringExtra(InboxActivity.INTENT_KEY_MESSAGE_ID);
             }
         }
     }
@@ -84,10 +88,10 @@ public class ReplyActivity extends MyActivity {
         SmsManager smsManager = SmsManager.getDefault();
         smsManager.sendTextMessage(mSenderAddress, null, message, null, null);
 
-        confirmSmsSent();
+        notifyUserSmsSent();
     }
 
-    private void confirmSmsSent() {
+    private void notifyUserSmsSent() {
         new AlertDialog.Builder(this)
                 .setTitle(getTitle())
                 .setMessage(getString(R.string.confirm_sms_sent))
@@ -95,6 +99,12 @@ public class ReplyActivity extends MyActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
+
+                        // Tell InboxActivity which message was replied to
+                        Intent intent = new Intent();
+                        intent.setData(Uri.parse(mMessageId));
+                        setResult(InboxActivity.RESULT_REPLY_SENT_OK, intent);
+
                         finish();
                     }
                 })
