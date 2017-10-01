@@ -4,7 +4,6 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    android:keepScreenOn="true"
     android:id="@+id/main_layout"
     tools:context=".MainActivity">
     <TextView
@@ -19,7 +18,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:textSize="@dimen/button_large_font_size"
         android:text="@string/photos_button"
         android:enabled="false"
         android:onClick="showPhotosActivity"/>
@@ -30,7 +28,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:textSize="@dimen/button_large_font_size"
         android:text="@string/messages_button"
         android:onClick="showMessagesActivity"/>
 

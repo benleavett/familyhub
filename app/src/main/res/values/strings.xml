@@ -26,15 +26,20 @@
 
     <!-- SettingsActivity -->
     <string name="sp_category_title_application">Application</string>
+    <string name="sp_title_keep_screen_on">Keep screen on</string>
+    <string name="sp_summary_keep_screen_on">Only when device is plugged in</string>
     <string name="sp_title_enable_fullscreen">Fullscreen mode</string>
 
     <string name="sp_category_title_vocalisation">Speech</string>
     <string name="sp_title_vocalisation_enabled">Speak messages selected</string>
-    <string name="choose_speech_rate_title">Speech rate</string>
+    <string name="sp_summary_vocalisation_enabled">Long-press on message to hear it read aloud</string>
+    <string name="sp_title_choose_speech_rate">Speech rate</string>
     <string name="choose_speech_rate_dialog_title">Choose speech rate</string>
+    <string name="sp_summary_choose_speech_rate">Change the speed at which words are spoken</string>
 
     <string name="sp_category_title_messages">Messages</string>
-    <string name="sp_category_title_preset_reply">Customise preset replies</string>
+    <string name="sp_title_enable_replies">Allow SMS replies</string>
+    <string name="sp_screen_title_preset_replies">Customise preset replies</string>
     <string name="title_reply_A">Reply #1</string>
     <string name="title_reply_B">Reply #2</string>
     <string name="title_reply_C">Reply #3</string>
@@ -52,4 +57,5 @@
     <string name="sp_name_reply_A">pref_reply_A</string>
     <string name="sp_name_reply_B">pref_reply_B</string>
     <string name="sp_name_reply_C">pref_reply_C</string>
+    <string name="sp_name_keep_screen_on">pref_keep_screen_on</string>
 </resources>

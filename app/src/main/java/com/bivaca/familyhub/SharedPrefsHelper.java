@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import java.security.KeyPair;
 import java.util.Map;
 
 /**
@@ -41,5 +40,15 @@ public class SharedPrefsHelper {
         }
 
         editor.commit();
+    }
+
+    public static boolean isKeepScreenOnEnabled(Context context) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        return sp.getBoolean(context.getString(R.string.sp_name_keep_screen_on), context.getResources().getBoolean(R.bool.keep_screen_on_default));
+    }
+
+    public static boolean isFullscreenEnabled(Context context) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        return sp.getBoolean(context.getString(R.string.sp_name_enable_fullscreen), true);
     }
 }
