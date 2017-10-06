@@ -39,14 +39,27 @@ public class SmsReceiver extends BroadcastReceiver {
                     if (message.length > -1) {
                         Log.d(TAG, String.format("SMS received (length: %d): %s", message.length, message[0].getMessageBody()));
 
-                        BasicSms sms = buildBasicSms(message);
-                        Uri uriResult = SmsHelper.insertMessageToInbox(context, sms.senderAddress, sms.body, sms.timestampSent);
-                        Log.d(TAG, "Store SMS " + uriResult + ": " + sms);
-
-                        notifyActivityOfNewSms(context, uriResult, sms);
+                        saveNewSmsAndNotify(context, message);
                     }
                 }
             }
+        }
+    }
+
+    private void saveNewSmsAndNotify(Context context, final SmsMessage[] message) {
+        final long timestamp = message[0].getTimestampMillis();
+        final String senderAddress = message[0].getOriginatingAddress();
+        final String body = getMessageBodyAsString(message);
+
+        Uri uriResult = SmsHelper.insertMessageToInbox(context, senderAddress, body, timestamp);
+
+        if (AcceptedContacts.getInstance().isAcceptedContact(senderAddress)) {
+            final String contactName = AcceptedContacts.getInstance().getContactName(senderAddress);
+
+            BasicSms sms = new BasicSms(timestamp, senderAddress, contactName, body, uriResult.toString());
+            Log.d(TAG, "Stored SMS from accepted contact " + uriResult + ": " + sms);
+
+            notifyActivityOfNewSms(context, uriResult, sms);
         }
     }
 
@@ -64,17 +77,11 @@ public class SmsReceiver extends BroadcastReceiver {
         context.startActivity(i);
     }
 
-    private static BasicSms buildBasicSms(SmsMessage[] message) {
-        BasicSms basicSms = new BasicSms();
-
+    private static String getMessageBodyAsString(SmsMessage[] message) {
         StringBuilder stringBuilder = new StringBuilder();
         for (SmsMessage msgPart : message) {
             stringBuilder.append(msgPart.getMessageBody());
         }
-        basicSms.body = stringBuilder.toString();
-        basicSms.senderAddress = message[0].getOriginatingAddress();
-        basicSms.timestampSent = message[0].getTimestampMillis();
-
-        return basicSms;
+        return stringBuilder.toString();
     }
 }

@@ -1,23 +1,29 @@
 package com.bivaca.familyhub.messages;
 
-class BasicSms {
+final class BasicSms {
     Long timestampSent;
     String senderAddress;
+    String friendlySenderName;
     String body;
     String id;
-    boolean isRead = false;
-    boolean isRepliedTo = false;
+    boolean isRead;
+    boolean isRepliedTo;
 
-    // Initialise as may never be set elsewhere but we may want to use it in toString()
-    String friendlySenderName = "";
+    private BasicSms() {}
 
-    BasicSms() {}
+    BasicSms(Long timestampSent, String senderAddress, String friendlySenderName, String body, String id) {
+        this(timestampSent, senderAddress, friendlySenderName, body, id, false);
+    }
 
-    BasicSms(Long timestampSent, String senderAddress, String body, String id) {
+    BasicSms(Long timestampSent, String senderAddress, String friendlySenderName, String body, String id, boolean isRead) {
         this.timestampSent = timestampSent;
         this.senderAddress = senderAddress;
+        this.friendlySenderName = friendlySenderName;
         this.body = body;
         this.id = id;
+        this.isRead = isRead;
+
+        this.isRepliedTo = false;
     }
 
     public String toString() {

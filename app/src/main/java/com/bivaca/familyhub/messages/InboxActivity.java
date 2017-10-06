@@ -121,15 +121,22 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
         String action = intent.getAction();
         if (action != null && action.equals(INTENT_ACTION_NAME_NEW_SMS)) {
 
-            BasicSms sms = new BasicSms(
-                    intent.getLongExtra(INTENT_KEY_TIMESTAMP, -1),
-                    intent.getStringExtra(INTENT_KEY_SENDER_ADDRESS),
-                    intent.getStringExtra(INTENT_KEY_BODY),
-                    SmsHelper.getIdFromUri(intent.getStringExtra(INTENT_KEY_URI)));
+            final String senderAddress = intent.getStringExtra(INTENT_KEY_SENDER_ADDRESS);
 
-            Log.d(TAG, String.format("Handling new sms (%s) - %s", sms, isShowLatestMessage));
+            if (AcceptedContacts.getInstance().isAcceptedContact(senderAddress)) {
+                final String contactName = AcceptedContacts.getInstance().getContactName(senderAddress);
 
-            if (Inbox.getInstance().handleNewSmsReceived(sms)) {
+                final BasicSms sms = new BasicSms(
+                        intent.getLongExtra(INTENT_KEY_TIMESTAMP, -1),
+                        senderAddress,
+                        contactName,
+                        intent.getStringExtra(INTENT_KEY_BODY),
+                        SmsHelper.getIdFromUri(intent.getStringExtra(INTENT_KEY_URI)));
+
+                Log.d(TAG, String.format("Handling new sms (%s) - %s", sms, isShowLatestMessage));
+
+                Inbox.getInstance().addNewSms(sms);
+
                 // When we show the inbox, show the newly added sms
                 if (isShowLatestMessage) {
                     Inbox.getInstance().resetInboxIteratorToLatest();
@@ -138,6 +145,8 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
                 viewCurrentMessage();
 
                 notifyUserNewSms();
+            } else {
+                Log.d(TAG, "Received message from unknown sender");
             }
         }
     }
