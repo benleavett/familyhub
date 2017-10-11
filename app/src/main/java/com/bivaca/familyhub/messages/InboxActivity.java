@@ -63,9 +63,7 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
     protected void onNewIntent(Intent intent) {
         Log.d(TAG, "onNewIntent");
 
-        // Add new SMS but don't update current selected message (as user may be viewing another SMS)
-        // ... unless the inbox is empty so we're staring at an empty screen
-        handleNewSmsReceived(intent, Inbox.getInstance().isEmpty());
+        handleNewSmsReceived(intent, true);
     }
 
     @Override
