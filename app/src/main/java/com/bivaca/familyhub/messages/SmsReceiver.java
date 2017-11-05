@@ -3,11 +3,18 @@ package com.bivaca.familyhub.messages;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioAttributes;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
 import android.util.Log;
+
+import com.google.firebase.FirebaseException;
+import com.google.firebase.crash.FirebaseCrash;
 
 public class SmsReceiver extends BroadcastReceiver {
     private static final String TAG = SmsReceiver.class.getSimpleName();
@@ -60,6 +67,32 @@ public class SmsReceiver extends BroadcastReceiver {
             Log.d(TAG, "Stored SMS from accepted contact " + uriResult + ": " + sms);
 
             notifyActivityOfNewSms(context, uriResult, sms);
+
+            playSoundNewMessage(context);
+        }
+    }
+
+    private void playSoundNewMessage(Context context) {
+        Uri defaultRingtoneUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
+        MediaPlayer mediaPlayer = new MediaPlayer();
+        AudioAttributes.Builder builder = new AudioAttributes.Builder();
+        builder.setUsage(AudioAttributes.USAGE_NOTIFICATION_COMMUNICATION_INSTANT);
+
+        try {
+            mediaPlayer.setDataSource(context, defaultRingtoneUri);
+            mediaPlayer.setAudioAttributes(builder.build());
+            mediaPlayer.prepare();
+            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    mp.release();
+                }
+            });
+            mediaPlayer.start();
+        } catch (Exception ex) {
+            Log.e(TAG, ex.getStackTrace().toString());
+            FirebaseCrash.report(ex);
         }
     }
 
