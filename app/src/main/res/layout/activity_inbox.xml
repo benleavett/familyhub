@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/unread_state"
-        android:textSize="@dimen/message_view_metadata_font_size"
+        android:textSize="@dimen/metadata_font_size"
         android:paddingLeft="@dimen/message_view_metadata_padding"
         android:paddingRight="@dimen/message_view_metadata_padding"
         android:background="@drawable/unread_state_background"
@@ -32,7 +32,7 @@
             android:id="@+id/message_sender_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/message_view_text_font_size"
+            android:textSize="@dimen/default_text_size"
             android:layout_alignParentLeft="true"
             android:padding="@dimen/message_view_metadata_padding"/>
         <ImageView
@@ -48,7 +48,7 @@
         android:id="@+id/message_datetime_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/message_view_metadata_font_size"
+        android:textSize="@dimen/metadata_font_size"
         android:paddingLeft="@dimen/message_view_metadata_padding"
         android:paddingRight="@dimen/message_view_metadata_padding"/>
     <ScrollView
@@ -59,8 +59,8 @@
             android:id="@+id/message_body_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/message_view_text_font_size"
-            android:padding="@dimen/message_view_padding" />
+            android:textSize="@dimen/default_text_size"
+            android:padding="@dimen/default_view_padding" />
     </ScrollView>
     <Button
         android:id="@+id/reply_button"

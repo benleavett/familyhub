@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical"
+    android:orientation="vertical"
+    tools:context=".messages.ConfirmMessageSent">
+
+    <TextView
+        android:id="@+id/comfirm_sms_sent_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/default_view_padding"
+        android:text="@string/confirm_sms_sent"
+        android:textAlignment="center"
+        android:textSize="@dimen/default_text_size" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:tint="@color/pink"
+        android:padding="@dimen/message_view_metadata_padding"
+        app:srcCompat="@drawable/ic_check_circle_black_24dp" />
+
+    <TextView
+        android:id="@+id/countdown_timer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/default_view_padding"
+        android:text="@string/countdown_timer_text"
+        android:textAlignment="center"
+        android:textSize="@dimen/metadata_font_size" />
+</LinearLayout>

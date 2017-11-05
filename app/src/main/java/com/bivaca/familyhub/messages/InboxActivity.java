@@ -36,7 +36,7 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
     final static String INTENT_KEY_TIMESTAMP = "timestamp";
     final static String INTENT_KEY_MESSAGE_ID = "msg_id";
 
-    final static int REPLY_REQUEST_CODE = 1;
+    final static int REPLY_COMPLETE_REQUEST_CODE = 1;
     final static int RESULT_REPLY_SENT_OK = 100;
 
     @Override
@@ -104,10 +104,10 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REPLY_REQUEST_CODE) {
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        if (requestCode == REPLY_COMPLETE_REQUEST_CODE) {
             if (resultCode == RESULT_REPLY_SENT_OK) {
-                String messageId = data.getData().toString();
+                String messageId = intent.getData().toString();
                 if (Inbox.getInstance().getCurrentMessage().id.equals(messageId)) {
                     Inbox.getInstance().markCurrentMessageAsReplied(this);
 
@@ -325,7 +325,7 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
         intent.putExtra(INTENT_KEY_SENDER_ADDRESS, sms.senderAddress);
         intent.putExtra(INTENT_KEY_MESSAGE_ID, sms.id);
 
-        startActivityForResult(intent, REPLY_REQUEST_CODE);
+        startActivityForResult(intent, REPLY_COMPLETE_REQUEST_CODE);
     }
 }
 
