@@ -83,22 +83,11 @@ public class Inbox {
         return mInboxIndex > 0;
     }
 
-    boolean handleNewSmsReceived(BasicSms sms) {
-        final String friendlyName = AcceptedContacts.getInstance().getContactName(sms.senderAddress);
+    void addNewSms(BasicSms sms) {
+        // Add to end of list (latest messages at end of list)
+        mMessages.add(sms);
 
-        if (friendlyName != null) {
-            sms.friendlySenderName = friendlyName;
-
-            // Add to end of list (latest messages at end of list)
-            mMessages.add(sms);
-
-            Log.d(TAG, "ADDED new SMS to local store " + sms);
-            return true;
-        }
-        else {
-            Log.d(TAG, "Found new SMS from invalid contact " + sms);
-            return false;
-        }
+        Log.d(TAG, "ADDED new SMS to local store " + sms);
     }
 
     void markMessageAsRead(final Activity activity, final BasicSms sms) {

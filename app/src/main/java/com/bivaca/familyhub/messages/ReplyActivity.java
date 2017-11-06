@@ -1,12 +1,10 @@
 package com.bivaca.familyhub.messages;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v7.app.AlertDialog;
 import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
@@ -18,10 +16,10 @@ import com.bivaca.familyhub.R;
 import java.util.ArrayList;
 
 public class ReplyActivity extends MyActivity {
-
     private static final String TAG = ReplyActivity.class.getSimpleName();
 
-    final static String MESSAGE_REPLY_INTENT_ACTION_NAME = "com.benjamjin.familyhub.MESSAGE_REPLY_INTENT_ACTION_NAME";
+    final static String MESSAGE_REPLY_INTENT_ACTION_NAME = "com.bivaca.familyhub.MESSAGE_REPLY_INTENT_ACTION_NAME";
+    final static int CONFIRM_SENT_COMPLETE_REQUEST_CODE = 1;
 
     private String mSenderAddress;
     private String mMessageId;
@@ -40,6 +38,17 @@ public class ReplyActivity extends MyActivity {
             if (action != null && action.equals(MESSAGE_REPLY_INTENT_ACTION_NAME)) {
                 mSenderAddress = getIntent().getStringExtra(InboxActivity.INTENT_KEY_SENDER_ADDRESS);
                 mMessageId = getIntent().getStringExtra(InboxActivity.INTENT_KEY_MESSAGE_ID);
+            }
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        if (requestCode == CONFIRM_SENT_COMPLETE_REQUEST_CODE) {
+            if (resultCode == InboxActivity.RESULT_REPLY_SENT_OK) {
+                // Pass result intent to InboxActivity
+                setResult(InboxActivity.RESULT_REPLY_SENT_OK, intent);
+                finish();
             }
         }
     }
@@ -92,23 +101,10 @@ public class ReplyActivity extends MyActivity {
     }
 
     private void notifyUserSmsSent() {
-        new AlertDialog.Builder(this)
-                .setTitle(getTitle())
-                .setMessage(getString(R.string.confirm_sms_sent))
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-
-                        // Tell InboxActivity which message was replied to
-                        Intent intent = new Intent();
-                        intent.setData(Uri.parse(mMessageId));
-                        setResult(InboxActivity.RESULT_REPLY_SENT_OK, intent);
-
-                        finish();
-                    }
-                })
-                .show();
+        Intent intent = new Intent(this, ConfirmMessageSent.class);
+        intent.setAction(ReplyActivity.MESSAGE_REPLY_INTENT_ACTION_NAME);
+        intent.putExtra(InboxActivity.INTENT_KEY_MESSAGE_ID, mMessageId);
+        startActivityForResult(intent, CONFIRM_SENT_COMPLETE_REQUEST_CODE);
     }
 
     private boolean verifyRequiredSmsFields() {

@@ -114,25 +114,30 @@ class SmsHelper {
 
             if (cursor != null && cursor.moveToFirst()) {
                 do {
-                    BasicSms sms = new BasicSms();
+                    String body = "";
+                    String senderAddress = "";
+                    long timestampSent = 0;
+                    boolean isRead = false;
+                    String id = "";
+
                     // Columns read must match exactly columns in ALL_SMS_MESSAGES_PROJECTION
                     for (int i = 0; i < cursor.getColumnCount(); i++) {
                         if (cursor.getColumnName(i).equals(Telephony.Sms.BODY)) {
-                            sms.body = cursor.getString(i);
+                            body = cursor.getString(i);
                         } else if (cursor.getColumnName(i).equals(Telephony.Sms.ADDRESS)) {
-                            sms.senderAddress = cursor.getString(i);
+                            senderAddress = cursor.getString(i);
                         } else if (cursor.getColumnName(i).equals(Telephony.Sms.DATE_SENT)) {
-                            sms.timestampSent = Long.parseLong(cursor.getString(i));
+                            timestampSent = Long.parseLong(cursor.getString(i));
                         } else if (cursor.getColumnName(i).equals(Telephony.Sms.READ)) {
-                            sms.isRead = cursor.getString(i).equals("1");
+                            isRead = cursor.getString(i).equals("1");
                         } else if (cursor.getColumnName(i).equals(SMS_COLUMN_DB_ID)) {
-                            sms.id = cursor.getString(i);
+                            id = cursor.getString(i);
                         }
                     }
 
-                    final String contactName = AcceptedContacts.getInstance().getContactName(sms.senderAddress);
-                    if (contactName != null) {
-                        sms.friendlySenderName = contactName;
+                    if (AcceptedContacts.getInstance().isAcceptedContact(senderAddress)) {
+                        final String contactName = AcceptedContacts.getInstance().getContactName(senderAddress);
+                        BasicSms sms = new BasicSms(timestampSent, senderAddress, contactName, body, id, isRead);
 
                         allMessages.add(sms);
 
@@ -154,6 +159,7 @@ class SmsHelper {
     }
 
     static String getIdFromUri(String uri) {
+        Log.e("BEN", "FIXME " + uri);
         //TODO
         return "-1";
     }

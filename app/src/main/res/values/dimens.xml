@@ -4,10 +4,12 @@
     <dimen name="button_large_font_size">50dp</dimen>
     <dimen name="large_button_padding">20dp</dimen>
 
+    <dimen name="metadata_font_size">24dp</dimen>
+
+    <dimen name="default_text_size">44dp</dimen>
+    <dimen name="default_view_padding">10dp</dimen>
+
     <!-- Message activities -->
-    <dimen name="message_view_metadata_font_size">24dp</dimen>
-    <dimen name="message_view_text_font_size">44dp</dimen>
-    <dimen name="message_view_padding">10dp</dimen>
     <dimen name="message_view_metadata_padding">5dp</dimen>
 
     <!-- Setting activities -->
