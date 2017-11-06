@@ -2,6 +2,8 @@
 <resources>
     <!--<color name="colorPrimary">#3F51B5</color>-->
     <!--<color name="colorPrimaryDark">#303F9F</color>-->
-    <color name="pink">#FF4081</color>
+    <color name="colorAccentOne">#ffff00</color>
+    <color name="color_text_scheme_one">#000000</color>
+    <color name="color_text_disabled_scheme_one">#cccccc</color>
     <!--<color name="black_overlay">#66000000</color>-->
 </resources>

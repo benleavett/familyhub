@@ -25,7 +25,7 @@
     <string name="confirm_sms_sent">Your reply has been sent</string>
 
     <!-- ComfirmMessageSentActivity -->
-    <string name="countdown_timer_text">Returning to Inbox in %d seconds</string>
+    <string name="countdown_timer_text">Returning to inbox in %d seconds</string>
 
     <!-- SettingsActivity -->
     <string name="sp_category_title_application">Application</string>
