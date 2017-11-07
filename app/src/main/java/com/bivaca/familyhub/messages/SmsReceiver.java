@@ -13,7 +13,9 @@ import android.os.Bundle;
 import android.telephony.SmsMessage;
 import android.util.Log;
 
+import com.bivaca.familyhub.FirebaseEventLogger;
 import com.google.firebase.FirebaseException;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crash.FirebaseCrash;
 
 public class SmsReceiver extends BroadcastReceiver {
@@ -69,6 +71,8 @@ public class SmsReceiver extends BroadcastReceiver {
             notifyActivityOfNewSms(context, uriResult, sms);
 
             playSoundNewMessage(context);
+
+            FirebaseEventLogger.logMessageReceived(context, sms.senderAddress, sms.friendlySenderName, sms.id);
         }
     }
 

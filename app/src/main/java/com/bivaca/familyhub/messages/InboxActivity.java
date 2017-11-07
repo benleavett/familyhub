@@ -37,6 +37,8 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
     final static String INTENT_KEY_TIMESTAMP = "timestamp";
     final static String INTENT_KEY_MESSAGE_ID = "msg_id";
 
+    final static String FRIENDLY_NAME_KEY = "friendly_name";
+
     final static int REPLY_COMPLETE_REQUEST_CODE = 1;
     final static int RESULT_REPLY_SENT_OK = 100;
 
@@ -325,7 +327,9 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
         intent.setAction(ReplyActivity.MESSAGE_REPLY_INTENT_ACTION_NAME);
         intent.putExtra(INTENT_KEY_SENDER_ADDRESS, sms.senderAddress);
         intent.putExtra(INTENT_KEY_MESSAGE_ID, sms.id);
+        intent.putExtra(FRIENDLY_NAME_KEY, sms.friendlySenderName);
 
+        //FIXME remove when investigated why message ids become null
         if (sms.id == null) {
             Bundle bundle = new Bundle();
             bundle.putString("friendlySenderName", sms.friendlySenderName);

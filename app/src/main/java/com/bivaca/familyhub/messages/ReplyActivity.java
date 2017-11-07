@@ -10,9 +10,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.bivaca.familyhub.FirebaseEventLogger;
 import com.bivaca.familyhub.MyActivity;
 import com.bivaca.familyhub.R;
-import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
 
@@ -24,6 +24,7 @@ public class ReplyActivity extends MyActivity {
 
     private String mSenderAddress;
     private String mMessageId;
+    private String mFriendlyName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +40,7 @@ public class ReplyActivity extends MyActivity {
             if (action != null && action.equals(MESSAGE_REPLY_INTENT_ACTION_NAME)) {
                 mSenderAddress = getIntent().getStringExtra(InboxActivity.INTENT_KEY_SENDER_ADDRESS);
                 mMessageId = getIntent().getStringExtra(InboxActivity.INTENT_KEY_MESSAGE_ID);
+                mFriendlyName = getIntent().getStringExtra(InboxActivity.FRIENDLY_NAME_KEY);
             }
         }
     }
@@ -97,6 +99,8 @@ public class ReplyActivity extends MyActivity {
 
         SmsManager smsManager = SmsManager.getDefault();
         smsManager.sendTextMessage(mSenderAddress, null, message, null, null);
+
+        FirebaseEventLogger.logMessageSent(this, mSenderAddress, mFriendlyName, mMessageId);
 
         notifyUserSmsSent();
     }

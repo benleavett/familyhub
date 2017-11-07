@@ -63,6 +63,8 @@ class VocaliserService implements OnInitListener, SharedPreferences.OnSharedPref
                 } else {
                     mTTS.speak(text, TextToSpeech.QUEUE_ADD, null);
                 }
+
+                FirebaseEventLogger.logVocalisation(mContext);
             }
         }
         else {
