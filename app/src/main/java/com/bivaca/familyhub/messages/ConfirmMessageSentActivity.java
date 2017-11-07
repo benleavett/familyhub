@@ -9,9 +9,10 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.bivaca.familyhub.R;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
-public class ConfirmMessageSent extends AppCompatActivity {
-    private static final String TAG = ConfirmMessageSent.class.getSimpleName();
+public class ConfirmMessageSentActivity extends AppCompatActivity {
+    private static final String TAG = ConfirmMessageSentActivity.class.getSimpleName();
 
     private String mMessageId;
     private TextView mCountdownText;
@@ -48,7 +49,13 @@ public class ConfirmMessageSent extends AppCompatActivity {
 
                 Intent intent = new Intent(getApplicationContext(), InboxActivity.class);
                 // Tell InboxActivity which message was replied to
-                intent.setData(Uri.parse(mMessageId));
+                //FIXME shouldn't really need this check - investigate why is sometimes null
+                if (mMessageId != null) {
+                    intent.setData(Uri.parse(mMessageId));
+                    
+                    //FIXME remove when resolved issue. Should match logEvent in InboxActivity
+                    FirebaseAnalytics.getInstance(getApplicationContext()).logEvent("message_id_null_confirm", null);
+                }
                 setResult(InboxActivity.RESULT_REPLY_SENT_OK, intent);
                 finish();
             }

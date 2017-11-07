@@ -71,7 +71,7 @@
                 android:value="com.bivaca.familyhub.messages.InboxActivity" />
         </activity>
         <activity
-            android:name=".messages.ConfirmMessageSent"
+            android:name=".messages.ConfirmMessageSentActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTop"
             android:parentActivityName=".messages.ReplyActivity"
