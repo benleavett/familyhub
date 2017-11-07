@@ -52,7 +52,7 @@ public class ConfirmMessageSentActivity extends AppCompatActivity {
                 //FIXME shouldn't really need this check - investigate why is sometimes null
                 if (mMessageId != null) {
                     intent.setData(Uri.parse(mMessageId));
-                    
+
                     //FIXME remove when resolved issue. Should match logEvent in InboxActivity
                     FirebaseAnalytics.getInstance(getApplicationContext()).logEvent("message_id_null_confirm", null);
                 }
