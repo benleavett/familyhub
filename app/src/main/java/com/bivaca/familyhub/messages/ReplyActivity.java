@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.bivaca.familyhub.MyActivity;
 import com.bivaca.familyhub.R;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
 
@@ -46,7 +47,7 @@ public class ReplyActivity extends MyActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (requestCode == CONFIRM_SENT_COMPLETE_REQUEST_CODE) {
             if (resultCode == InboxActivity.RESULT_REPLY_SENT_OK) {
-                // Pass result intent to InboxActivity
+                // Pass result intent straight back to InboxActivity
                 setResult(InboxActivity.RESULT_REPLY_SENT_OK, intent);
                 finish();
             }
@@ -101,7 +102,7 @@ public class ReplyActivity extends MyActivity {
     }
 
     private void notifyUserSmsSent() {
-        Intent intent = new Intent(this, ConfirmMessageSent.class);
+        Intent intent = new Intent(this, ConfirmMessageSentActivity.class);
         intent.setAction(ReplyActivity.MESSAGE_REPLY_INTENT_ACTION_NAME);
         intent.putExtra(InboxActivity.INTENT_KEY_MESSAGE_ID, mMessageId);
         startActivityForResult(intent, CONFIRM_SENT_COMPLETE_REQUEST_CODE);

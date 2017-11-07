@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.bivaca.familyhub.MyActivity;
 import com.bivaca.familyhub.R;
 import com.bivaca.familyhub.Util;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.ocpsoft.prettytime.PrettyTime;
 
@@ -324,6 +325,12 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
         intent.setAction(ReplyActivity.MESSAGE_REPLY_INTENT_ACTION_NAME);
         intent.putExtra(INTENT_KEY_SENDER_ADDRESS, sms.senderAddress);
         intent.putExtra(INTENT_KEY_MESSAGE_ID, sms.id);
+
+        if (sms.id == null) {
+            Bundle bundle = new Bundle();
+            bundle.putString("friendlySenderName", sms.friendlySenderName);
+            FirebaseAnalytics.getInstance(this).logEvent("message_id_null_inbox", bundle);
+        }
 
         startActivityForResult(intent, REPLY_COMPLETE_REQUEST_CODE);
     }

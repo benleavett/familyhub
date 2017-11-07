@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:gravity="center_vertical"
     android:orientation="vertical"
-    tools:context=".messages.ConfirmMessageSent">
+    tools:context=".messages.ConfirmMessageSentActivity">
 
     <TextView
         android:id="@+id/comfirm_sms_sent_text"
