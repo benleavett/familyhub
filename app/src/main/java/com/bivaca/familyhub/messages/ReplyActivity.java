@@ -90,10 +90,6 @@ public class ReplyActivity extends MyActivity {
 
         String message = buttonSelected.getText().toString();
 
-        if (!verifyRequiredSmsFields()) {
-            return;
-        }
-
         //FIXME check that we *actually* inserted the message
         Uri uri = SmsHelper.insertMessageToOutbox(this, mSenderAddress, message);
 
@@ -109,11 +105,7 @@ public class ReplyActivity extends MyActivity {
         Intent intent = new Intent(this, ConfirmMessageSentActivity.class);
         intent.setAction(ReplyActivity.MESSAGE_REPLY_INTENT_ACTION_NAME);
         intent.putExtra(InboxActivity.INTENT_KEY_MESSAGE_ID, mMessageId);
-        startActivityForResult(intent, CONFIRM_SENT_COMPLETE_REQUEST_CODE);
-    }
 
-    private boolean verifyRequiredSmsFields() {
-        //TODO
-        return true;
+        startActivityForResult(intent, CONFIRM_SENT_COMPLETE_REQUEST_CODE);
     }
 }

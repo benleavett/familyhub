@@ -12,6 +12,8 @@ import android.text.SpannableString;
 import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -111,12 +113,13 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
         if (requestCode == REPLY_COMPLETE_REQUEST_CODE) {
             if (resultCode == RESULT_REPLY_SENT_OK) {
                 String messageId = intent.getData().toString();
+
                 if (Inbox.getInstance().getCurrentMessage().id.equals(messageId)) {
                     Inbox.getInstance().markCurrentMessageAsReplied(this);
-
-                    populateMessageViewLayout(Inbox.getInstance().getCurrentMessage());
                 }
             }
+
+            populateMessageViewLayout(Inbox.getInstance().getCurrentMessage());
         }
     }
 
@@ -146,17 +149,10 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
                 }
 
                 viewCurrentMessage();
-
-                notifyUserNewSms();
             } else {
                 Log.d(TAG, "Received message from unknown sender");
             }
         }
-    }
-
-    private void notifyUserNewSms() {
-        LinearLayout layout = (LinearLayout) findViewById(R.id.inbox_layout);
-        Snackbar.make(layout, "You've received a new message", Snackbar.LENGTH_LONG).show();
     }
 
     private void setLongPressListeners() {
@@ -180,8 +176,7 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
     }
 
     private void populateMessageViewLayoutForEmptyInbox() {
-        TextView isUnreadState = (TextView) findViewById(R.id.unread_state);
-        isUnreadState.setVisibility(View.INVISIBLE);
+        setUnreadStatusIndicator(false);
 
         TextView senderView = (TextView) findViewById(R.id.message_sender_text);
         senderView.setVisibility(View.INVISIBLE);
@@ -204,29 +199,31 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
         replyBtn.setVisibility(View.GONE);
     }
 
-    private void setMessageStatusIndicator(final BasicSms sms) {
-        TextView messageStatusView = (TextView) findViewById(R.id.unread_state);
+    private void setUnreadStatusIndicator(final boolean isUnread) {
+        TextView isUnreadState = (TextView) findViewById(R.id.unread_state);
 
-        if (!sms.isRead) {
-            messageStatusView.setText(getString(R.string.message_unread_text));
-            messageStatusView.setVisibility(View.VISIBLE);
+        if (isUnread) {
+            isUnreadState.setText(getString(R.string.message_unread_text));
+            isUnreadState.setVisibility(View.VISIBLE);
             if (Util.isLollipopOrAbove()) {
-                messageStatusView.setBackground(getDrawable(R.drawable.unread_state_background));
+                isUnreadState.setBackground(getDrawable(R.drawable.unread_state_background));
             } else {
                 ResourcesCompat.getDrawable(getResources(), R.drawable.unread_state_background, null);
             }
-        }/* else if (sms.hasReplied) {
-        //TODO handle 'has replied' message state
-            messageStatusView.setText(getString(R.string.message_replied_text));
-            messageStatusView.setVisibility(View.VISIBLE);
-            messageStatusView.setBackground(getDrawable(R.drawable.replied_state_background));
-        }*/ else {
-            messageStatusView.setVisibility(View.GONE);
+
+            Animation anim = new AlphaAnimation(0.0f, 1.0f);
+            anim.setDuration(750);
+            anim.setRepeatMode(Animation.REVERSE);
+            anim.setRepeatCount(Animation.INFINITE);
+            isUnreadState.startAnimation(anim);
+        } else {
+            isUnreadState.setVisibility(View.GONE);
+            isUnreadState.clearAnimation();
         }
     }
 
     private void populateMessageViewLayout(final BasicSms sms) {
-        setMessageStatusIndicator(sms);
+        setUnreadStatusIndicator(!sms.isRead);
 
         // Set sender name
         TextView senderView = (TextView) findViewById(R.id.message_sender_text);

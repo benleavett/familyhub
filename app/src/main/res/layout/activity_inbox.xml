@@ -18,8 +18,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/unread_state"
         android:textSize="@dimen/metadata_font_size"
-        android:paddingLeft="@dimen/message_view_metadata_padding"
-        android:paddingRight="@dimen/message_view_metadata_padding"
         android:background="@drawable/unread_state_background"
         android:text="@string/message_unread_text"
         android:textColor="@android:color/white"
