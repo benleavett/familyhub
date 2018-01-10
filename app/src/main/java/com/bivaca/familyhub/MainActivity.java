@@ -8,6 +8,7 @@ import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Telephony;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -20,16 +21,29 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bivaca.familyhub.messages.Inbox;
+import com.bivaca.familyhub.photos.SlideshowActivity;
+import com.bivaca.familyhub.util.SharedPrefsHelper;
+import com.bivaca.familyhub.util.Util;
 import com.crashlytics.android.Crashlytics;
 import io.fabric.sdk.android.Fabric;
 
 import com.bivaca.familyhub.messages.InboxActivity;
 
 public class MainActivity extends MyActivity {
-
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private static final int MAKE_DEFAULT_SMS_PROMPT = 1;
+    private static final int MAKE_DEFAULT_LAUNCHER_PROMPT = 2;
+
+    private Handler runSlideshowHandler = null;
+
+    private final Runnable showPhotosRunnable = new Runnable() {
+        @Override
+        public void run() {
+            Log.d(TAG, "Timer - started");
+            showPhotosActivity(null);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +60,7 @@ public class MainActivity extends MyActivity {
         //TODO check if SMS function is enabled
         getMyApplication().verifySmsPermissions(this);
 
-        TextView versionView = (TextView)findViewById(R.id.version_text);
+        TextView versionView = findViewById(R.id.version_text);
         versionView.setText("v" + BuildConfig.VERSION_CODE);
     }
 
@@ -54,7 +68,7 @@ public class MainActivity extends MyActivity {
     protected void onResume() {
         super.onResume();
 
-        if(!isDefaultMessagingApp()) {
+        if(!Util.isDefaultMessagingApp(this)) {
             promptUserToMakeDefaultMessagingApp();
         }
 
@@ -72,7 +86,30 @@ public class MainActivity extends MyActivity {
                     .show();
         }
 
-        promptToMakeHome();
+        // If we had to prompt to make home then we'll set the timer later, if not then set it here
+        if (!promptToMakeHomeLauncher()) {
+            if (SharedPrefsHelper.isPhotosEnabled(this) && SharedPrefsHelper.isAutoPlaySlides(this)) {
+                setTimerToLoadSlideshow();
+            }
+        }
+
+        // Enable photos button only if the pref says we should
+        Button photosButton = findViewById(R.id.show_photos_button);
+        photosButton.setEnabled(SharedPrefsHelper.isPhotosEnabled(this));
+    }
+
+    private void cancelTimerToLoadSlideshow() {
+        Log.d(TAG, "Timer - cancelling");
+        if (runSlideshowHandler != null) {
+            runSlideshowHandler.removeCallbacks(showPhotosRunnable);
+        }
+    }
+
+    private void setTimerToLoadSlideshow() {
+        Log.d(TAG, "Timer - setting");
+        runSlideshowHandler = new Handler();
+
+        runSlideshowHandler.postDelayed(showPhotosRunnable, SharedPrefsHelper.getAutoPlayDelayMilliseconds(this));
     }
 
     @Override
@@ -87,14 +124,21 @@ public class MainActivity extends MyActivity {
         if (requestCode == MAKE_DEFAULT_SMS_PROMPT) {
             if (resultCode != RESULT_OK) {
                 Log.w(TAG, "User declined to set as default SMS app");
-                finish();
+
+                if (!BuildConfig.DEBUG) {
+                    finish();
+                }
+            }
+        } else if (requestCode == MAKE_DEFAULT_LAUNCHER_PROMPT) {
+            if (resultCode == RESULT_OK && SharedPrefsHelper.isAutoPlaySlides(this)) {
+                setTimerToLoadSlideshow();
             }
         }
     }
 
     private void setClearInboxVisibleState() {
         if (BuildConfig.DEBUG) {
-            Button clearInboxBtn = (Button) findViewById(R.id.clear_inbox_btn);
+            Button clearInboxBtn = findViewById(R.id.clear_inbox_btn);
             clearInboxBtn.setVisibility(View.VISIBLE);
         }
     }
@@ -105,24 +149,19 @@ public class MainActivity extends MyActivity {
         startActivityForResult(intent, MAKE_DEFAULT_SMS_PROMPT);
     }
 
-    private boolean isDefaultMessagingApp() {
-        String defaultSmsPackage = Telephony.Sms.getDefaultSmsPackage(this);
-        return defaultSmsPackage != null && defaultSmsPackage.equals(getPackageName());
-    }
-
     public void showMessagesActivity(View v) {
+        cancelTimerToLoadSlideshow();
         startActivity(new Intent(this, InboxActivity.class));
     }
 
     public void showPhotosActivity(View v) {
-//        startActivity(new Intent(this, PhotosActivity.class));
+        cancelTimerToLoadSlideshow();
+        startActivity(new Intent(this, SlideshowActivity.class));
     }
 
     public void showSettingsActivity(View v) {
+        cancelTimerToLoadSlideshow();
         startActivity(new Intent(this, SettingsActivity.class));
-        //TODO wtf - testing snackbar
-//        LinearLayout layout = (LinearLayout) findViewById(R.id.main_layout);
-//        Snackbar.make(layout, "You've received a new message", Snackbar.LENGTH_LONG).show();
     }
 
     public void clearInbox(View v) {
@@ -162,15 +201,24 @@ public class MainActivity extends MyActivity {
         }
     }
 
-    private void promptToMakeHome() {
-        if (!Util.noDefaultSet(this) && !Util.isDefault(this)) {
+    private boolean promptToMakeHomeLauncher() {
+        if (Util.isNotHomeLauncher(this)) {
             if (Util.isLollipopOrAbove()) {
                 chooseHomeScreenLollipop();
             } else {
                 chooseHomeScreenDefault();
             }
+            return true;
+        } else {
+            return false;
         }
     }
+
+//    @Override
+//    public boolean dispatchTouchEvent(MotionEvent ev) {
+//        Log.d(TAG, "DISPATCHING");
+//        return super.dispatchTouchEvent(ev);
+//    }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void chooseHomeScreenLollipop() {
@@ -187,7 +235,7 @@ public class MainActivity extends MyActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        startActivity(new Intent(android.provider.Settings.ACTION_HOME_SETTINGS));
+                        startActivityForResult(new Intent(android.provider.Settings.ACTION_HOME_SETTINGS), MAKE_DEFAULT_LAUNCHER_PROMPT);
                         finish();
                     }
                 })
@@ -215,7 +263,7 @@ public class MainActivity extends MyActivity {
                         // A home screen is set - take us to that
                         Intent settings = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
                         settings.setData(Uri.parse("package:" + info.activityInfo.packageName));
-                        startActivity(settings);
+                        startActivityForResult(settings, MAKE_DEFAULT_LAUNCHER_PROMPT);
                         finish();
                     }
                 })

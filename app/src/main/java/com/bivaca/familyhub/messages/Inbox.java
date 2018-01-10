@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.bivaca.familyhub.R;
-import com.bivaca.familyhub.SharedPrefsHelper;
+import com.bivaca.familyhub.util.SharedPrefsHelper;
 
 import java.util.LinkedList;
 import java.util.List;

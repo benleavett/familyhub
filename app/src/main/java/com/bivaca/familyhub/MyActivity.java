@@ -6,6 +6,9 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.bivaca.familyhub.util.SharedPrefsHelper;
+import com.bivaca.familyhub.util.Util;
+
 import java.util.HashMap;
 
 public class MyActivity extends AppCompatActivity {

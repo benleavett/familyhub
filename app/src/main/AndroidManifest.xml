@@ -80,6 +80,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.bivaca.familyhub.messages.ReplyActivity" />
         </activity>
+        <activity android:name=".photos.SlideshowActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTop"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.bivaca.familyhub.MainActivity" />
+        </activity>
 
         <!-- UNUSED -->
         <activity android:name=".messages.ComposeSmsActivity">
@@ -134,7 +142,7 @@
             </intent-filter>
         </service>
 
-        <!--<activity android:name=".WelcomeActivity" />-->
+        <!-- <activity android:name=".WelcomeActivity" /> -->
     </application>
 
 </manifest>

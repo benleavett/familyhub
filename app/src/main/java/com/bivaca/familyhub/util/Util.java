@@ -1,4 +1,4 @@
-package com.bivaca.familyhub;
+package com.bivaca.familyhub.util;
 
 import android.content.Context;
 import android.content.Intent;
@@ -7,7 +7,10 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.BatteryManager;
 import android.os.Build;
+import android.provider.Telephony;
 import android.util.Log;
+
+import com.bivaca.familyhub.BuildConfig;
 
 public class Util {
 
@@ -28,7 +31,7 @@ public class Util {
     /**
      * @return true if we are the default home screen
      */
-    static boolean isDefault(Context context) {
+    public static boolean isDefault(Context context) {
         ResolveInfo info = context.getPackageManager().resolveActivity(homeScreenIntent(), 0);
         return BuildConfig.APPLICATION_ID.equals(info.activityInfo.packageName);
     }
@@ -36,10 +39,14 @@ public class Util {
     /**
      * @return true if there is no default home screen set
      */
-    public static boolean noDefaultSet(Context context) {
+    private static boolean noDefaultSet(Context context) {
         final PackageManager pm = context.getPackageManager();
         final ResolveInfo info = pm.resolveActivity(Util.homeScreenIntent(), 0);
         return info.match == 0 || "com.android.internal.app.ResolverActivity".equals(info.activityInfo.targetActivity);
+    }
+
+    public static boolean isNotHomeLauncher(Context context) {
+        return !noDefaultSet(context) && !isDefault(context);
     }
 
     public static Intent homeScreenIntent() {
@@ -65,5 +72,10 @@ public class Util {
             default:
                 return false;
         }
+    }
+
+    public static boolean isDefaultMessagingApp(Context context) {
+        String defaultSmsPackage = Telephony.Sms.getDefaultSmsPackage(context);
+        return defaultSmsPackage != null && defaultSmsPackage.equals(context.getPackageName());
     }
 }

@@ -20,8 +20,8 @@ import android.widget.TextView;
 
 import com.bivaca.familyhub.MyActivity;
 import com.bivaca.familyhub.R;
-import com.bivaca.familyhub.SharedPrefsHelper;
-import com.bivaca.familyhub.Util;
+import com.bivaca.familyhub.util.SharedPrefsHelper;
+import com.bivaca.familyhub.util.Util;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.ocpsoft.prettytime.PrettyTime;

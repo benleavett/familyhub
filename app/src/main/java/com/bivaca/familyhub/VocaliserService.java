@@ -11,6 +11,9 @@ import android.speech.tts.UtteranceProgressListener;
 import android.util.Log;
 import android.util.TypedValue;
 
+import com.bivaca.familyhub.util.FirebaseEventLogger;
+import com.bivaca.familyhub.util.Util;
+
 class VocaliserService implements OnInitListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String TAG = VocaliserService.class.getSimpleName();
@@ -47,7 +50,7 @@ class VocaliserService implements OnInitListener, SharedPreferences.OnSharedPref
     public void onSharedPreferenceChanged(SharedPreferences sp, String spKey) {
         if (spKey.equals(mContext.getString(R.string.sp_name_pref_choose_speech_rate))) {
             TypedValue value = new TypedValue();
-            mContext.getResources().getValue(R.dimen.speech_rate_options_default, value, true);
+            mContext.getResources().getValue(R.dimen.pref_default_speech_rate_options, value, true);
             float defaultRate = value.getFloat();
             setSpeechRate(sp.getString(spKey, Float.toString(defaultRate)));
         }
@@ -85,7 +88,7 @@ class VocaliserService implements OnInitListener, SharedPreferences.OnSharedPref
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
         return sp.getBoolean(
                 mContext.getString(R.string.sp_name_vocalisation_enabled),
-                mContext.getResources().getBoolean(R.bool.vocalisation_enabled_default));
+                mContext.getResources().getBoolean(R.bool.pref_default_vocalisation_enabled));
     }
 
     private void setSpeechRate(String speechRateStr) {

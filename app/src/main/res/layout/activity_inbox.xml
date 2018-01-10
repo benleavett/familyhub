@@ -42,7 +42,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/default_text_size"
                     android:textAlignment="center"
-                    android:padding="@dimen/message_view_metadata_padding"/>
+                    android:padding="@dimen/default_text_padding"/>
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -50,16 +50,16 @@
                     android:layout_alignParentEnd="true"
                     android:visibility="visible"
                     app:srcCompat="@drawable/ic_check_circle_black_24dp"
-                    android:padding="@dimen/message_view_metadata_padding"/>
+                    android:padding="@dimen/default_text_padding"/>
             </RelativeLayout>
             <TextView
                 android:id="@+id/message_datetime_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/default_text_size"
-                android:paddingLeft="@dimen/message_view_metadata_padding"
+                android:paddingLeft="@dimen/default_text_padding"
                 android:textAlignment="center"
-                android:paddingRight="@dimen/message_view_metadata_padding"/>
+                android:paddingRight="@dimen/default_text_padding"/>
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="1dp"

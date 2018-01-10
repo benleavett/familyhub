@@ -1,8 +1,10 @@
-package com.bivaca.familyhub;
+package com.bivaca.familyhub.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+
+import com.bivaca.familyhub.R;
 
 import java.util.Map;
 
@@ -44,7 +46,7 @@ public class SharedPrefsHelper {
 
     public static boolean isKeepScreenOnEnabled(Context context) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        return sp.getBoolean(context.getString(R.string.sp_name_keep_screen_on), context.getResources().getBoolean(R.bool.keep_screen_on_default));
+        return sp.getBoolean(context.getString(R.string.sp_name_keep_screen_on), context.getResources().getBoolean(R.bool.pref_default_keep_screen_on_default));
     }
 
     public static boolean isFullscreenEnabled(Context context) {
@@ -55,5 +57,28 @@ public class SharedPrefsHelper {
     public static boolean isHideMessageWhenReplied(Context context) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         return sp.getBoolean(context.getString(R.string.sp_name_pref_hide_msg_when_replied), false);
+    }
+
+    public static boolean isAutoPlaySlides(Context context) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        return sp.getBoolean("pref_auto_play_slides", context.getResources().getBoolean(R.bool.pref_default_auto_play_slides));
+    }
+
+    public static int getSlideTransitionFrequencyMilliseconds(Context context) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        // This is such bullshit. Android EditTextPreference can only ever take a string
+        String spValue = sp.getString("pref_transition_frequency", context.getString(R.string.pref_default_transition_frequency_seconds));
+        return Integer.valueOf(spValue) * 1000;
+    }
+
+    public static long getAutoPlayDelayMilliseconds(Context context) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        String spValue = sp.getString("pref_delay_initiate_auto_play", context.getString(R.string.pref_default_delay_initiate_auto_play_seconds));
+        return Integer.valueOf(spValue) * 1000;
+    }
+
+    public static boolean isPhotosEnabled(Context context) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        return sp.getBoolean("pref_name_enable_photos", context.getResources().getBoolean(R.bool.pref_default_enable_photos));
     }
 }

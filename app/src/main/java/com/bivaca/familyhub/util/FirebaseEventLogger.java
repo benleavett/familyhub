@@ -1,4 +1,4 @@
-package com.bivaca.familyhub;
+package com.bivaca.familyhub.util;
 
 import android.content.Context;
 import android.os.Bundle;

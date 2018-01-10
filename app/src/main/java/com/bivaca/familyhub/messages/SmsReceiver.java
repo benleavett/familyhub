@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioAttributes;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -13,9 +12,7 @@ import android.os.Bundle;
 import android.telephony.SmsMessage;
 import android.util.Log;
 
-import com.bivaca.familyhub.FirebaseEventLogger;
-import com.google.firebase.FirebaseException;
-import com.google.firebase.analytics.FirebaseAnalytics;
+import com.bivaca.familyhub.util.FirebaseEventLogger;
 import com.google.firebase.crash.FirebaseCrash;
 
 public class SmsReceiver extends BroadcastReceiver {
