@@ -13,53 +13,66 @@
         android:layout_height="wrap_content"
         android:text="@string/back_to_main_button"
         android:onClick="showPreviousActivity"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/unread_state"
-        android:textSize="@dimen/metadata_font_size"
-        android:background="@drawable/unread_state_background"
-        android:text="@string/message_unread_text"
-        android:textColor="@android:color/white"
-        android:textAlignment="center"
-        android:textStyle="bold"/>
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <TextView
-            android:id="@+id/message_sender_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/default_text_size"
-            android:layout_alignParentLeft="true"
-            android:padding="@dimen/message_view_metadata_padding"/>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/replied_state"
-            android:layout_alignParentRight="true"
-            android:visibility="invisible"
-            app:srcCompat="@drawable/ic_check_circle_black_24dp"
-            android:padding="@dimen/message_view_metadata_padding"/>
-    </RelativeLayout>
-    <TextView
-        android:id="@+id/message_datetime_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/metadata_font_size"
-        android:paddingLeft="@dimen/message_view_metadata_padding"
-        android:paddingRight="@dimen/message_view_metadata_padding"/>
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
-        <TextView
-            android:id="@+id/message_body_view"
+        android:layout_weight="1"
+        android:id="@+id/scroller_message_view">
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/default_text_size"
-            android:padding="@dimen/default_view_padding" />
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/unread_state"
+                android:textSize="@dimen/metadata_font_size"
+                android:background="@drawable/unread_state_background"
+                android:text="@string/message_unread_text"
+                android:textColor="@android:color/white"
+                android:textAlignment="center"
+                android:textStyle="bold"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/message_sender_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/default_text_size"
+                    android:textAlignment="center"
+                    android:padding="@dimen/message_view_metadata_padding"/>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/replied_state"
+                    android:layout_alignParentEnd="true"
+                    android:visibility="visible"
+                    app:srcCompat="@drawable/ic_check_circle_black_24dp"
+                    android:padding="@dimen/message_view_metadata_padding"/>
+            </RelativeLayout>
+            <TextView
+                android:id="@+id/message_datetime_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/default_text_size"
+                android:paddingLeft="@dimen/message_view_metadata_padding"
+                android:textAlignment="center"
+                android:paddingRight="@dimen/message_view_metadata_padding"/>
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/default_view_padding"
+                android:background="@color/color_divider"
+                android:id="@+id/divider_metadata"/>
+            <TextView
+                android:id="@+id/message_body_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/default_text_size"
+                android:padding="@dimen/default_view_padding" />
+        </LinearLayout>
     </ScrollView>
     <Button
         android:id="@+id/reply_button"
