@@ -6,7 +6,6 @@ import android.graphics.Typeface;
 import android.preference.PreferenceManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v4.content.res.ResourcesCompat;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
@@ -17,7 +16,6 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bivaca.familyhub.MyActivity;
@@ -196,8 +194,7 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
         Button laterBtn = (Button) findViewById(R.id.select_later_message_button);
         laterBtn.setVisibility(View.GONE);
 
-        Button replyBtn = (Button) findViewById(R.id.reply_button);
-        replyBtn.setVisibility(View.GONE);
+        showReplyButton(false);
     }
 
     private void setUnreadStatusIndicator(final boolean isUnread) {
@@ -274,7 +271,14 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
 
         refreshMessageSelectorButtonsEnabled();
 
-        refreshResponseButtonsVisibilityFromPrefs();
+        // Hide reply button if the user has already replied to this sms
+        if (sms.isRepliedTo) {
+            Button replyBtn = (Button) findViewById(R.id.reply_button);
+            replyBtn.setEnabled(false);
+            replyBtn.setText(R.string.message_replied_text);
+        } else {
+            refreshReplyButtonVisibilityFromPrefs();
+        }
     }
 
     private void setMessageSelectorButtonEnabled(boolean isEnabled, int id) {
@@ -322,12 +326,20 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
         setMessageSelectorButtonEnabled(Inbox.getInstance().hasLaterMessage(), R.id.select_later_message_button);
     }
 
-    private void refreshResponseButtonsVisibilityFromPrefs() {
+    private void refreshReplyButtonVisibilityFromPrefs() {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean isResponseEnabled = sp.getBoolean(getString(R.string.sp_name_enable_replies), false);
+        boolean isReplyEnabled = sp.getBoolean(getString(R.string.sp_name_enable_replies), false);
 
+        showReplyButton(isReplyEnabled);
+    }
+
+    private void showReplyButton(boolean isShow) {
         Button replyBtn = (Button) findViewById(R.id.reply_button);
-        replyBtn.setVisibility(isResponseEnabled ? View.VISIBLE : View.GONE);
+        replyBtn.setVisibility(isShow ? View.VISIBLE : View.GONE);
+        if (isShow) {
+            replyBtn.setEnabled(true);
+            replyBtn.setText(R.string.reply_button_text);
+        }
     }
 
     public void showReplyActivity(View v) {
