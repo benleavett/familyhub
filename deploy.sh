@@ -15,8 +15,14 @@ else
     	then
     		report_failed_deploy
 	fi
-	git fetch github
-	git rebase github/master
+
+	git fetch origin
+	if [ $? -ne 0 ]
+    	then 
+	    	report_failed_deploy
+	fi
+
+	git rebase origin/master
 	if [ $? -ne 0 ]
     	then 
 	    	report_failed_deploy
@@ -37,7 +43,7 @@ else
 	    	report_failed_deploy
 	fi
 
-    git push github $tag_name
+    git push origin $tag_name
     if [ $? -ne 0 ]
     	then 
 	    	report_failed_deploy
@@ -48,7 +54,7 @@ else
 		echo $new_v > version_code
 		git add version_code
 		git commit -m "Bumping version to $new_v"
-		git push github master
+		git push origin master
 
 		if [ $? -eq 0 ]
     		then
