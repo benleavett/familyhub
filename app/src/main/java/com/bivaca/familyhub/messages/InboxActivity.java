@@ -11,6 +11,7 @@ import android.support.v4.content.res.ResourcesCompat;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -216,9 +217,25 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
             anim.setRepeatMode(Animation.REVERSE);
             anim.setRepeatCount(Animation.INFINITE);
             isUnreadState.startAnimation(anim);
+
+            // Hide this status indicator when user interacts with the view
+            View view = findViewById(R.id.scroller_message_view);
+            view.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+                    Log.d(TAG, "TOUCHED");
+                    setUnreadStatusIndicator(false);
+                    return false;
+                }
+            });
+
         } else {
             isUnreadState.setVisibility(View.GONE);
             isUnreadState.clearAnimation();
+
+            // Remove touch listener
+            View view = findViewById(R.id.scroller_message_view);
+            view.setOnTouchListener(null);
         }
     }
 
@@ -228,7 +245,7 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
         // Set sender name
         TextView senderView = (TextView) findViewById(R.id.message_sender_text);
         // Italicise
-        SpannableString senderNameSpan = new SpannableString(String.format("From: %s", sms.friendlySenderName));
+        SpannableString senderNameSpan = new SpannableString(String.format("From %s", sms.friendlySenderName));
         senderNameSpan.setSpan(new StyleSpan(Typeface.ITALIC), 0, senderNameSpan.length(), 0);
         senderView.setText(senderNameSpan);
         senderView.setVisibility(View.VISIBLE);
