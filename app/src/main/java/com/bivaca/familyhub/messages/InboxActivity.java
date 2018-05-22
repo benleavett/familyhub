@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.bivaca.familyhub.MyActivity;
 import com.bivaca.familyhub.R;
+import com.bivaca.familyhub.SharedPrefsHelper;
 import com.bivaca.familyhub.Util;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
@@ -51,7 +52,7 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
 
         // Check we have right permissions
         if (getMyApplication().verifySmsPermissions(this)) {
-            Inbox.getInstance().initInbox(this);
+            Inbox.getInstance().initInbox(this, SharedPrefsHelper.isHideMessageWhenReplied(this));
         }
 
         // If we're creating this activity in response to a new SMS...
@@ -73,7 +74,7 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (super.handleRequestPermissionsResult(requestCode, permissions, grantResults)) {
-            Inbox.getInstance().initInbox(this);
+            Inbox.getInstance().initInbox(this, SharedPrefsHelper.isHideMessageWhenReplied(this));
         } else {
             finish();
         }
@@ -271,8 +272,8 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
 
         refreshMessageSelectorButtonsEnabled();
 
-        // Hide reply button if the user has already replied to this sms
         if (sms.isRepliedTo) {
+            // Disable reply button if the user has already replied to this sms
             Button replyBtn = (Button) findViewById(R.id.reply_button);
             replyBtn.setEnabled(false);
             replyBtn.setText(R.string.message_replied_text);
