@@ -41,8 +41,8 @@
     <string name="sp_summary_choose_speech_rate">Change the speed at which words are spoken</string>
 
     <string name="sp_category_title_messages">Messages</string>
-    <string name="sp_title_enable_replies">Allow SMS replies</string>
-    <string name="sp_title_hide_msg_when_replied">Hide message when replied</string>
+    <string name="sp_title_enable_replies">Allow replies</string>
+    <string name="sp_title_hide_msg_when_replied">Hide replied-to messages</string>
     <string name="sp_screen_title_preset_replies">Customise preset replies</string>
     <string name="title_reply_A">Reply #1</string>
     <string name="title_reply_B">Reply #2</string>
