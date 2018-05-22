@@ -21,6 +21,8 @@ public class Inbox {
     private LinkedList<BasicSms> mMessages = new LinkedList<>();
     private int mInboxIndex = -1;
 
+    private boolean mHideRepliedToMessages = false;
+
     private Inbox() {}
 
     public static Inbox getInstance() { return mInstance; }
@@ -30,12 +32,14 @@ public class Inbox {
         0 ..................... n
         Earliest message        Latest message
      */
-    void initInbox(Context context) {//ContentResolver contentResolver) {
+    void initInbox(Context context, boolean hideRepliedToMessages) {
         Log.d(TAG, "Init");
         OnInboxLoadedListener listener = (OnInboxLoadedListener)context;
 
-        if (mInboxIndex == -1) {
+        if (mInboxIndex == -1 || hideRepliedToMessages != mHideRepliedToMessages) {
             Log.d(TAG, "Init - actual");
+
+            mHideRepliedToMessages = hideRepliedToMessages;
             mMessages.clear();
 
             collectSmsAndAddToInbox(context, listener);
@@ -148,11 +152,23 @@ public class Inbox {
     }
 
     private void setInboxContents(Context context, List<BasicSms> result) {
+        mMessages = new LinkedList<>();
+
         for (BasicSms sms : result) {
             sms.isRepliedTo = SharedPrefsHelper.getMessageRepliedStateFromDisk(context, sms.id);
-        }
 
-        mMessages = new LinkedList<>(result);
+            if (mHideRepliedToMessages) {
+                // Only add to inbox if the message hasn't been replied to yet
+                if (!sms.isRepliedTo) {
+                    mMessages.push(sms);
+                } else {
+                    Log.d(TAG, "Hiding replied-to message from inbox " + sms.id);
+                }
+            } else {
+                // Always add message to inbox
+                mMessages.push(sms);
+            }
+        }
     }
 
     public boolean clearInbox(final Context context) {
@@ -171,15 +187,32 @@ public class Inbox {
 
     public void markCurrentMessageAsReplied(Context context) {
         BasicSms sms = mMessages.get(mInboxIndex);
+
         if (sms != null) {
+            // Mark message as read
             sms.isRepliedTo = true;
             mMessages.set(mInboxIndex, sms);
 
             SharedPrefsHelper.writeMessageRepliedStateToDisk(context, sms.id);
+
+            // Hide message and show previous if this shared-pref is enabled
+            if (mHideRepliedToMessages) {
+                Log.d(TAG, "Hiding replied-to message from inbox " + sms.id);
+
+                removeCurrentMessage();
+            }
         }
     }
 
     public boolean isEmpty() {
         return mMessages.size() == 0;
+    }
+
+    public void removeCurrentMessage() {
+        if (mInboxIndex >= 0) {
+            mMessages.remove(mInboxIndex);
+        }
+
+        mInboxIndex--;
     }
 }

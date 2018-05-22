@@ -30,6 +30,11 @@
             android:key="@string/sp_name_enable_replies"
             android:title="@string/sp_title_enable_replies"
             android:defaultValue="false"/>
+        <CheckBoxPreference
+            android:key="@string/sp_name_pref_hide_msg_when_replied"
+            android:dependency="@string/sp_name_enable_replies"
+            android:title="@string/sp_title_hide_msg_when_replied"
+            android:defaultValue="false"/>
         <PreferenceScreen
             android:title="@string/sp_screen_title_preset_replies"
             android:dependency="@string/sp_name_enable_replies"

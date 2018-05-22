@@ -51,4 +51,9 @@ public class SharedPrefsHelper {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         return sp.getBoolean(context.getString(R.string.sp_name_enable_fullscreen), true);
     }
+
+    public static boolean isHideMessageWhenReplied(Context context) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        return sp.getBoolean(context.getString(R.string.sp_name_pref_hide_msg_when_replied), false);
+    }
 }
