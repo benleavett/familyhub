@@ -10,4 +10,6 @@
     <string name="pref_default_transition_frequency_seconds">10</string>
     <bool name="pref_default_auto_play_slides">false</bool>
     <string name="pref_default_delay_initiate_auto_play_seconds">5</string>
+
+    <bool name="pref_default_replies_enabled">false</bool>
 </resources>

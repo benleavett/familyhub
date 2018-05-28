@@ -21,7 +21,7 @@ public class Inbox {
     private LinkedList<BasicSms> mMessages = new LinkedList<>();
     private int mInboxIndex = -1;
 
-    private boolean mHideRepliedToMessages = false;
+    private boolean isHideRepliedToStateCurrent = false;
 
     private Inbox() {}
 
@@ -32,17 +32,20 @@ public class Inbox {
         0 ..................... n
         Earliest message        Latest message
      */
-    void initInbox(Context context, boolean hideRepliedToMessages) {
+    void initInbox(Activity activity) {
         Log.d(TAG, "Init");
-        OnInboxLoadedListener listener = (OnInboxLoadedListener)context;
+        OnInboxLoadedListener listener = (OnInboxLoadedListener)activity;
 
-        if (mInboxIndex == -1 || hideRepliedToMessages != mHideRepliedToMessages) {
+        final boolean isHideRepliedToStateNew = SharedPrefsHelper.isHideMessageWhenReplied(activity);
+
+        if (mInboxIndex == -1 || isHideRepliedToStateNew != isHideRepliedToStateCurrent) {
             Log.d(TAG, "Init - actual");
 
-            mHideRepliedToMessages = hideRepliedToMessages;
             mMessages.clear();
 
-            collectSmsAndAddToInbox(context, listener);
+            isHideRepliedToStateCurrent = isHideRepliedToStateNew;
+
+            collectSmsAndAddToInbox(activity, listener);
         } else {
             resetInboxIteratorToLatest();
 
@@ -51,12 +54,12 @@ public class Inbox {
     }
 
     void resetInboxIteratorToLatest() {
-        Log.d(TAG, "RESETTING ITERATOR");
         if (isEmpty()) {
             mInboxIndex = -1;
         } else {
             mInboxIndex = mMessages.size() - 1;
         }
+        Log.d(TAG, "RESET ITERATOR TO " + mInboxIndex);
     }
 
     BasicSms getCurrentMessage() {
@@ -100,6 +103,8 @@ public class Inbox {
         }
 
         final int inboxIndex = mInboxIndex;
+
+        //FIXME make this a static class or revisit wtf is going on (why thread??)
         new AsyncTask<Void, Void, Boolean>() {
             @Override
             protected Boolean doInBackground(Void... a) {
@@ -151,22 +156,32 @@ public class Inbox {
         }.execute();
     }
 
+//    private class LoadSmsFromDeviceTask extends AsyncTask<Object, Void, Boolean> {
+//
+//        @Override
+//        protected Boolean doInBackground(Object... objects) {
+//            return null;
+//        }
+//    }
+
     private void setInboxContents(Context context, List<BasicSms> result) {
         mMessages = new LinkedList<>();
 
         for (BasicSms sms : result) {
             sms.isRepliedTo = SharedPrefsHelper.getMessageRepliedStateFromDisk(context, sms.id);
 
-            if (mHideRepliedToMessages) {
-                // Only add to inbox if the message hasn't been replied to yet
+            Log.d(TAG, "Adding sms from db to messages list: " + sms);
+
+            // If we need to hide messages that have already been replied to...
+            if (SharedPrefsHelper.isRepliesEnabled(context) && SharedPrefsHelper.isHideMessageWhenReplied(context)) {
                 if (!sms.isRepliedTo) {
-                    mMessages.push(sms);
+                    mMessages.add(sms);
                 } else {
                     Log.d(TAG, "Hiding replied-to message from inbox " + sms.id);
                 }
             } else {
                 // Always add message to inbox
-                mMessages.push(sms);
+                mMessages.add(sms);
             }
         }
     }
@@ -196,7 +211,7 @@ public class Inbox {
             SharedPrefsHelper.writeMessageRepliedStateToDisk(context, sms.id);
 
             // Hide message and show previous if this shared-pref is enabled
-            if (mHideRepliedToMessages) {
+            if (isHideRepliedToStateCurrent) {
                 Log.d(TAG, "Hiding replied-to message from inbox " + sms.id);
 
                 removeCurrentMessage();

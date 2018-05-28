@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.bivaca.familyhub.R;
+import com.bivaca.familyhub.messages.InboxActivity;
 
 import java.util.Map;
 
@@ -80,5 +81,10 @@ public class SharedPrefsHelper {
     public static boolean isPhotosEnabled(Context context) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         return sp.getBoolean("pref_name_enable_photos", context.getResources().getBoolean(R.bool.pref_default_enable_photos));
+    }
+
+    public static boolean isRepliesEnabled(Context context) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        return sp.getBoolean(context.getString(R.string.sp_name_enable_replies), context.getResources().getBoolean(R.bool.pref_default_replies_enabled));
     }
 }

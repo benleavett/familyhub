@@ -55,7 +55,7 @@ class SmsHelper {
 
     private static Cursor getContentCursorForAllMessages(Context context) {
         String sortOrder = Telephony.Sms.DATE_SENT + " ASC";
-        return context.getContentResolver().query(Telephony.Sms.CONTENT_URI, ALL_SMS_MESSAGES_PROJECTION, null, null, sortOrder);
+        return context.getContentResolver().query(Telephony.Sms.Inbox.CONTENT_URI, ALL_SMS_MESSAGES_PROJECTION, null, null, sortOrder);
     }
 
 //    private static Cursor getContentCursorForMessage(Context context, BasicSms sms) {

@@ -43,7 +43,7 @@ public class SmsReceiver extends BroadcastReceiver {
                     }
 
                     if (message.length > -1) {
-                        Log.d(TAG, String.format("SMS received (length: %d): %s", message.length, message[0].getMessageBody()));
+                        Log.d(TAG, String.format("SMS received (length: %d): %s, %s", message.length, message[0].getMessageBody(), message[0].getTimestampMillis()));
 
                         saveNewSmsAndNotify(context, message);
                     }
