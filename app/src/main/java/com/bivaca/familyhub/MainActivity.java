@@ -24,8 +24,6 @@ import com.bivaca.familyhub.messages.Inbox;
 import com.bivaca.familyhub.photos.SlideshowActivity;
 import com.bivaca.familyhub.util.SharedPrefsHelper;
 import com.bivaca.familyhub.util.Util;
-import com.crashlytics.android.Crashlytics;
-import io.fabric.sdk.android.Fabric;
 
 import com.bivaca.familyhub.messages.InboxActivity;
 
@@ -48,10 +46,6 @@ public class MainActivity extends MyActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (!BuildConfig.DEBUG) {
-            Fabric.with(this, new Crashlytics());
-        }
 
         setContentView(R.layout.activity_main);
 

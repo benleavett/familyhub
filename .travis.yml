@@ -15,7 +15,7 @@ env:
   global:
   - ANDROID_API=26
   - EMULATOR_API=21
-  - ANDROID_BUILD_TOOLS=26.0.2
+  - ANDROID_BUILD_TOOLS=27.0.3
   - ADB_INSTALL_TIMEOUT=5
   - KEYSTORE_NAME=.keystore
   - KEY_ALIAS=key0
@@ -57,6 +57,7 @@ before_deploy:
 - APK_FILENAME=familyhub-$TRAVIS_TAG-build$TRAVIS_BUILD_NUMBER.apk
 - jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore $HOME/$KEYSTORE_NAME -storepass $storepass -keypass $keypass $INTERMEDIATE_FILENAME $KEY_ALIAS
 - jarsigner -verify $INTERMEDIATE_FILENAME
+- ls ${ANDROID_HOME}/build-tools/
 - ${ANDROID_HOME}/build-tools/$ANDROID_BUILD_TOOLS/zipalign -v 4 $INTERMEDIATE_FILENAME $APK_FILENAME
 
 deploy:
