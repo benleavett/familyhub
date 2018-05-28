@@ -7,7 +7,7 @@
             android:key="@string/sp_name_keep_screen_on"
             android:title="@string/sp_title_keep_screen_on"
             android:summary="@string/sp_summary_keep_screen_on"
-            android:defaultValue="@bool/keep_screen_on_default" />
+            android:defaultValue="@bool/pref_default_keep_screen_on_default" />
         <!--<CheckBoxPreference-->
             <!--android:key="@string/sp_name_enable_fullscreen"-->
             <!--android:title="@string/sp_title_enable_fullscreen"-->
@@ -25,7 +25,7 @@
             android:summary="Show this many messages per contact"
             android:entries="@array/max_messages_per_contact_options"
             android:entryValues="@array/max_messages_per_contact_options_values"
-            android:defaultValue="@integer/max_messages_per_contact_options_default"/>
+            android:defaultValue="@integer/pref_default_max_messages_per_contact_options"/>
         <CheckBoxPreference
             android:key="@string/sp_name_enable_replies"
             android:title="@string/sp_title_enable_replies"
@@ -62,7 +62,7 @@
         <CheckBoxPreference
             android:key="@string/sp_name_vocalisation_enabled"
             android:title="@string/sp_title_vocalisation_enabled"
-            android:defaultValue="@bool/vocalisation_enabled_default"
+            android:defaultValue="@bool/pref_default_vocalisation_enabled"
             android:summary="@string/sp_summary_vocalisation_enabled"/>
         <ListPreference
             android:dependency="@string/sp_name_vocalisation_enabled"
@@ -72,19 +72,45 @@
             android:summary="@string/sp_summary_choose_speech_rate"
             android:entries="@array/speech_rate_options"
             android:entryValues="@array/speech_rate_options_values"
-            android:defaultValue="@dimen/speech_rate_options_default" />
+            android:defaultValue="@dimen/pref_default_speech_rate_options" />
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="Photo sources"
+        android:title="@string/sp_category_title_photos"
         android:persistent="false"
-        android:enabled="false">
-        <PreferenceScreen
-            android:title="Manage photo sources">
-            <CheckBoxPreference
-                android:key="@string/sp_name_pref_enable_photos"
-                android:defaultValue="false"
-                android:title="Enable photos view" />
-        </PreferenceScreen>
+        android:enabled="true">
+        <CheckBoxPreference
+            android:key="pref_name_enable_photos"
+            android:title="@string/pref_title_enable_photos"
+            android:defaultValue="@bool/pref_default_enable_photos"
+            android:summary="@string/pref_summary_enable_photos"/>
+        <EditTextPreference
+            android:key="@string/sp_name_transition_frequency"
+            android:dependency="pref_name_enable_photos"
+            android:title="@string/sp_title_transition_frequency"
+            android:summary="@string/sp_summary_transition_frequency"
+            android:numeric="integer"
+            android:defaultValue="@string/pref_default_transition_frequency_seconds" />
+        <CheckBoxPreference
+            android:key="pref_auto_play_slides"
+            android:dependency="pref_name_enable_photos"
+            android:title="@string/sp_title_auto_play_slides"
+            android:defaultValue="@bool/pref_default_auto_play_slides"
+            android:summary="@string/sp_summary_auto_play_slides"/>
+        <EditTextPreference
+            android:key="pref_delay_initiate_auto_play"
+            android:dependency="pref_auto_play_slides"
+            android:title="@string/sp_title_delay_initiate_auto_play"
+            android:summary="@string/sp_summary_delay_initiate_auto_play"
+            android:numeric="integer"
+            android:defaultValue="@string/pref_default_delay_initiate_auto_play_seconds" />
+
+        <!--<PreferenceScreen-->
+            <!--android:title="Manage photo sources">-->
+            <!--<CheckBoxPreference-->
+                <!--android:key="@string/sp_name_pref_enable_photos"-->
+                <!--android:defaultValue="false"-->
+                <!--android:title="Enable photos view" />-->
+        <!--</PreferenceScreen>-->
     </PreferenceCategory>
 </PreferenceScreen>

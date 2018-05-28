@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item name="speech_rate_options_default" format="float" type="dimen">1.0</item>
-    <integer name="max_messages_per_contact_options_default">-1</integer>
-    <bool name="vocalisation_enabled_default">true</bool>
-    <bool name="keep_screen_on_default">true</bool>
+    <item name="pref_default_speech_rate_options" format="float" type="dimen">1.0</item>
+    <bool name="pref_default_vocalisation_enabled">true</bool>
+
+    <bool name="pref_default_keep_screen_on_default">true</bool>
+    <integer name="pref_default_max_messages_per_contact_options">-1</integer>
+
+    <bool name="pref_default_enable_photos">true</bool>
+    <string name="pref_default_transition_frequency_seconds">10</string>
+    <bool name="pref_default_auto_play_slides">false</bool>
+    <string name="pref_default_delay_initiate_auto_play_seconds">5</string>
+
+    <bool name="pref_default_replies_enabled">false</bool>
 </resources>

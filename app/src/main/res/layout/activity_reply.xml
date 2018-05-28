@@ -20,8 +20,8 @@
         android:gravity="center_vertical"
         android:textAlignment="center"
         android:textSize="@dimen/default_text_size"
-        android:paddingLeft="@dimen/message_view_metadata_padding"
-        android:paddingRight="@dimen/message_view_metadata_padding"
+        android:paddingLeft="@dimen/default_text_padding"
+        android:paddingRight="@dimen/default_text_padding"
         android:text="@string/choose_reply_text"/>
 
     <LinearLayout

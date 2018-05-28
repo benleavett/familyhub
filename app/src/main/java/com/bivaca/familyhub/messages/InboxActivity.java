@@ -1,9 +1,7 @@
 package com.bivaca.familyhub.messages;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Typeface;
-import android.preference.PreferenceManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.res.ResourcesCompat;
@@ -20,8 +18,8 @@ import android.widget.TextView;
 
 import com.bivaca.familyhub.MyActivity;
 import com.bivaca.familyhub.R;
-import com.bivaca.familyhub.SharedPrefsHelper;
-import com.bivaca.familyhub.Util;
+import com.bivaca.familyhub.util.SharedPrefsHelper;
+import com.bivaca.familyhub.util.Util;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.ocpsoft.prettytime.PrettyTime;
@@ -52,7 +50,7 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
 
         // Check we have right permissions
         if (getMyApplication().verifySmsPermissions(this)) {
-            Inbox.getInstance().initInbox(this, SharedPrefsHelper.isHideMessageWhenReplied(this));
+            Inbox.getInstance().initInbox(this);
         }
 
         // If we're creating this activity in response to a new SMS...
@@ -74,7 +72,7 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (super.handleRequestPermissionsResult(requestCode, permissions, grantResults)) {
-            Inbox.getInstance().initInbox(this, SharedPrefsHelper.isHideMessageWhenReplied(this));
+            Inbox.getInstance().initInbox(this);
         } else {
             finish();
         }
@@ -156,10 +154,10 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
     }
 
     private void setLongPressListeners() {
-        TextView body = (TextView) findViewById(R.id.message_body_view);
+        TextView body = findViewById(R.id.message_body_view);
         body.setOnLongClickListener(this);
 
-        TextView sender = (TextView) findViewById(R.id.message_sender_text);
+        TextView sender = findViewById(R.id.message_sender_text);
         sender.setOnLongClickListener(this);
     }
 
@@ -178,28 +176,25 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
     private void populateMessageViewLayoutForEmptyInbox() {
         setUnreadStatusIndicator(false);
 
-        TextView senderView = (TextView) findViewById(R.id.message_sender_text);
+        TextView senderView = findViewById(R.id.message_sender_text);
         senderView.setVisibility(View.INVISIBLE);
 
-        ImageView repliedState = (ImageView) findViewById(R.id.replied_state);
-        repliedState.setVisibility(View.INVISIBLE);
-
-        TextView timestampView = (TextView) findViewById(R.id.message_datetime_text);
+        TextView timestampView = findViewById(R.id.message_datetime_text);
         timestampView.setVisibility(View.INVISIBLE);
 
-        TextView previewView = (TextView) findViewById(R.id.message_body_view);
+        TextView previewView = findViewById(R.id.message_body_view);
         previewView.setText(getString(R.string.empty_inbox_message));
 
-        Button earlierBtn = (Button) findViewById(R.id.select_earlier_message_button);
+        Button earlierBtn = findViewById(R.id.select_earlier_message_button);
         earlierBtn.setVisibility(View.GONE);
-        Button laterBtn = (Button) findViewById(R.id.select_later_message_button);
+        Button laterBtn = findViewById(R.id.select_later_message_button);
         laterBtn.setVisibility(View.GONE);
 
-        showReplyButton(false);
+        setReplyButtonStateForMessage(null);
     }
 
     private void setUnreadStatusIndicator(final boolean isUnread) {
-        TextView isUnreadState = (TextView) findViewById(R.id.unread_state);
+        TextView isUnreadState = findViewById(R.id.unread_state);
 
         if (isUnread) {
             isUnreadState.setText(getString(R.string.message_unread_text));
@@ -241,19 +236,15 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
         setUnreadStatusIndicator(!sms.isRead);
 
         // Set sender name
-        TextView senderView = (TextView) findViewById(R.id.message_sender_text);
+        TextView senderView = findViewById(R.id.message_sender_text);
         // Italicise
         SpannableString senderNameSpan = new SpannableString(String.format("From %s", sms.friendlySenderName));
         senderNameSpan.setSpan(new StyleSpan(Typeface.ITALIC), 0, senderNameSpan.length(), 0);
         senderView.setText(senderNameSpan);
         senderView.setVisibility(View.VISIBLE);
 
-        // Set visibility of replied-to indicator
-        ImageView repliedState = (ImageView) findViewById(R.id.replied_state);
-        repliedState.setVisibility(sms.isRepliedTo ? View.VISIBLE : View.INVISIBLE);
-
         // Set message sent time
-        TextView timestampView = (TextView) findViewById(R.id.message_datetime_text);
+        TextView timestampView = findViewById(R.id.message_datetime_text);
         final String sentTime = getPrettyStringFromTimestamp(sms.timestampSent);
         // Italicise
         SpannableString sentTimeSpan = new SpannableString(sentTime);
@@ -262,33 +253,26 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
         timestampView.setVisibility(View.VISIBLE);
 
         // Set message body
-        TextView previewView = (TextView) findViewById(R.id.message_body_view);
+        TextView previewView = findViewById(R.id.message_body_view);
         previewView.setText(sms.body);
 
-        Button earlierBtn = (Button) findViewById(R.id.select_earlier_message_button);
+        Button earlierBtn = findViewById(R.id.select_earlier_message_button);
         earlierBtn.setVisibility(View.VISIBLE);
-        Button laterBtn = (Button) findViewById(R.id.select_later_message_button);
+        Button laterBtn = findViewById(R.id.select_later_message_button);
         laterBtn.setVisibility(View.VISIBLE);
 
         refreshMessageSelectorButtonsEnabled();
 
-        if (sms.isRepliedTo) {
-            // Disable reply button if the user has already replied to this sms
-            Button replyBtn = (Button) findViewById(R.id.reply_button);
-            replyBtn.setEnabled(false);
-            replyBtn.setText(R.string.message_replied_text);
-        } else {
-            refreshReplyButtonVisibilityFromPrefs();
-        }
+        setReplyButtonStateForMessage(sms);
     }
 
     private void setMessageSelectorButtonEnabled(boolean isEnabled, int id) {
-        Button btn = (Button) findViewById(id);
+        Button btn = findViewById(id);
         btn.setEnabled(isEnabled);
     }
 
     private boolean isMessageSelectorButtonDisabled(int id) {
-        Button btn = (Button) findViewById(id);
+        Button btn = findViewById(id);
         return !btn.isEnabled();
     }
 
@@ -327,20 +311,17 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
         setMessageSelectorButtonEnabled(Inbox.getInstance().hasLaterMessage(), R.id.select_later_message_button);
     }
 
-    private void refreshReplyButtonVisibilityFromPrefs() {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean isReplyEnabled = sp.getBoolean(getString(R.string.sp_name_enable_replies), false);
+    private void setReplyButtonStateForMessage(final BasicSms sms) {
+        // Hide reply button if we haven't got an SMS to show for it, otherwise show button if appropriate depending on shared-pref state
+        final boolean isShowReplyButton = sms == null ? false : SharedPrefsHelper.isRepliesEnabled(this);
 
-        showReplyButton(isReplyEnabled);
-    }
+        Button replyBtn = findViewById(R.id.reply_button);
 
-    private void showReplyButton(boolean isShow) {
-        Button replyBtn = (Button) findViewById(R.id.reply_button);
-        replyBtn.setVisibility(isShow ? View.VISIBLE : View.GONE);
-        if (isShow) {
-            replyBtn.setEnabled(true);
-            replyBtn.setText(R.string.reply_button_text);
-        }
+        replyBtn.setVisibility(isShowReplyButton ? View.VISIBLE : View.GONE);
+        // Disable button if message has been replied to (but still show)
+        replyBtn.setEnabled(!sms.isRepliedTo);
+        // Show 'replied-to' text if necessary, otherwise use default
+        replyBtn.setText(sms.isRepliedTo ? R.string.reply_button_text_replied : R.string.reply_button_text_default);
     }
 
     public void showReplyActivity(View v) {

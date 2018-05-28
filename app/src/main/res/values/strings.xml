@@ -5,7 +5,7 @@
     <string name="photos_button">Photos</string>
     <string name="messages_button">Messages</string>
     <string name="settings_button">Settings</string>
-    <string name="reset_launcher_button">Revert launcher</string>
+    <string name="reset_launcher_button">Reset launcher</string>
     <string name="dialog_text_change_home_default">Your default Home screen is \"%s\".\n\nTap OK, then \"Clear Defaults\" to choose a new default.</string>
     <string name="dialog_text_change_home_lollipop_above">Your default Home screen is \"%1$s\".\n\nTap OK, then \"Home app\" to choose a new default. Then re-open %2$s.</string>
     <string name="dialog_text_no_sim_card">Device not supported - SIM card required.</string>
@@ -16,16 +16,20 @@
     <string name="back_to_main_button">Exit</string>
     <string name="back_to_messages_button">Back to messages</string>
     <string name="message_unread_text">NEW MESSAGE</string>
-    <string name="message_replied_text">✔ Replied️</string>
+    <string name="reply_button_text_replied">✔ Replied️</string>
     <string name="empty_inbox_message">You have no messages from your contacts</string>
     <string name="choose_reply_text">Choose reply</string>
-    <string name="reply_button_text">Reply</string>
+    <string name="reply_button_text_default">Reply</string>
 
     <!-- ReplyActivity -->
     <string name="confirm_sms_sent">Your reply has been sent</string>
 
     <!-- ComfirmMessageSentActivity -->
     <string name="countdown_timer_text">Returning to inbox in %d seconds</string>
+
+    <!-- SlideshowActivity -->
+    <string name="no_photos_available_text">No photos available</string>
+    <string name="loading_text">Loading photos...</string>
 
     <!-- SettingsActivity -->
     <string name="sp_category_title_application">Application</string>
@@ -51,6 +55,16 @@
     <string name="default_text_reply_B">Preset 2</string>
     <string name="default_text_reply_C">Preset 3</string>
 
+    <string name="sp_category_title_photos">Photos</string>
+    <string name="sp_title_auto_play_slides">Auto-play slides</string>
+    <string name="sp_summary_auto_play_slides">Slides begin automatically from home screen</string>
+
+    <string name="sp_title_transition_frequency">Display rate (secs)</string>
+    <string name="sp_summary_transition_frequency">Time until next slide is shown</string>
+
+    <string name="sp_title_delay_initiate_auto_play">Delay before auto-play (secs)</string>
+    <string name="sp_summary_delay_initiate_auto_play">Time until slides begin auto-playing</string>
+
     <!-- Shared prefs keys -->
     <string name="sp_name_enable_fullscreen">pref_fullscreen_mode_enabled</string>
     <string name="sp_name_vocalisation_enabled">pref_vocalisation_enabled</string>
@@ -63,4 +77,8 @@
     <string name="sp_name_reply_B">pref_reply_B</string>
     <string name="sp_name_reply_C">pref_reply_C</string>
     <string name="sp_name_keep_screen_on">pref_keep_screen_on</string>
+    <string name="sp_name_transition_frequency">pref_transition_frequency</string>
+
+    <string name="pref_title_enable_photos">Enable slideshow</string>
+    <string name="pref_summary_enable_photos">Enable access to photo slideshow</string>
 </resources>

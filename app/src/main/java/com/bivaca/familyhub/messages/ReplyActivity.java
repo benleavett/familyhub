@@ -10,7 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.bivaca.familyhub.FirebaseEventLogger;
+import com.bivaca.familyhub.util.FirebaseEventLogger;
 import com.bivaca.familyhub.MyActivity;
 import com.bivaca.familyhub.R;
 
