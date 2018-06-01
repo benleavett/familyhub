@@ -117,7 +117,11 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
                 }
             }
 
-            populateMessageViewLayout(Inbox.getInstance().getCurrentMessage());
+            if (!Inbox.getInstance().isEmpty()) {
+                populateMessageViewLayout(Inbox.getInstance().getCurrentMessage());
+            } else {
+                populateMessageViewLayoutForEmptyInbox();
+            }
         }
     }
 
@@ -318,10 +322,13 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
         Button replyBtn = findViewById(R.id.reply_button);
 
         replyBtn.setVisibility(isShowReplyButton ? View.VISIBLE : View.GONE);
-        // Disable button if message has been replied to (but still show)
-        replyBtn.setEnabled(!sms.isRepliedTo);
-        // Show 'replied-to' text if necessary, otherwise use default
-        replyBtn.setText(sms.isRepliedTo ? R.string.reply_button_text_replied : R.string.reply_button_text_default);
+
+        if (sms != null) {
+            // Disable button if message has been replied to (but still show)
+            replyBtn.setEnabled(!sms.isRepliedTo);
+            // Show 'replied-to' text if necessary, otherwise use default
+            replyBtn.setText(sms.isRepliedTo ? R.string.reply_button_text_replied : R.string.reply_button_text_default);
+        }
     }
 
     public void showReplyActivity(View v) {

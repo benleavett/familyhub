@@ -228,6 +228,6 @@ public class Inbox {
             mMessages.remove(mInboxIndex);
         }
 
-        mInboxIndex--;
+        resetInboxIteratorToLatest();
     }
 }
