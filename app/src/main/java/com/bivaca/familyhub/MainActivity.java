@@ -26,6 +26,9 @@ import com.bivaca.familyhub.util.SharedPrefsHelper;
 import com.bivaca.familyhub.util.Util;
 
 import com.bivaca.familyhub.messages.InboxActivity;
+import com.crashlytics.android.Crashlytics;
+
+import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends MyActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -46,6 +49,7 @@ public class MainActivity extends MyActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
 
         setContentView(R.layout.activity_main);
 

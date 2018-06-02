@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bivaca.familyhub.MyActivity;
@@ -236,7 +235,11 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
         }
     }
 
-    private void populateMessageViewLayout(final BasicSms sms) {
+    private void populateMessageViewLayout(@NonNull final BasicSms sms) {
+        if (sms == null) {
+            Log.e(TAG, "populateMessageViewLayout called with null BasicSms");
+        }
+
         setUnreadStatusIndicator(!sms.isRead);
 
         // Set sender name
@@ -317,7 +320,7 @@ public class InboxActivity extends MyActivity implements View.OnLongClickListene
 
     private void setReplyButtonStateForMessage(final BasicSms sms) {
         // Hide reply button if we haven't got an SMS to show for it, otherwise show button if appropriate depending on shared-pref state
-        final boolean isShowReplyButton = sms == null ? false : SharedPrefsHelper.isRepliesEnabled(this);
+        final boolean isShowReplyButton = sms != null && SharedPrefsHelper.isRepliesEnabled(this);
 
         Button replyBtn = findViewById(R.id.reply_button);
 
