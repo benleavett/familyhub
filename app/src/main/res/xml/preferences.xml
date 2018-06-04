@@ -84,6 +84,12 @@
             android:title="@string/pref_title_enable_photos"
             android:defaultValue="@bool/pref_default_enable_photos"
             android:summary="@string/pref_summary_enable_photos"/>
+        <CheckBoxPreference
+            android:key="pref_photo_order_random"
+            android:dependency="pref_name_enable_photos"
+            android:title="@string/pref_title_photo_order_random"
+            android:defaultValue="@bool/pref_default_photo_order_random"
+            android:summary="@string/pref_summary_photo_order_random"/>
         <EditTextPreference
             android:key="@string/sp_name_transition_frequency"
             android:dependency="pref_name_enable_photos"

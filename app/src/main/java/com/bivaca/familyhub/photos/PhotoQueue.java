@@ -5,7 +5,6 @@ import android.util.Log;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 
 /**
@@ -16,25 +15,24 @@ class PhotoQueue extends ArrayList<File> {
     private static final String TAG = PhotoQueue.class.getSimpleName();
 
     private HashMap<File, FileStatus> fileStatus = new HashMap<>();
+    private int currentIndex = 0;
 
     enum FileStatus { ACTIVE, MARK_FOR_DELETION }
 
     @Override
     public File get(int iter) {
-//        if (size() > 0) {
-            final int itemIndex = iter % size();
-            Log.d(TAG, "Returning item from queue: " + itemIndex);
-            return super.get(itemIndex);
-//        } else {
-//            return null;
-//        }
+        final int itemIndex = iter % size();
+        Log.d(TAG, "Returning item from queue: " + itemIndex);
+        return super.get(itemIndex);
     }
 
-    //TODO use this method to decide which image to show next
-    public File getRandom() {
-        final int itemIndex = new Random().nextInt() % size();
-        Log.d(TAG, "Returning random item from queue: " + itemIndex);
-        return super.get(itemIndex);
+    public File getNext() {
+        return get(currentIndex++);
+    }
+
+    public File getNextRandom() {
+        int randomIndex = new Random().nextInt(size());
+        return get(randomIndex);
     }
 
     @Override
@@ -52,21 +50,4 @@ class PhotoQueue extends ArrayList<File> {
     public boolean isMarkedForDeletion(File file) {
         return fileStatus.get(file) == FileStatus.MARK_FOR_DELETION;
     }
-
-//    @Override
-//    public int size() {
-//        int count = 0;
-//        for (FileStatus status : fileStatus.values()) {
-//            if (status == FileStatus.ACTIVE) {
-//                count++;
-//            }
-//        }
-//
-//        return count;
-//    }
-//
-//    @Override
-//    public boolean isEmpty() {
-//        return size() == 0;
-//    }
 }
