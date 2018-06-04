@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.bivaca.familyhub.R;
-import com.bivaca.familyhub.messages.InboxActivity;
 
 import java.util.Map;
 
@@ -86,5 +85,10 @@ public class SharedPrefsHelper {
     public static boolean isRepliesEnabled(Context context) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         return sp.getBoolean(context.getString(R.string.sp_name_enable_replies), context.getResources().getBoolean(R.bool.pref_default_replies_enabled));
+    }
+
+    public static boolean isShowPhotosRandomOrder(Context context) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        return sp.getBoolean("pref_photo_order_random", context.getResources().getBoolean(R.bool.pref_default_photo_order_random));
     }
 }

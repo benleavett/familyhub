@@ -187,8 +187,13 @@ public class SlideshowActivity extends MyActivity {
             while (!terminateSlideShow.get()) {
                 synchronized (photoQueue) {
                     if (!photoQueue.get().isEmpty()) {
-                        //TODO check if a new random shared-pref is set - then use queue.getRandom()
-                        final File currentPhoto = photoQueue.get().get(currentSlideIndex);
+
+                        final File currentPhoto;
+                        if (SharedPrefsHelper.isShowPhotosRandomOrder(activity)) {
+                            currentPhoto = photoQueue.get().getNextRandom();
+                        } else {
+                            currentPhoto = photoQueue.get().getNext();
+                        }
 
                         if (currentPhoto != null) {
                             if (photoQueue.get().isMarkedForDeletion(currentPhoto)) {
@@ -197,7 +202,6 @@ public class SlideshowActivity extends MyActivity {
                                 currentPhoto.delete();
                             } else {
                                 showPhoto(activity, currentPhoto);
-                                currentSlideIndex++;
 
                                 updateSlideshowLayoutState(activity, LoadingState.PHOTOS_AVAILABLE);
                             }
@@ -274,6 +278,7 @@ public class SlideshowActivity extends MyActivity {
     // *********************************** //
 
     private static class DropboxPhotosDownloadTask extends AsyncTask<Object, Void, Integer> {
+//        private static final String DROPBOX_ACCESS_TOKEN_STAGING = "PL700l5eeYIAAAAAAAALpXbnXzOHVLawoihxDh2AUV-PPzh2DFyT-pw1PTwoxL1z";
         private static final String DROPBOX_ACCESS_TOKEN = "PL700l5eeYIAAAAAAAAK7xjOe_13PbLD6ioaI9-S0Vazd3tDsQznACZ3A9txLw0s";
 
         private Activity activity;

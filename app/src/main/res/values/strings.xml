@@ -81,4 +81,6 @@
 
     <string name="pref_title_enable_photos">Enable slideshow</string>
     <string name="pref_summary_enable_photos">Enable access to photo slideshow</string>
+    <string name="pref_title_photo_order_random">Photos in random order</string>
+    <string name="pref_summary_photo_order_random">Show photos in random order</string>
 </resources>
