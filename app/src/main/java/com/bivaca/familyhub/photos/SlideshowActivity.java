@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
+import android.media.ExifInterface;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bivaca.familyhub.BuildConfig;
 import com.bivaca.familyhub.R;
 import com.bivaca.familyhub.MyActivity;
 import com.bivaca.familyhub.util.SharedPrefsHelper;
@@ -32,12 +34,17 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+
+import static android.media.ExifInterface.TAG_DATETIME_ORIGINAL;
 
 public class SlideshowActivity extends MyActivity {
     private static final String TAG = SlideshowActivity.class.getSimpleName();
@@ -179,7 +186,6 @@ public class SlideshowActivity extends MyActivity {
 
         @Override
         protected Void doInBackground(Object... params) {
-            int currentSlideIndex = 0;
             final int transitionFreqMs = SharedPrefsHelper.getSlideTransitionFrequencyMilliseconds(activity);
 
             Log.d(TAG, "STARTING SLIDESHOW");
@@ -199,7 +205,12 @@ public class SlideshowActivity extends MyActivity {
                             if (photoQueue.get().isMarkedForDeletion(currentPhoto)) {
                                 Log.d(TAG, "Deleting photo: " + currentPhoto);
                                 photoQueue.get().remove(currentPhoto);
-                                currentPhoto.delete();
+
+                                if (!currentPhoto.delete()) {
+                                    Log.e(TAG, "Failed to delete photo: " + currentPhoto);
+                                }
+                                // As we're not showing any photo in this iteration just skip to next iteration (without sleeping)
+                                continue;
                             } else {
                                 showPhoto(activity, currentPhoto);
 
@@ -222,29 +233,44 @@ public class SlideshowActivity extends MyActivity {
             return null;
         }
 
-        private void showPhoto(final Activity activity, File localPath) {
-            final Bitmap bitmap = BitmapFactory.decodeFile(localPath.getAbsolutePath());
-            final Date timeTaken = getDatePhotoCaptured(localPath);
+        private void showPhoto(final Activity activity, final File localPath) {
+            String timeTakenString = null;
+            try {
+                Date timeTaken = getDatePhotoCaptured(localPath);
+                timeTakenString = new PrettyTime().format(timeTaken);
+            } catch (IOException e) {
+                Log.e(TAG, "Error getting EXIF data from file " + localPath, e);
+            } catch (ParseException e) {
+                Log.e(TAG, "Error formatting EXIF date from file " + localPath, e);
+            }
 
-            Log.d(TAG, String.format("Showing photo %s (%s)", localPath, new PrettyTime().format(timeTaken)));
+            activity.runOnUiThread(getShowPhotoRunnable(localPath, timeTakenString));
+        }
 
-            activity.runOnUiThread(new Runnable() {
+        private Runnable getShowPhotoRunnable(final File localPath, final String timeTakenString) {
+            return new Runnable() {
                 @Override
                 public void run() {
+                    Log.d(TAG, String.format("Showing photo %s (%s)", localPath, timeTakenString));
+
+                    final Bitmap bitmap = BitmapFactory.decodeFile(localPath.getAbsolutePath());
                     ImageView imageView = activity.findViewById(R.id.photos_main_view);
                     imageView.setImageBitmap(bitmap);
 
                     TextView dateDescription = activity.findViewById(R.id.photo_time_description);
-                    if (timeTaken != null) {
-                        dateDescription.setText(new PrettyTime().format(timeTaken));
-                    } else {
-                        dateDescription.setText("");
-                    }
+                    dateDescription.setText(timeTakenString);
                 }
-            });
+            };
         }
 
-        private static Date getDatePhotoCaptured(File localPath) {
+        private static Date getDatePhotoCaptured(File localPath) throws IOException, ParseException {
+            ExifInterface exifInterface = new ExifInterface(localPath.getAbsolutePath());
+
+//            if (Util.isNougatOrAbove()) {
+                String exifDate = exifInterface.getAttribute(TAG_DATETIME_ORIGINAL);
+
+                return getDateFromExif(exifDate);
+//            } else {
 //        com.drew.metadata.Metadata metadata = null;
 //        Date date = null;
 //
@@ -269,7 +295,14 @@ public class SlideshowActivity extends MyActivity {
 //            return null;
 //        }
 //        return date;
-            return new Date();
+//                return new Date();
+//            }
+        }
+
+        private static Date getDateFromExif(String exifDate) throws ParseException {
+            // Example date 2018:05:21 18:18:49
+            DateFormat format = new SimpleDateFormat("y:M:d H:m:s");
+            return format.parse(exifDate);
         }
     }
 
@@ -278,8 +311,8 @@ public class SlideshowActivity extends MyActivity {
     // *********************************** //
 
     private static class DropboxPhotosDownloadTask extends AsyncTask<Object, Void, Integer> {
-//        private static final String DROPBOX_ACCESS_TOKEN_STAGING = "PL700l5eeYIAAAAAAAALpXbnXzOHVLawoihxDh2AUV-PPzh2DFyT-pw1PTwoxL1z";
-        private static final String DROPBOX_ACCESS_TOKEN = "PL700l5eeYIAAAAAAAAK7xjOe_13PbLD6ioaI9-S0Vazd3tDsQznACZ3A9txLw0s";
+        private static final String DROPBOX_ACCESS_TOKEN_STAGING = "PL700l5eeYIAAAAAAAALpXbnXzOHVLawoihxDh2AUV-PPzh2DFyT-pw1PTwoxL1z";
+        private static final String DROPBOX_ACCESS_TOKEN_PROD = "PL700l5eeYIAAAAAAAAK7xjOe_13PbLD6ioaI9-S0Vazd3tDsQznACZ3A9txLw0s";
 
         private Activity activity;
 
@@ -297,7 +330,9 @@ public class SlideshowActivity extends MyActivity {
                             .withUserLocale("en_US")
                             .build();
 
-            DbxClientV2 client = new DbxClientV2(config, DROPBOX_ACCESS_TOKEN);
+            DbxClientV2 client = new DbxClientV2(config, BuildConfig.DEBUG ?
+                    DROPBOX_ACCESS_TOKEN_STAGING :
+                    DROPBOX_ACCESS_TOKEN_PROD);
 
             HashSet<File> latestPhotosSet = null;
             try {

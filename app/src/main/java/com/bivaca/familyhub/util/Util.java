@@ -60,6 +60,10 @@ public class Util {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
     }
 
+    public static boolean isNougatOrAbove() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.N;
+    }
+
     public static boolean isCharging(Context context) {
         Intent intent = context.registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
         int chargingData = intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1);

@@ -46,23 +46,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:id="@+id/photos_layout">
+        android:id="@+id/photos_layout"
+        android:background="#000">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text=""
             android:id="@+id/photo_time_description"
+            android:text=""
             android:textSize="@dimen/default_text_size"
-            android:padding="@dimen/default_text_padding"
-            android:background="#000"
+            android:padding="@dimen/default_view_padding"
+            android:background="@android:color/transparent"
             android:textAlignment="center"
-            android:visibility="gone"
             android:textColor="#fff"/>
         <ImageView
-            android:id="@+id/photos_main_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#000"/>
+            android:id="@+id/photos_main_view" />
     </LinearLayout>
 
 </LinearLayout>
