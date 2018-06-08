@@ -8,10 +8,11 @@
             android:title="@string/sp_title_keep_screen_on"
             android:summary="@string/sp_summary_keep_screen_on"
             android:defaultValue="@bool/pref_default_keep_screen_on_default" />
-        <!--<CheckBoxPreference-->
-            <!--android:key="@string/sp_name_enable_fullscreen"-->
-            <!--android:title="@string/sp_title_enable_fullscreen"-->
-            <!--android:defaultValue="true" />-->
+        <SwitchPreference
+            android:key="pref_dev_mode_enabled"
+            android:title="@string/sp_title_dev_mode_enabled"
+            android:summary="@string/sp_summary_dev_mode_enabled"
+            android:defaultValue="false" />
     </PreferenceCategory>
 
     <PreferenceCategory

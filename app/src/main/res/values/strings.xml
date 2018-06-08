@@ -9,6 +9,7 @@
     <string name="dialog_text_change_home_default">Your default Home screen is \"%s\".\n\nTap OK, then \"Clear Defaults\" to choose a new default.</string>
     <string name="dialog_text_change_home_lollipop_above">Your default Home screen is \"%1$s\".\n\nTap OK, then \"Home app\" to choose a new default. Then re-open %2$s.</string>
     <string name="dialog_text_no_sim_card">Device not supported - SIM card required.</string>
+    <string name="dev_mode_header_string_format">DEV MODE  _ %s _  DEV MODE</string>
 
     <!-- Messages activities -->
     <string name="show_earlier_message_button">Older</string>
@@ -35,7 +36,8 @@
     <string name="sp_category_title_application">Application</string>
     <string name="sp_title_keep_screen_on">Keep screen on</string>
     <string name="sp_summary_keep_screen_on">Only when device is plugged in</string>
-    <string name="sp_title_enable_fullscreen">Fullscreen mode</string>
+    <string name="sp_title_dev_mode_enabled">Dev mode</string>
+    <string name="sp_summary_dev_mode_enabled">Stop requiring app has SMS and launcher status</string>
 
     <string name="sp_category_title_vocalisation">Speech</string>
     <string name="sp_title_vocalisation_enabled">Speak messages selected</string>

@@ -1,7 +1,6 @@
 package com.bivaca.familyhub;
 
 import android.os.Bundle;
-import android.preference.Preference;
 import android.preference.PreferenceFragment;
 
 public class SettingsActivity extends MyActivity {

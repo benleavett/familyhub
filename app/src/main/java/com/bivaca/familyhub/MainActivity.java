@@ -35,6 +35,7 @@ public class MainActivity extends MyActivity {
 
     private static final int MAKE_DEFAULT_SMS_PROMPT = 1;
     private static final int MAKE_DEFAULT_LAUNCHER_PROMPT = 2;
+    private static final String VERSION_STRING = "v" + BuildConfig.VERSION_CODE;
 
     private Handler runSlideshowHandler = null;
 
@@ -55,37 +56,49 @@ public class MainActivity extends MyActivity {
 
         setClearInboxVisibleState();
 
-        //TODO check if SMS function is enabled
-        getMyApplication().verifySmsPermissions(this);
+        if (!SharedPrefsHelper.isDevModeEnabled(this)) {
+            //TODO check if SMS function is enabled
+            getMyApplication().verifySmsPermissions(this);
+        }
+    }
 
+    private void updateHeaderTextForDevMode() {
         TextView versionView = findViewById(R.id.version_text);
-        versionView.setText("v" + BuildConfig.VERSION_CODE);
+        if (SharedPrefsHelper.isDevModeEnabled(this)) {
+            versionView.setText(String.format(getString(R.string.dev_mode_header_string_format), VERSION_STRING));
+        } else {
+            versionView.setText(VERSION_STRING);
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        if(!Util.isDefaultMessagingApp(this)) {
-            promptUserToMakeDefaultMessagingApp();
-        }
+        updateHeaderTextForDevMode();
 
-        if (!hasDeviceActiveSim()) {
-            new AlertDialog.Builder(this)
-                    .setTitle(getTitle())
-                    .setMessage(getString(R.string.dialog_text_no_sim_card))
-                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                            finish();
-                        }
-                    })
-                    .show();
+        if (!SharedPrefsHelper.isDevModeEnabled(this)) {
+            if (!Util.isDefaultMessagingApp(this)) {
+                promptUserToMakeDefaultMessagingApp();
+            }
+
+            if (!hasDeviceActiveSim()) {
+                new AlertDialog.Builder(this)
+                        .setTitle(getTitle())
+                        .setMessage(getString(R.string.dialog_text_no_sim_card))
+                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                finish();
+                            }
+                        })
+                        .show();
+            }
         }
 
         // If we had to prompt to make home then we'll set the timer later, if not then set it here
-        if (!promptToMakeHomeLauncher()) {
+        if (SharedPrefsHelper.isDevModeEnabled(this) || !promptToMakeHomeLauncher()) {
             if (SharedPrefsHelper.isPhotosEnabled(this) && SharedPrefsHelper.isAutoPlaySlides(this)) {
                 setTimerToLoadSlideshow();
             }

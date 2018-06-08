@@ -91,4 +91,14 @@ public class SharedPrefsHelper {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         return sp.getBoolean("pref_photo_order_random", context.getResources().getBoolean(R.bool.pref_default_photo_order_random));
     }
+
+    public static boolean isDevModeEnabled(Context context) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        return sp.getBoolean("pref_dev_mode_enabled", false);
+    }
+
+    public static boolean isVocalisationEnabled(Context context) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        return sp.getBoolean(context.getString(R.string.sp_name_vocalisation_enabled), context.getResources().getBoolean(R.bool.pref_default_vocalisation_enabled));
+    }
 }

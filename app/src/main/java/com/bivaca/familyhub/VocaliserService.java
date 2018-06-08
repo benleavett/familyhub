@@ -12,6 +12,7 @@ import android.util.Log;
 import android.util.TypedValue;
 
 import com.bivaca.familyhub.util.FirebaseEventLogger;
+import com.bivaca.familyhub.util.SharedPrefsHelper;
 import com.bivaca.familyhub.util.Util;
 
 class VocaliserService implements OnInitListener, SharedPreferences.OnSharedPreferenceChangeListener {
@@ -58,7 +59,7 @@ class VocaliserService implements OnInitListener, SharedPreferences.OnSharedPref
 
     void doVocalise(String text) {
         if (mIsTTSReady) {
-            if (isVocalisationEnabled()) {
+            if (SharedPrefsHelper.isVocalisationEnabled(mContext)) {
                 Log.d(TAG, "Vocalising: " + text);
 
                 if (Util.isLollipopOrAbove()) {
@@ -82,13 +83,6 @@ class VocaliserService implements OnInitListener, SharedPreferences.OnSharedPref
 
     void cancelVocalising() {
         mTTS.stop();
-    }
-
-    private boolean isVocalisationEnabled() {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
-        return sp.getBoolean(
-                mContext.getString(R.string.sp_name_vocalisation_enabled),
-                mContext.getResources().getBoolean(R.bool.pref_default_vocalisation_enabled));
     }
 
     private void setSpeechRate(String speechRateStr) {
