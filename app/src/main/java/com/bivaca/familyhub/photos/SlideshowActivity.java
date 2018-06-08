@@ -86,16 +86,9 @@ public class SlideshowActivity extends MyActivity {
 
         loadQueueFromLocalRootDir();
 
-        startAsyncTask(new DropboxPhotosDownloadTask(this));
+        new DropboxPhotosDownloadTask(this).execute("");
 
-        startAsyncTask(new StartSlideshowTask(this));
-    }
-
-    private void startAsyncTask(AsyncTask asyncTask) {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-            asyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "");
-        else
-            asyncTask.execute("");
+        new StartSlideshowTask(this).execute("");
     }
 
     private void loadQueueFromLocalRootDir() {
