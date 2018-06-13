@@ -5,9 +5,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
-import android.media.ExifInterface;
+import android.support.media.ExifInterface;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -227,28 +226,32 @@ public class SlideshowActivity extends MyActivity {
         }
 
         private void showPhoto(final Activity activity, final File localPath) {
-            String timeTakenString = null;
+            Date timeTaken = null;
             try {
-                Date timeTaken = getDatePhotoCaptured(localPath);
-                timeTakenString = new PrettyTime().format(timeTaken);
+                timeTaken = getDatePhotoCaptured(localPath);
             } catch (IOException e) {
                 Log.e(TAG, "Error getting EXIF data from file " + localPath, e);
             } catch (ParseException e) {
                 Log.e(TAG, "Error formatting EXIF date from file " + localPath, e);
             }
 
-            activity.runOnUiThread(getShowPhotoRunnable(localPath, timeTakenString));
+            activity.runOnUiThread(getShowPhotoRunnable(localPath, timeTaken));
         }
 
-        private Runnable getShowPhotoRunnable(final File localPath, final String timeTakenString) {
+        private Runnable getShowPhotoRunnable(final File localPath, final Date timeTaken) {
             return new Runnable() {
                 @Override
                 public void run() {
-                    Log.d(TAG, String.format("Showing photo %s (%s)", localPath, timeTakenString));
-
                     final Bitmap bitmap = BitmapFactory.decodeFile(localPath.getAbsolutePath());
                     ImageView imageView = activity.findViewById(R.id.photos_main_view);
                     imageView.setImageBitmap(bitmap);
+
+                    String timeTakenString = "";
+                    if (timeTaken != null) {
+                        timeTakenString = new PrettyTime().format(timeTaken);
+                    }
+
+                    Log.d(TAG, String.format("Showing photo %s (%s)", localPath, timeTakenString));
 
                     TextView dateDescription = activity.findViewById(R.id.photo_time_description);
                     dateDescription.setText(timeTakenString);
@@ -256,46 +259,19 @@ public class SlideshowActivity extends MyActivity {
             };
         }
 
-        private static Date getDatePhotoCaptured(File localPath) throws IOException, ParseException {
-            ExifInterface exifInterface = new ExifInterface(localPath.getAbsolutePath());
-
-//            if (Util.isNougatOrAbove()) {
-                String exifDate = exifInterface.getAttribute(TAG_DATETIME_ORIGINAL);
-
-                return getDateFromExif(exifDate);
-//            } else {
-//        com.drew.metadata.Metadata metadata = null;
-//        Date date = null;
-//
-//        try {
-////            InputStream inputStream = new FileInputStream(localPath);
-////            BufferedInputStream bis = new BufferedInputStream(inputStream);
-//            metadata = JpegMetadataReader.readMetadata(localPath);
-//
-//            if (metadata != null) {
-//                // obtain the Exif directory
-//                ExifSubIFDDirectory directory = metadata.getFirstDirectoryOfType(ExifSubIFDDirectory.class);
-//
-//                // query the tag's value
-//                date = directory.getDate(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL);
-//            }
-////            bis.close();
-//        } catch (JpegProcessingException e) {
-//            Log.e(TAG, e.toString(), e);
-//            return null;
-//        } catch (IOException e) {
-//            Log.e(TAG, e.toString(), e);
-//            return null;
-//        }
-//        return date;
-//                return new Date();
-//            }
-        }
-
         private static Date getDateFromExif(String exifDate) throws ParseException {
             // Example date 2018:05:21 18:18:49
             DateFormat format = new SimpleDateFormat("y:M:d H:m:s");
-            return format.parse(exifDate);
+
+            return exifDate != null ? format.parse(exifDate) : null;
+        }
+
+        private static Date getDatePhotoCaptured(File localPath) throws IOException, ParseException {
+            ExifInterface exifInterface = new ExifInterface(localPath.getAbsolutePath());
+
+            String exifDate = exifInterface.getAttribute(TAG_DATETIME_ORIGINAL);
+
+            return getDateFromExif(exifDate);
         }
     }
 
@@ -408,13 +384,7 @@ public class SlideshowActivity extends MyActivity {
                                 Log.d(TAG, String.format("Downloaded %d bytes to %s", downloader.getResult().getSize(), localPath.getAbsolutePath()));
 
                                 photoQueue.get().add(localPath);
-                            } catch (DbxException e) {
-                                Log.e(TAG, e.getMessage(), e);
-                                return null;
-                            } catch (FileNotFoundException e) {
-                                Log.e(TAG, e.getMessage(), e);
-                                return null;
-                            } catch (IOException e) {
+                            } catch (DbxException | IOException e) {
                                 Log.e(TAG, e.getMessage(), e);
                                 return null;
                             }
