@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.bivaca.familyhub.messages.Inbox;
 import com.bivaca.familyhub.photos.SlideshowActivity;
+import com.bivaca.familyhub.util.FirebaseEventLogger;
 import com.bivaca.familyhub.util.SharedPrefsHelper;
 import com.bivaca.familyhub.util.Util;
 
@@ -148,7 +149,7 @@ public class MainActivity extends MyActivity {
     }
 
     private void setClearInboxVisibleState() {
-        if (BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG || SharedPrefsHelper.isDevModeEnabled(this)) {
             Button clearInboxBtn = findViewById(R.id.clear_inbox_btn);
             clearInboxBtn.setVisibility(View.VISIBLE);
         }
@@ -162,16 +163,19 @@ public class MainActivity extends MyActivity {
 
     public void showMessagesActivity(View v) {
         cancelTimerToLoadSlideshow();
+        FirebaseEventLogger.logMessagesFeatureExplicitlyLaunched(this);
         startActivity(new Intent(this, InboxActivity.class));
     }
 
     public void showPhotosActivity(View v) {
         cancelTimerToLoadSlideshow();
+        FirebaseEventLogger.logPhotoFeatureExplicitlyLaunched(this);
         startActivity(new Intent(this, SlideshowActivity.class));
     }
 
     public void showSettingsActivity(View v) {
         cancelTimerToLoadSlideshow();
+        FirebaseEventLogger.logSettingsLaunched(this);
         startActivity(new Intent(this, SettingsActivity.class));
     }
 
@@ -205,6 +209,8 @@ public class MainActivity extends MyActivity {
 //    }
 
     public void resetLauncher(View v) {
+        FirebaseEventLogger.logResetLauncher(this);
+
         if (Util.isDefault(this)) {
             getPackageManager().clearPackagePreferredActivities(getPackageName());
             startActivity(Util.homeScreenIntent());

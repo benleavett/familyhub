@@ -2,6 +2,7 @@ package com.bivaca.familyhub;
 
 import android.Manifest;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -12,6 +13,7 @@ import com.bivaca.familyhub.util.Util;
 import java.util.HashMap;
 
 public class MyActivity extends AppCompatActivity {
+    private static final String TAG = MyActivity.class.getSimpleName();
 
     @Override
     protected void onResume() {
@@ -24,9 +26,11 @@ public class MyActivity extends AppCompatActivity {
     private void setKeepScreenOnState() {
         //FIXME register receiver to get changes to charging state
         // Only allow screen to stay on if we're charging
-        if (SharedPrefsHelper.isKeepScreenOnEnabled(this) && Util.isCharging(this)) {
+        if (SharedPrefsHelper.isKeepScreenOnEnabled(this) && Util.isChargerPluggedIn(this)) {
+            Log.d(TAG, "Keep screen on state: ENABLED");
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         } else {
+            Log.d(TAG, "Keep screen on state: DISABLED");
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         }
     }

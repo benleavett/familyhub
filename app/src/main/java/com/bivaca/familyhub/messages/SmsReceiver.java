@@ -1,5 +1,6 @@
 package com.bivaca.familyhub.messages;
 
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +10,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.TaskStackBuilder;
 import android.telephony.SmsMessage;
 import android.util.Log;
 
@@ -108,7 +110,14 @@ public class SmsReceiver extends BroadcastReceiver {
         i.putExtra(InboxActivity.INTENT_KEY_TIMESTAMP, sms.timestampSent);
         i.setAction(InboxActivity.INTENT_ACTION_NAME_NEW_SMS);
 
-        context.startActivity(i);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+        stackBuilder.addNextIntentWithParentStack(i);
+
+        try {
+            stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT).send();
+        } catch (PendingIntent.CanceledException e) {
+            Log.e(TAG, e.getMessage(), e);
+        }
     }
 
     private static String getMessageBodyAsString(SmsMessage[] message) {

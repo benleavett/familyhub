@@ -28,4 +28,20 @@ public class FirebaseEventLogger {
     public static void logVocalisation(Context context) {
         FirebaseAnalytics.getInstance(context).logEvent("vocalisation", null);
     }
+
+    public static void logPhotoFeatureExplicitlyLaunched(Context context) {
+        FirebaseAnalytics.getInstance(context).logEvent("photos_launch_action", null);
+    }
+
+    public static void logMessagesFeatureExplicitlyLaunched(Context context) {
+        FirebaseAnalytics.getInstance(context).logEvent("messages_launch_action", null);
+    }
+
+    public static void logSettingsLaunched(Context context) {
+        FirebaseAnalytics.getInstance(context).logEvent("settings_launch_action", null);
+    }
+
+    public static void logResetLauncher(Context context) {
+        FirebaseAnalytics.getInstance(context).logEvent("reset_action", null);
+    }
 }

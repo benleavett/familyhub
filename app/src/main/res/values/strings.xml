@@ -14,7 +14,7 @@
     <!-- Messages activities -->
     <string name="show_earlier_message_button">Older</string>
     <string name="show_later_message_button">Newer</string>
-    <string name="back_to_main_button">Exit</string>
+    <string name="back_to_main_button">Home</string>
     <string name="back_to_messages_button">Back to messages</string>
     <string name="message_unread_text">NEW MESSAGE</string>
     <string name="reply_button_text_replied">✔ Replied️</string>

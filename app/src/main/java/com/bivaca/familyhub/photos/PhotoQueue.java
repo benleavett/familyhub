@@ -32,7 +32,14 @@ class PhotoQueue extends ArrayList<File> {
 
     public File getNextRandom() {
         int randomIndex = new Random().nextInt(size());
-        return get(randomIndex);
+
+        // If our new random photo choice is the same as the last random photo choice, then pick again
+        if (size() > 1 && randomIndex == currentIndex) {
+            return getNextRandom();
+        } else {
+            currentIndex = randomIndex;
+            return get(randomIndex);
+        }
     }
 
     @Override
